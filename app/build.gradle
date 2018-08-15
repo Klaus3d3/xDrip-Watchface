@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+
+android {
+<<<<<<< HEAD
+    compileSdkVersion 24
+=======
+    compileSdkVersion 27
+>>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId 'com.Klause3d3.xDripwatchface'
+        minSdkVersion 22
+        targetSdkVersion 27
+        versionCode 2
+        versionName '2.0'
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+<<<<<<< HEAD
+    implementation files('libs/HuamiWatchFacesWOS2.8.jar')
+    implementation 'com.github.marlonlom:timeago:3.0.2'
+    //implementation 'com.jakewharton:butterknife:8.8.1'
+    //annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+=======
+    //implementation files('libs/HuamiWatchFacesWOS2.8.jar')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+>>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+}
+
+
+
+
+

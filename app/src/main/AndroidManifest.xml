@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.klaus3d3.xDripwatchface">
+
+    <!-- Required to act as a custom watch face. -->
+    <uses-permission android:name="android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+<<<<<<< HEAD
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.DeviceDefault">
+
+=======
+
+    <application android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:theme="@android:style/Theme.DeviceDefault">
+>>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+        <!-- Mainface -->
+        <activity
+            android:name="com.huami.watch.watchface.custom.ui.WatchFaceSettingsActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.huami.watch.watchface.custom.ui.WatchFaceCustomActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".settings.Settings"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".ui.xDripAlarmActivity"
+            android:allowEmbedded="true"
+            android:exported="true"
+            android:label="xDripAlarm"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.INFO" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.xDripOtheralertActivity"
+            android:allowEmbedded="true"
+            android:exported="true"
+            android:label="xDripAlarm"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.INFO" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.xDripSnoozePickerActivity"
+            android:allowEmbedded="true"
+            android:exported="true"
+            android:label="xDripAlarm"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.INFO" />
+            </intent-filter>
+        </activity>
+        <service android:name=".GreatFitSlpt" />
+        <service
+            android:name=".GreatFit"
+            android:label="@string/watch_face"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/custom_watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/preview" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview_circular"
+                android:resource="@drawable/preview" />
+            <meta-data
+                android:name="com.huami.watch.watchface.hasslpt"
+                android:value="false" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+
+<<<<<<< HEAD
+        <!--             Here you can copy-paste the above code (under "Mainface") to add a second watch face -->
+        <service android:name=".CustomDataUpdater" />
+
+
+        <receiver
+            android:name=".TimeTick"
+            android:enabled="true"
+            android:exported="true"></receiver>
+=======
+        <!--
+            Here you can copy-paste the above code (under "Mainface") to add a second watch face
+        -->
+        <service android:name="com.dinodevs.greatfitwatchface.CustomDataUpdater" />
+        <receiver
+            android:name="com.dinodevs.greatfitwatchface.Reciever"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.REBOOT" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+        <activity android:name="com.dinodevs.greatfitwatchface.settings.WidgetsActivity"></activity>
+        <activity android:name="com.dinodevs.greatfitwatchface.settings.ColorActivity"></activity>
+        <activity android:name="com.dinodevs.greatfitwatchface.settings.LanguageActivity"></activity>
+>>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+    </application>
+
+</manifest>
