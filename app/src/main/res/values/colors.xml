@@ -99,10 +99,6 @@
 
     <color name="black_overlay">#66000000</color>
 
-<<<<<<< HEAD
-=======
-    <color name="air_pressure_colour">#ffffff</color>
-    <color name="air_pressure_colour_slpt">#ffffff</color>
 
     <color name="altitude_colour">#ffffff</color>
     <color name="altitude_colour_slpt">#ffffff</color>
@@ -116,5 +112,5 @@
     <color name="accent">#03A9F4</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+
 </resources>

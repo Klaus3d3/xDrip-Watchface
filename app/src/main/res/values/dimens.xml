@@ -185,22 +185,5 @@
 <dimen name="air_pressure_left">20px</dimen>
 <dimen name="air_pressure_top">170px</dimen>
 
-<<<<<<< HEAD
-    </resources>
-=======
-    <!-- Altitude -->
-    <dimen name="altitude_font_size">20px</dimen>
-    <dimen name="altitude_left">20px</dimen>
-    <dimen name="altitude_top">170px</dimen>
 
-    <!-- Phone's Battery -->
-    <dimen name="phoneBattery_font_size">20px</dimen>
-    <dimen name="phoneBattery_left">20px</dimen>
-    <dimen name="phoneBattery_top">170px</dimen>
-
-    <!-- Settings -->
-    <dimen name="padding_round">16dp</dimen>
-    <dimen name="padding_round_small">8dp</dimen>
-    <dimen name="padding_round_large">24dp</dimen>
 </resources>
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed

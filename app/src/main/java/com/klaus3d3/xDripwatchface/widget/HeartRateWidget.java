@@ -6,11 +6,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 
-<<<<<<< HEAD:app/src/main/java/com/klaus3d3/xDripwatchface/widget/HeartRateWidget.java
-import com.klaus3d3.xDripwatchface.CustomDataUpdater;
-=======
-import com.dinodevs.greatfitwatchface.settings.LoadSettings;
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed:app/src/main/java/com/dinodevs/greatfitwatchface/widget/HeartRateWidget.java
 import com.ingenic.iwds.slpt.view.core.SlptLinearLayout;
 import com.ingenic.iwds.slpt.view.core.SlptPictureView;
 import com.ingenic.iwds.slpt.view.core.SlptViewComponent;
@@ -36,17 +31,12 @@ public class HeartRateWidget extends AbstractWidget {
 
     private Drawable heartIcon;
     private boolean flashingIconBool;
+    private boolean heartRateBool;
     private boolean heartAlignLeftBool;
     private boolean showUnits;
-    private LoadSettings settings;
-
-    public HeartRateWidget(LoadSettings settings) {
-        this.settings = settings;
-    }
 
     @Override
     public void init(Service service) {
-
         this.textLeft = service.getResources().getDimension(R.dimen.heart_rate_text_left);
         this.textTop = service.getResources().getDimension(R.dimen.heart_rate_text_top);
 
@@ -63,7 +53,7 @@ public class HeartRateWidget extends AbstractWidget {
         this.heartIcon = service.getResources().getDrawable(R.drawable.flashing_heart, null);
         this.setDrawableBounds(this.heartIcon, service.getResources().getDimension(R.dimen.heart_rate_icon_left), service.getResources().getDimension(R.dimen.heart_rate_icon_top));
 
-
+        this.heartRateBool = service.getResources().getBoolean(R.bool.heart_rate);
 
         // Show units boolean
         this.showUnits = service.getResources().getBoolean(R.bool.heart_rate_units);
@@ -77,18 +67,13 @@ public class HeartRateWidget extends AbstractWidget {
     @Override
     public void onDataUpdate(DataType type, Object value) {
         this.heartRate = (HeartRate) value;
-
     }
 
     @Override
-<<<<<<< HEAD:app/src/main/java/com/klaus3d3/xDripwatchface/widget/HeartRateWidget.java
     public void draw(Canvas canvas, float width, float height, float centerX, float centerY, int minutes, int hours) {
         // Do not run if disabled
         if(!this.heartRateBool){return;}
 
-=======
-    public void draw(Canvas canvas, float width, float height, float centerX, float centerY) {
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed:app/src/main/java/com/dinodevs/greatfitwatchface/widget/HeartRateWidget.java
         // if units are enabled
         String units = (showUnits)?" bpm":"";
         // Draw Heart rate
@@ -117,7 +102,7 @@ public class HeartRateWidget extends AbstractWidget {
         heart.setTextAttrForAll(
                 service.getResources().getDimension(R.dimen.heart_rate_font_size),
                 service.getResources().getColor(R.color.heart_colour_slpt),
-                ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE)
+                ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE)
         );
         // Position based on screen on
         heart.alignX = 2;

@@ -2,12 +2,9 @@ package com.klaus3d3.xDripwatchface;
 
 import com.huami.watch.watchface.AbstractSlptClock;
 
-import com.klaus3d3.xDripwatchface.widget.BatteryWidget;
 import com.klaus3d3.xDripwatchface.widget.CirclesWidget;
 import com.klaus3d3.xDripwatchface.widget.HeartRateWidget;
 import com.klaus3d3.xDripwatchface.widget.MainClock;
-import com.klaus3d3.xDripwatchface.widget.CaloriesWidget;
-import com.klaus3d3.xDripwatchface.widget.FloorWidget;
 import com.klaus3d3.xDripwatchface.widget.GreatWidget;
 import com.klaus3d3.xDripwatchface.widget.WeatherWidget;
 

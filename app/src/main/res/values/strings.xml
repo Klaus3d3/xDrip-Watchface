@@ -1,12 +1,9 @@
 <resources>
-<<<<<<< HEAD
+
     <string name="app_name">xDrip+ Watchface + Service</string>
     <string name="watch_face">xDrip+</string>
     <string name="author">GreatApo + Klaus3d3</string>
-=======
-    <string name="app_name">GreatFit Watchface</string>
-    <string name="watch_face">GreatFit</string>
-    <string name="author">GreatApo</string>
+
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -82,5 +79,5 @@
     <string name="Slovak">Slovenčina</string>
     <string name="Spanish">Español</string>
     <string name="Turkish">Türkçe</string>
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+
 </resources>

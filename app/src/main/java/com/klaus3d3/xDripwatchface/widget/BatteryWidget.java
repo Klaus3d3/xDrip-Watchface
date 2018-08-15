@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.Log;
 
-import com.dinodevs.greatfitwatchface.settings.LoadSettings;
 import com.huami.watch.watchface.util.Util;
 import com.ingenic.iwds.slpt.view.core.SlptBatteryView;
 import com.ingenic.iwds.slpt.view.core.SlptLinearLayout;
@@ -39,36 +38,31 @@ public class BatteryWidget extends AbstractWidget {
     private Drawable batteryIcon80;
     private Drawable batteryIcon90;
     private Drawable batteryIcon100;
-    private Boolean batteryImgBool;
+    private Boolean batteryBool;
     private float leftBattery;
     private float topBattery;
     private String[] numbers = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
     private String sBattery;
     private int BatteryNum;
-    private LoadSettings settings;
-
-    public BatteryWidget(LoadSettings settings) {
-        this.settings = settings;
-    }
 
     public void init(Service service) {
         this.leftBattery = service.getResources().getDimension(R.dimen.battery_icon_left);
         this.topBattery = service.getResources().getDimension(R.dimen.battery_icon_top);
 
-        this.batteryImgBool = service.getResources().getBoolean(R.bool.battery_icon);
-        if(this.batteryImgBool) {
+        this.batteryBool = service.getResources().getBoolean(R.bool.battery_icon);
+        if(this.batteryBool) {
             this.batteryIcon0 = service.getResources().getDrawable(R.drawable.battery0, null);
-            this.batteryIcon10 = service.getResources().getDrawable(R.drawable.battery1, null);
-            this.batteryIcon20 = service.getResources().getDrawable(R.drawable.battery2, null);
-            this.batteryIcon30 = service.getResources().getDrawable(R.drawable.battery3, null);
-            this.batteryIcon40 = service.getResources().getDrawable(R.drawable.battery4, null);
-            this.batteryIcon50 = service.getResources().getDrawable(R.drawable.battery5, null);
-            this.batteryIcon60 = service.getResources().getDrawable(R.drawable.battery6, null);
-            this.batteryIcon70 = service.getResources().getDrawable(R.drawable.battery7, null);
-            this.batteryIcon80 = service.getResources().getDrawable(R.drawable.battery8, null);
-            this.batteryIcon90 = service.getResources().getDrawable(R.drawable.battery9, null);
-            this.batteryIcon100 = service.getResources().getDrawable(R.drawable.battery10, null);
+            this.batteryIcon10 = service.getResources().getDrawable(R.drawable.battery10, null);
+            this.batteryIcon20 = service.getResources().getDrawable(R.drawable.battery20, null);
+            this.batteryIcon30 = service.getResources().getDrawable(R.drawable.battery30, null);
+            this.batteryIcon40 = service.getResources().getDrawable(R.drawable.battery40, null);
+            this.batteryIcon50 = service.getResources().getDrawable(R.drawable.battery50, null);
+            this.batteryIcon60 = service.getResources().getDrawable(R.drawable.battery60, null);
+            this.batteryIcon70 = service.getResources().getDrawable(R.drawable.battery70, null);
+            this.batteryIcon80 = service.getResources().getDrawable(R.drawable.battery80, null);
+            this.batteryIcon90 = service.getResources().getDrawable(R.drawable.battery90, null);
+            this.batteryIcon100 = service.getResources().getDrawable(R.drawable.battery100, null);
             this.batteryIcon0.setBounds((int) this.leftBattery, (int) this.topBattery, ((int) this.leftBattery) + batteryIcon0.getIntrinsicWidth(), ((int) this.topBattery) + batteryIcon0.getIntrinsicHeight());
             this.batteryIcon10.setBounds((int) this.leftBattery, (int) this.topBattery, ((int) this.leftBattery) + batteryIcon10.getIntrinsicWidth(), ((int) this.topBattery) + batteryIcon10.getIntrinsicHeight());
             this.batteryIcon20.setBounds((int) this.leftBattery, (int) this.topBattery, ((int) this.leftBattery) + batteryIcon20.getIntrinsicWidth(), ((int) this.topBattery) + batteryIcon20.getIntrinsicHeight());
@@ -91,13 +85,8 @@ public class BatteryWidget extends AbstractWidget {
         return Collections.singletonList(DataType.BATTERY);
     }
 
-<<<<<<< HEAD:app/src/main/java/com/klaus3d3/xDripwatchface/widget/BatteryWidget.java
     public void draw(Canvas canvas, float width, float height, float centerX, float centerY, int minutes, int hours) {
         if (this.batteryData != null && this.batteryBool) {
-=======
-    public void draw(Canvas canvas, float width, float height, float centerX, float centerY) {
-        if (this.batteryData != null && this.batteryImgBool) {
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed:app/src/main/java/com/dinodevs/greatfitwatchface/widget/BatteryWidget.java
             this.sBattery = String.format("%02d", new Object[]{Integer.valueOf((this.batteryData.getLevel() * 100) / this.batteryData.getScale())});
 
             if (sBattery.equals("100")) {

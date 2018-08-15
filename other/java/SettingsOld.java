@@ -1,4 +1,4 @@
-package com.dinodevs.greatfitwatchface.settings;
+package com.klaus3d3.xDripwatchface.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dinodevs.greatfitwatchface.widget.MainClock;
-import com.dinodevs.greatfitwatchface.R;
+import com.klaus3d3.xDripwatchface.widget.MainClock;
+import com.klaus3d3.xDripwatchface.R;
 
 // BY GREATAPO
 
@@ -17,7 +17,7 @@ public class SettingsOld extends FragmentActivity {
     public static String[] color = {"#ff0000", "#00ffff","#00ff00","#ff00ff","#ffffff","#ffff00"};
     public int currentColor = 3;
     public int currentLanguage = 0;
-    private com.dinodevs.greatfitwatchface.settings.APsettings settings;
+    private com.klaus3d3.xDripwatchface.settings.APsettings settings;
     // Languages
     public static String[] codes = {
             "English", "中文", "Czech", "Français", "Deutsch", "Ελληνικά", "עברית", "Magyar", "Italiano", "日本語", "Polski", "Português", "Русский", "Slovenčina", "Español"//, "Türkçe",

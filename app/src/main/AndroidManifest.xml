@@ -11,18 +11,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-<<<<<<< HEAD
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <application
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@android:style/Theme.DeviceDefault">
 
-=======
+
 
     <application android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:theme="@android:style/Theme.DeviceDefault">
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+
         <!-- Mainface -->
         <activity
             android:name="com.huami.watch.watchface.custom.ui.WatchFaceSettingsActivity"
@@ -95,7 +90,7 @@
             </intent-filter>
         </service>
 
-<<<<<<< HEAD
+
         <!--             Here you can copy-paste the above code (under "Mainface") to add a second watch face -->
         <service android:name=".CustomDataUpdater" />
 
@@ -104,27 +99,8 @@
             android:name=".TimeTick"
             android:enabled="true"
             android:exported="true"></receiver>
-=======
-        <!--
-            Here you can copy-paste the above code (under "Mainface") to add a second watch face
-        -->
-        <service android:name="com.dinodevs.greatfitwatchface.CustomDataUpdater" />
-        <receiver
-            android:name="com.dinodevs.greatfitwatchface.Reciever"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.REBOOT" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <category android:name="android.intent.category.HOME" />
-            </intent-filter>
-        </receiver>
-        <activity android:name="com.dinodevs.greatfitwatchface.settings.WidgetsActivity"></activity>
-        <activity android:name="com.dinodevs.greatfitwatchface.settings.ColorActivity"></activity>
-        <activity android:name="com.dinodevs.greatfitwatchface.settings.LanguageActivity"></activity>
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed
+
+
     </application>
 
 </manifest>

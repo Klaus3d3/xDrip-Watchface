@@ -7,15 +7,13 @@ import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.os.Handler;
-<<<<<<< HEAD:app/src/main/java/com/klaus3d3/xDripwatchface/AbstractWatchFace.java
+
 import android.provider.Settings;
-=======
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed:app/src/main/java/com/dinodevs/greatfitwatchface/AbstractWatchFace.java
+
 import android.util.Log;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-<<<<<<< HEAD:app/src/main/java/com/klaus3d3/xDripwatchface/AbstractWatchFace.java
 import android.os.PowerManager;
 import com.klaus3d3.xDripwatchface.data.DataType;
 import com.klaus3d3.xDripwatchface.data.MultipleWatchDataListenerAdapter;
@@ -25,16 +23,8 @@ import com.klaus3d3.xDripwatchface.widget.DigitalClockWidget;
 import com.klaus3d3.xDripwatchface.widget.Widget;
 import com.klaus3d3.xDripwatchface.R;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-=======
 
-import com.dinodevs.greatfitwatchface.data.DataType;
-import com.dinodevs.greatfitwatchface.data.MultipleWatchDataListenerAdapter;
-import com.dinodevs.greatfitwatchface.widget.AnalogClockWidget;
-import com.dinodevs.greatfitwatchface.widget.ClockWidget;
-import com.dinodevs.greatfitwatchface.widget.DigitalClockWidget;
-import com.dinodevs.greatfitwatchface.widget.Widget;
-import com.dinodevs.greatfitwatchface.R;
->>>>>>> 94587dd10f0ec9e982cf95285090c7b5c382bfed:app/src/main/java/com/dinodevs/greatfitwatchface/AbstractWatchFace.java
+
 import com.huami.watch.watchface.WatchDataListener;
 
 import org.json.JSONObject;

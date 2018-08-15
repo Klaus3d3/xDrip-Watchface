@@ -1,4 +1,4 @@
-package com.dinodevs.greatfitwatchface.settings;
+package com.klaus3d3.xDripwatchface.settings;
 
 import android.content.Context;
 
