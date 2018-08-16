@@ -40,7 +40,7 @@
     <bool name="calories">false</bool>
     <bool name="heart_rate">false</bool>
     <bool name="temperature">true</bool>
-    <bool name="weather_image">false</bool>
+    <bool name="weather_image">true</bool>
     <bool name="floor">false</bool>
     <bool name="city">false</bool>
     <bool name="humidity">false</bool>

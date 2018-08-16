@@ -132,9 +132,8 @@ public class CustomDataUpdater extends Service {
                     hd.putInt("heart_rate",HRToSend);
                     hd.putInt("heart_acuracy",1);
                     companionTransporter.send("Amazfit_Healthdata",hd);
-                    Log.d("CustomDataUpdater",watchface_graph);
 
-                }
+                                    }
                 if (action.equals(Constants.ACTION_XDRIP_OTHERALERT))
                 {
                     Intent intent = new Intent(context, xDripOtheralertActivity.class);

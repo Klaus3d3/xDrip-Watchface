@@ -50,7 +50,7 @@
 
     <!-- steps -->
 <dimen name="steps_font_size">20px</dimen>
-<dimen name="steps_text_left">67px</dimen>
+<dimen name="steps_text_left">65px</dimen>
 <dimen name="steps_text_top">84px</dimen>
 
     <!-- today distance -->
@@ -97,12 +97,12 @@
 <dimen name="temperature_left">126px</dimen>
 <dimen name="temperature_top">84px</dimen>
     <!-- weather icon -->
-<dimen name="weather_img_left">50px</dimen>
-<dimen name="weather_img_top">50px</dimen>
+<dimen name="weather_img_left">121px</dimen>
+<dimen name="weather_img_top">20px</dimen>
 
     <!-- Weekday (Monday...) -->
 <dimen name="weekday_font_size">25px</dimen>
-<dimen name="weekday_left">90px</dimen>
+<dimen name="weekday_left">80px</dimen>
 <dimen name="weekday_top">126px</dimen>
 
     <!-- Date -->
@@ -117,7 +117,7 @@
 
     <!-- Month -->
 <dimen name="month_font_size">25px</dimen>
-<dimen name="month_left">225px</dimen>
+<dimen name="month_left">235px</dimen>
 <dimen name="month_top">126px</dimen>
 
     <!-- Year -->

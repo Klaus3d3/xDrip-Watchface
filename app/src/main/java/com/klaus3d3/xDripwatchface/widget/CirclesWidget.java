@@ -148,13 +148,13 @@ public class CirclesWidget extends AbstractWidget {
 
         // Widgets text colors
         this.batteryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        this.batteryPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE));
+        this.batteryPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE));
         this.batteryPaint.setTextSize(service.getResources().getDimension(R.dimen.steps_font_size));
         this.batteryPaint.setColor(service.getResources().getColor(R.color.battery_colour));
         this.batteryPaint.setTextAlign( (this.batteryAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER );
 
         this.stepsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        this.stepsPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE));
+        this.stepsPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE));
         this.stepsPaint.setTextSize(service.getResources().getDimension(R.dimen.steps_font_size));
         this.stepsPaint.setColor(service.getResources().getColor(R.color.steps_colour));
         this.stepsPaint.setTextAlign( (this.stepsAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER );
@@ -184,9 +184,7 @@ public class CirclesWidget extends AbstractWidget {
         // Show units boolean
         this.showUnits = service.getResources().getBoolean(R.bool.distance_units);
 
-        // Over circles layout
-        this.background = service.getResources().getDrawable(R.drawable.over_circles_layout);
-        this.background.setBounds(0, 0, 320, 300);
+
 
         // Fix angles
         if(this.batteryCircleBool){
@@ -261,8 +259,7 @@ public class CirclesWidget extends AbstractWidget {
         }
         canvas.restoreToCount(count);
 
-        // Over circles layout
-        this.background.draw(canvas);
+
 
         // Show battery
         if (this.batteryData != null && this.batteryBool) {
@@ -378,7 +375,7 @@ public class CirclesWidget extends AbstractWidget {
         int tmp_left;
 
         // It's a bird, it's a plane... nope... it's a font.
-        Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE);
+        Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
 
         // Show battery
         SlptLinearLayout power = new SlptLinearLayout();

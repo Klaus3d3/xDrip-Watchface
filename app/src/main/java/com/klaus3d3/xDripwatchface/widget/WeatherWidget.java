@@ -85,7 +85,7 @@ public class WeatherWidget extends AbstractWidget {
         if(this.temperatureBool) {
             this.textPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
             this.textPaint.setColor(service.getResources().getColor(R.color.temperature_colour));
-            this.textPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE));
+            this.textPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE));
             this.textPaint.setTextSize(service.getResources().getDimension(R.dimen.temperature_font_size));
             this.textPaint.setTextAlign((this.temperatureAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER);
         }
@@ -312,7 +312,7 @@ public class WeatherWidget extends AbstractWidget {
     public List<SlptViewComponent> buildSlptViewComponent(Service service) {
         // Variables
         this.mService = service;
-        Typeface font = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE);
+        Typeface font = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
 
         // Get weather data
         this.weather = getSlptWeather();
@@ -393,8 +393,8 @@ public class WeatherWidget extends AbstractWidget {
         SlptPictureView weatherLayout = new SlptPictureView();
         weatherLayout.setImagePicture( SimpleFile.readFileFromAssets(service, String.format("slpt_weather/clock_skin_weather_%s.png", weatherImageStrList.get(this.weather.weatherType))) );
         weatherLayout.setStart(
-                (int) service.getResources().getDimension(R.dimen.weather_img_left),
-                (int) service.getResources().getDimension(R.dimen.weather_img_top)
+                (int) service.getResources().getDimension(R.dimen.weather_img_left)-5,
+                (int) service.getResources().getDimension(R.dimen.weather_img_top)-4
         );
         if(!service.getResources().getBoolean(R.bool.weather_image)){weatherLayout.show=false;}
 
