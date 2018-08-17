@@ -18,6 +18,7 @@ import android.util.Base64;
 import android.util.Log;
 
 
+import com.klaus3d3.xDripwatchface.CustomDataUpdater;
 import com.klaus3d3.xDripwatchface.data.Alarm;
 import com.klaus3d3.xDripwatchface.data.CustomData;
 import com.klaus3d3.xDripwatchface.data.HeartRate;
@@ -90,14 +91,17 @@ public class GreatWidget extends AbstractWidget {
     private float xdripLeft;
     private String[] digitalNums = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
     private String[] digitalNumsNo0 = {"", "1", "2", "3", "4", "5", "6", "7", "8", "9"};//no 0 on first digit
-
+    private Bitmap graph;
 
 
 
     @Override
     public void init(Service service){
+        Log.e("GreatWidget", "init");
         // This service
         this.mService = service;
+
+
 
         // Get AM/PM
         this.time = getSlptTime();
@@ -109,6 +113,7 @@ public class GreatWidget extends AbstractWidget {
 
         // Get xdrip
         this.xdripData = getXdrip();
+
 
 
         this.leftHour = service.getResources().getDimension(R.dimen.hours_left);
@@ -185,16 +190,6 @@ public class GreatWidget extends AbstractWidget {
 
     }
 
-    public Bitmap StringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
 
 
 
@@ -225,11 +220,8 @@ public class GreatWidget extends AbstractWidget {
             this.xdripDeltaPaint.setColor(Color.parseColor(xdripData.color));
             this.xdripDatePaint.setColor(Color.parseColor(xdripData.color));
             if(xdripData.color.equals("WHITE"))this.background.draw(canvas);
-            try {
-                 canvas.drawBitmap(StringToBitMap(xdripData.sgv_graph), mService.getResources().getDimension(R.dimen.xdripgraph_left), mService.getResources().getDimension(R.dimen.xdripgraph_top), xdripgraphpaint);
-            }catch (Exception e){
-                Log.e("GreatFit_Error",e.toString());
-            };
+
+            if(xdripData.firstdata)canvas.drawBitmap(xdripData.sgv_graph, mService.getResources().getDimension(R.dimen.xdripgraph_left), mService.getResources().getDimension(R.dimen.xdripgraph_top), xdripgraphpaint);
             canvas.drawText(xdripData.sgv, xdripLeft, xdripTop, xdripsgvPaint);
             canvas.drawText(xdripData.delta, mService.getResources().getDimension(R.dimen.xdripdelta_left), mService.getResources().getDimension(R.dimen.xdripdelta_top), xdripDeltaPaint);
             canvas.drawText(TimeAgo.using(xdripData.timestamp), mService.getResources().getDimension(R.dimen.xdripdate_left), mService.getResources().getDimension(R.dimen.xdripdate_top), xdripDatePaint);
@@ -273,6 +265,7 @@ public class GreatWidget extends AbstractWidget {
             case XDRIP:
                 // Update Xdrip
                 this.xdripData = (Xdrip) value;
+                this.graph=xdripData.sgv_graph;
                // Log.w("DinoDevs-GreatFit", type.toString()+" => "+value.toString() );
                 break;
 
@@ -297,6 +290,7 @@ public class GreatWidget extends AbstractWidget {
 
     public Xdrip getXdrip(){
         String str = Settings.System.getString(this.mService.getContentResolver(), "xdrip");
+
         return new Xdrip(str);
     }
 
@@ -306,7 +300,8 @@ public class GreatWidget extends AbstractWidget {
         // Variables
         // This service
         this.mService = service;
-        List<SlptViewComponent> slpt_objects = new ArrayList<>();
+
+
         this.ampmBool = service.getResources().getBoolean(R.bool.ampm);
         int tmp_left;
         Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
@@ -362,15 +357,14 @@ public class GreatWidget extends AbstractWidget {
 
         // Draw XdripGraph
 
-        SlptPictureView xdripGraphLayout = new SlptPictureView();
-        try{
-        xdripGraphLayout.setImagePicture(BitmaptoByte(StringToBitMap(xdripData.sgv_graph)));
-        }catch (Exception e){
-        Log.e("GreatFit_Error",e.toString());
-        };
-        // Position based on screen on
-        xdripGraphLayout.setStart((int) service.getResources().getDimension(R.dimen.xdripgraph_left),  (int)service.getResources().getDimension(R.dimen.xdripgraph_top));
+            SlptPictureView xdripGraphLayout = new SlptPictureView();
+        if(xdripData.firstdata) {
+        xdripGraphLayout.setImagePicture(BitmaptoByte(xdripData.sgv_graph));
+            // Position based on screen on
+            xdripGraphLayout.setStart((int) service.getResources().getDimension(R.dimen.xdripgraph_left), (int) service.getResources().getDimension(R.dimen.xdripgraph_top));
 
+        }
+        if (!xdripData.firstdata) xdripGraphLayout.show = false;
         // Draw hours
 
         SlptLinearLayout hourLayout = new SlptLinearLayout();
@@ -499,7 +493,7 @@ public class GreatWidget extends AbstractWidget {
         // Draw Xdrip Date
         SlptLinearLayout xdripDateLayout = new SlptLinearLayout();
         SlptPictureView xdripDateStr = new SlptPictureView();
-        xdripDateStr.setStringPicture( xdripData.updatetime );
+        xdripDateStr.setStringPicture( xdripData.timeago );
         xdripDateLayout.add(xdripDateStr);
         xdripDateLayout.setTextAttrForAll(
                 service.getResources().getDimension(R.dimen.xdripdate_font_size),

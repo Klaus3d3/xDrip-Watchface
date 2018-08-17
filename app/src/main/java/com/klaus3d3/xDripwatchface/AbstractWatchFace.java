@@ -124,14 +124,14 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
 
         return AnalogClockWidget.class.isInstance(this.clock) ? new AnalogEngine((AnalogClockWidget) this.clock) : new DigitalEngine((DigitalClockWidget) this.clock);
     }
-
+    @Override
     public void onCreate() {
         super.onCreate();
         this.TransportIntent = new Intent(this,CustomDataUpdater.class);
         this.startService(this.TransportIntent);
     }
 
-
+    @Override
     public void onDestroy() {
         super.onDestroy();
         this.stopService(this.TransportIntent);

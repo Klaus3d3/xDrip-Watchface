@@ -78,9 +78,10 @@ public class CustomDataUpdater extends Service {
         if (companionTransporter == null) {
             initTransporter();
         }
-        Settings.System.putString(context.getContentResolver(), "xdrip", "{\"sgv_graph\":\"" + watchface_graph + "\",\"sgv\":\"" + watchface_sgv + "\",\"delta\":\"" + watchface_delta + "\",\"updatetime\":\"" + watchface_date+ "\",\"phonebattery\":\""+watchface_battery+"\",\"timeago\":\""+watchface_timeago+"\"}");//default
-
-        return super.onStartCommand(intent, flags, startId);
+        //Settings.System.putString(context.getContentResolver(), "xdrip", "{\"sgv_graph\":\"" + watchface_graph + "\",\"sgv\":\"" + watchface_sgv + "\",\"delta\":\"" + watchface_delta + "\",\"updatetime\":\"" + watchface_date+ "\",\"phonebattery\":\""+watchface_battery+"\",\"timeago\":\""+watchface_timeago+"\"}");//default
+        //savetoSettings(context);
+        return START_STICKY;
+        //return super.onStartCommand(intent, flags, startId);
     }
 
 
@@ -123,8 +124,8 @@ public class CustomDataUpdater extends Service {
                     if(db.getBoolean("ishigh")||db.getBoolean("islow")||db.getBoolean("isstale")){bad_value=true;}
                     else {bad_value=false;}
                     alarmManager.cancel(PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
-                   // alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, db.getLong("date")+1000*60, 1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
-                    alarmManager.set(AlarmManager.RTC_WAKEUP,db.getLong("date")+1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, db.getLong("date")+1000*60, 1000*60*1,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    //alarmManager.set(AlarmManager.RTC_WAKEUP,db.getLong("date")+1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
                     savetoSettings(context);
                     DataBundle hd = new DataBundle();
 
@@ -171,7 +172,7 @@ public class CustomDataUpdater extends Service {
                     confirm_sgv_data(db.getString("reply_message"));
 
                 }
-                if (action.equals(Constants.ACTION_XDRIP_SNOOZE_CONFIRMATION)) Toast.makeText(context, "Snooze confirmed by watch", Toast.LENGTH_LONG).show();
+               // if (action.equals(Constants.ACTION_XDRIP_SNOOZE_CONFIRMATION)) Toast.makeText(context, "Snooze confirmed by watch", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -216,7 +217,7 @@ public class CustomDataUpdater extends Service {
         JSONObject json_data = new JSONObject();
         json_data.put("sgv",CustomDataUpdater.watchface_sgv);
         json_data.put("delta",CustomDataUpdater.watchface_delta);
-        json_data.put("updatetime",CustomDataUpdater.watchface_date);
+        json_data.put("timestamp",CustomDataUpdater.watchface_date);
         json_data.put("timeago",timeago);
         json_data.put("sgv_graph",CustomDataUpdater.watchface_graph);
         json_data.put("phonebattery",CustomDataUpdater.watchface_battery);
@@ -237,10 +238,19 @@ public class CustomDataUpdater extends Service {
     }
 }
 
+
     @Override
     public void onDestroy() {
           unregisterReceiver(snoozeReceiver);
-         super.onDestroy();
+            companionTransporter.disconnectTransportService();
+            unregisterComponentCallbacks(this);
+            companionTransporter.removeAllChannelListeners();
+            companionTransporter.removeAllDataListeners();
+            companionTransporter.removeAllServiceConnectionListeners();
+
+          this.stopSelf();
+        Log.d("CustomDataUpdater", "Service stopped");
+        super.onDestroy();
     }
 
 

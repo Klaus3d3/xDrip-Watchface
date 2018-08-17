@@ -72,7 +72,7 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
 
 
     protected void initWatchFaceConfig() {
-        Log.w("DinoDevs-GreatFit", "Initiating watchface");
+        Log.w("Klaus3d3", "Initiating watchface");
 
         this.greatfitParameters = "";
         //this.getResources().getBoolean(R.bool.seconds)
@@ -80,7 +80,7 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
         this.context = this.getApplicationContext();
         this.needRefreshSecond = Util.needSlptRefreshSecond(this.context);
         if (this.needRefreshSecond) {
-            this.setClockPeriodSecond(true);
+            this.setClockPeriodSecond(false);
         }
     }
 }
