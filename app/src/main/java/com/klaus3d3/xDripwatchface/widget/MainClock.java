@@ -635,6 +635,6 @@ public class MainClock extends DigitalClockWidget {
         // Hide if disabled
         if(!service.getResources().getBoolean(R.bool.week_name)){WeekdayLayout.show=false;}
 
-        return Arrays.asList(background, indicatorLayout, dateLayout, dayLayout, monthLayout, WeekdayLayout, yearLayout);
+        return Arrays.asList(background, indicatorLayout, dayLayout, monthLayout, WeekdayLayout);
     }
 }

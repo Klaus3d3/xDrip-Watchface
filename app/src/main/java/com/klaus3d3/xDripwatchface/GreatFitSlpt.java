@@ -28,11 +28,10 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
     public GreatFitSlpt() {
         super(
                 new MainClock(),
-                new CirclesWidget(),
-                new HeartRateWidget(),
-                new BatteryWidget(),
+                new GreatWidget(),
                 new WeatherWidget(),
-                new GreatWidget()
+                //new HeartRateWidget(),
+                new CirclesWidget()
         );
     }
 

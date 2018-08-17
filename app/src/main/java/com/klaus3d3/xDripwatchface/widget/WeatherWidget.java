@@ -207,30 +207,6 @@ public class WeatherWidget extends AbstractWidget {
             canvas.drawText(weather.getTemperature() + units, textLeft, textTop, textPaint);
         }
 
-        // Draw City
-        if(this.cityBool) {
-            canvas.drawText(weather.city, cityLeft, cityTop, cityPaint);
-        }
-
-        // Draw Humidity
-        if(this.humidityBool) {
-            canvas.drawText(weather.humidity, humidityLeft, humidityTop, humidityPaint);
-        }
-
-        // Draw UV ray
-        if(this.uvBool) {
-            canvas.drawText(weather.uv, uvLeft, uvTop, uvPaint);
-        }
-
-        // Draw Wind Direction
-        if(this.windDirectionBool) {
-            canvas.drawText( ((windDirectionAsArrowBool)? this.weather.windArrow : this.weather.windDirection), windDirectionLeft, windDirectionTop, windDirectionPaint);
-        }
-
-        // Draw Wind Strength
-        if(this.windStrengthBool) {
-            canvas.drawText(weather.windStrength, windStrengthLeft, windStrengthTop, windStrengthPaint);
-        }
 
         // Draw Weather icon
         if(this.weatherBool) {
@@ -260,27 +236,7 @@ public class WeatherWidget extends AbstractWidget {
         // Get ALL data from system
         String str = Settings.System.getString(this.mService.getApplicationContext().getContentResolver(), "WeatherInfo");
 
-        // WeatherInfo
-        // {"isAlert":true, "isNotification":true,
-        // "tempFormatted":"28ºC",
-        // "tempUnit":"C",
-        // "v":1,
-        // "weatherCode":0,
-        // "aqi":-1,
-        // "aqiLevel":0,
-        // "city":"Somewhere",
-        // "forecasts":[{"tempFormatted":"31ºC/21ºC","tempMax":31,"tempMin":21,"weatherCodeFrom":0,"weatherCodeTo":0,"day":1,"weatherFrom":0,"weatherTo":0},{"tempFormatted":"33ºC/23ºC","tempMax":33,"tempMin":23,"weatherCodeFrom":0,"weatherCodeTo":0,"day":2,"weatherFrom":0,"weatherTo":0},{"tempFormatted":"34ºC/24ºC","tempMax":34,"tempMin":24,"weatherCodeFrom":0,"weatherCodeTo":0,"day":3,"weatherFrom":0,"weatherTo":0},{"tempFormatted":"34ºC/23ºC","tempMax":34,"tempMin":23,"weatherCodeFrom":0,"weatherCodeTo":0,"day":4,"weatherFrom":0,"weatherTo":0},{"tempFormatted":"32ºC/22ºC","tempMax":32,"tempMin":22,"weatherCodeFrom":0,"weatherCodeTo":0,"day":5,"weatherFrom":0,"weatherTo":0}],
-        // "pm25":-1,
-        // "sd":"50%", //(Humidity)
-        // "temp":28,
-        // "time":1531292274457,
-        // "uv":"Strong",
-        // "weather":0,
-        // "windDirection":"NW",
-        // "windStrength":"7.4km/h"}
 
-        // WeatherCheckedSummary
-        // {"tempUnit":"1","temp":"31\/21","weatherCodeFrom":0}
 
         // Extract data from JSON
         JSONObject weather_data = new JSONObject();
@@ -398,146 +354,8 @@ public class WeatherWidget extends AbstractWidget {
         );
         if(!service.getResources().getBoolean(R.bool.weather_image)){weatherLayout.show=false;}
 
-        // Draw City
-        SlptLinearLayout cityLayout = new SlptLinearLayout();
-        SlptPictureView cityText = new SlptPictureView();
-        cityText.setStringPicture( this.weather.city );
-        cityLayout.add(cityText);
-        cityLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.city_font_size),
-                service.getResources().getColor(R.color.city_colour_slpt),
-                font
-        );
-        // Position based on screen on
-        cityLayout.alignX = 2;
-        cityLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.city_left);
-        if(!service.getResources().getBoolean(R.bool.city_left_align)) {
-            // If text is centered, set rectangle
-            cityLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.city_font_size))
-            );
-            tmp_left = -320;
-        }
-        cityLayout.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.city_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.city_font_size))
-        );
-        if(!service.getResources().getBoolean(R.bool.city)){cityLayout.show=false;}
 
-        // Draw Humidity
-        SlptLinearLayout humidityLayout = new SlptLinearLayout();
-        SlptPictureView humidityText = new SlptPictureView();
-        humidityText.setStringPicture( this.weather.humidity );
-        humidityLayout.add(humidityText);
-        humidityLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.humidity_font_size),
-                service.getResources().getColor(R.color.humidity_colour_slpt),
-                font
-        );
-        // Position based on screen on
-        humidityLayout.alignX = 2;
-        humidityLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.humidity_left);
-        if(!service.getResources().getBoolean(R.bool.humidity_left_align)) {
-            // If text is centered, set rectangle
-            humidityLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.humidity_font_size))
-            );
-            tmp_left = -320;
-        }
-        humidityLayout.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.humidity_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.humidity_font_size))
-        );
-        if(!service.getResources().getBoolean(R.bool.humidity)){humidityLayout.show=false;}
 
-        // Draw UV rays (Strong)
-        SlptLinearLayout uvLayout = new SlptLinearLayout();
-        SlptPictureView uvText = new SlptPictureView();
-        uvText.setStringPicture( this.weather.uv );
-        uvLayout.add(uvText);
-        uvLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.uv_font_size),
-                service.getResources().getColor(R.color.uv_colour_slpt),
-                font
-        );
-        // Position based on screen on
-        uvLayout.alignX = 2;
-        uvLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.uv_left);
-        if(!service.getResources().getBoolean(R.bool.uv_left_align)) {
-            // If text is centered, set rectangle
-            uvLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.uv_font_size))
-            );
-            tmp_left = -320;
-        }
-        uvLayout.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.uv_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.uv_font_size))
-        );
-        if(!service.getResources().getBoolean(R.bool.uv)){uvLayout.show=false;}
-
-        // Draw Wind Direction
-        SlptLinearLayout windDirectionLayout = new SlptLinearLayout();
-        SlptPictureView windDirectionText = new SlptPictureView();
-        windDirectionText.setStringPicture( (service.getResources().getBoolean(R.bool.wind_direction_as_arrows))? this.weather.windArrow : this.weather.windDirection );
-        windDirectionLayout.add(windDirectionText);
-        windDirectionLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.wind_direction_font_size),
-                service.getResources().getColor(R.color.wind_direction_colour_slpt),
-                font
-        );
-        // Position based on screen on
-        windDirectionLayout.alignX = 2;
-        windDirectionLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.wind_direction_left);
-        if(!service.getResources().getBoolean(R.bool.wind_direction_left_align)) {
-            // If text is centered, set rectangle
-            windDirectionLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.wind_direction_font_size))
-            );
-            tmp_left = -320;
-        }
-        windDirectionLayout.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.wind_direction_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.wind_direction_font_size))
-        );
-        if(!service.getResources().getBoolean(R.bool.wind_direction)){windDirectionLayout.show=false;}
-
-        // Draw Wind Strength (ex. 7.4km/h)
-        SlptLinearLayout windStrengthLayout = new SlptLinearLayout();
-        SlptPictureView windStrengthText = new SlptPictureView();
-        windStrengthText.setStringPicture( this.weather.windStrength );
-        windStrengthLayout.add(windStrengthText);
-        windStrengthLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.uv_font_size),
-                service.getResources().getColor(R.color.uv_colour_slpt),
-                font
-        );
-        // Position based on screen on
-        windStrengthLayout.alignX = 2;
-        windStrengthLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.wind_strength_left);
-        if(!service.getResources().getBoolean(R.bool.wind_strength_left_align)) {
-            // If text is centered, set rectangle
-            windStrengthLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.wind_strength_font_size))
-            );
-            tmp_left = -320;
-        }
-        windStrengthLayout.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.wind_strength_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.wind_strength_font_size))
-        );
-        if(!service.getResources().getBoolean(R.bool.wind_strength)){windStrengthLayout.show=false;}
-
-        return Arrays.asList(new SlptViewComponent[]{temperatureLayout, weatherLayout, cityLayout, humidityLayout, uvLayout, windDirectionLayout, windStrengthLayout});
+        return Arrays.asList(new SlptViewComponent[]{temperatureLayout, weatherLayout});
     }
 }
