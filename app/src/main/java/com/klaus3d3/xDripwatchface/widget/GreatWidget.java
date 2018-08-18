@@ -236,7 +236,7 @@ public class GreatWidget extends AbstractWidget {
     public List<DataType> getDataTypes() {
         // For many refreshes
         //return Arrays.asList(DataType.BATTERY, DataType.STEPS, DataType.DISTANCE, DataType.TOTAL_DISTANCE, DataType.TIME,  DataType.CALORIES,  DataType.DATE,  DataType.HEART_RATE,  DataType.FLOOR, DataType.WEATHER);
-        return Arrays.asList(DataType.TIME, DataType.CUSTOM, DataType.ALARM, DataType.XDRIP);
+        return Arrays.asList(DataType.TIME,  DataType.XDRIP);
     }
 
     @Override
@@ -258,10 +258,7 @@ public class GreatWidget extends AbstractWidget {
 
                 break;
 
-                case ALARM:
-                // Update Alarm
-                this.alarmData = (Alarm) value;
-                break;
+
             case XDRIP:
                 // Update Xdrip
                 this.xdripData = (Xdrip) value;

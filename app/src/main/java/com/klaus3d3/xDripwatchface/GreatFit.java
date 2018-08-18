@@ -20,7 +20,7 @@ public class GreatFit extends AbstractWatchFace {
                 new MainClock(),
                 new GreatWidget(),
                 new WeatherWidget(),
-                //new HeartRateWidget(),
+                new HeartRateWidget(),
                 new CirclesWidget()
 
         );

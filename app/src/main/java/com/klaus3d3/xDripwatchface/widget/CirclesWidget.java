@@ -135,7 +135,7 @@ public class CirclesWidget extends AbstractWidget {
 
     @Override
     public List<DataType> getDataTypes() {
-        return Arrays.asList(DataType.BATTERY, DataType.STEPS, DataType.DISTANCE, DataType.TOTAL_DISTANCE);
+        return Arrays.asList(DataType.BATTERY, DataType.STEPS);
     }
 
     // Update steps variables

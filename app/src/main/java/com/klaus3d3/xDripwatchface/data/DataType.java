@@ -12,7 +12,7 @@ public enum DataType {
             return (E) new Steps((int) args[0], (int) args[1]);
         }
     },
-    DISTANCE(2) {
+  /*  DISTANCE(2) {
         @Override
         protected <E> E getValue(Object... args) {
             return (E) new TodayDistance((double) args[0]);
@@ -29,7 +29,7 @@ public enum DataType {
         protected <E> E getValue(Object... args) {
             return (E) new Calories((float) args[0]);
         }
-    },
+    },*/
     HEART_RATE(5) {
         @Override
         protected <E> E getValue(Object... args) {
@@ -56,13 +56,13 @@ public enum DataType {
         }
     },
 
-    FLOOR(12) {
+   /* FLOOR(12) {
         @Override
         protected <E> E getValue(Object... args){
             return (E) new TodayFloor ((int) args[0]);
         }
 
-    },
+    },*/
 
     WEATHER(8) {
         @Override
@@ -71,7 +71,7 @@ public enum DataType {
         }
     },
 
-    CUSTOM(13) {
+   /* CUSTOM(13) {
         protected <E> E getValue(Object... args) {
             return (E) new CustomData((String) args[0]);
         }
@@ -81,7 +81,7 @@ public enum DataType {
         protected <E> E getValue(Object... args) {
             return (E) new Alarm((String) args[0]);
         }
-    },
+    },*/
 
     XDRIP(15) {
         protected <E> E getValue(Object... args) {

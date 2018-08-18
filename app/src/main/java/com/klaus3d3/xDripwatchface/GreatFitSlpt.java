@@ -30,7 +30,7 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
                 new MainClock(),
                 new GreatWidget(),
                 new WeatherWidget(),
-                //new HeartRateWidget(),
+                new HeartRateWidget(),
                 new CirclesWidget()
         );
     }
@@ -71,7 +71,7 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
 
 
     protected void initWatchFaceConfig() {
-        Log.w("Klaus3d3", "Initiating watchface");
+        Log.w("xDripWatchface", "Initiating watchface");
 
         this.greatfitParameters = "";
         //this.getResources().getBoolean(R.bool.seconds)

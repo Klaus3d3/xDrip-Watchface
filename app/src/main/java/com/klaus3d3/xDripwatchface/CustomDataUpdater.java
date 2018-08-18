@@ -52,6 +52,7 @@ public class CustomDataUpdater extends Service {
     public static String watchface_timeago=TimeAgo.using(1);
     public static String watchface_graph="";
     private Intent SaveSettingIndent;
+    private int counter=0;
     AlarmManager alarmManager;
 
 
@@ -127,13 +128,15 @@ public class CustomDataUpdater extends Service {
                     //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, db.getLong("date")+1000*60, 1000*60*1,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
                     //alarmManager.set(AlarmManager.RTC_WAKEUP,db.getLong("date")+1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
                     savetoSettings(context);
-                    DataBundle hd = new DataBundle();
-
-                    hd.putInt("steps",StepsToSend);
-                    hd.putInt("heart_rate",HRToSend);
-                    hd.putInt("heart_acuracy",1);
-                    companionTransporter.send("Amazfit_Healthdata",hd);
-
+                    counter++;
+                    if (counter==5) {
+                        DataBundle hd = new DataBundle();
+                        hd.putInt("steps", StepsToSend);
+                        hd.putInt("heart_rate", HRToSend);
+                        hd.putInt("heart_acuracy", 1);
+                        companionTransporter.send("Amazfit_Healthdata", hd);
+                        counter=0;
+                    }
                                     }
                 if (action.equals(Constants.ACTION_XDRIP_OTHERALERT))
                 {
