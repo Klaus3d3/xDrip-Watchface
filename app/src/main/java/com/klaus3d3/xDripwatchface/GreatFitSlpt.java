@@ -3,9 +3,6 @@ package com.klaus3d3.xDripwatchface;
 import android.content.Context;
 import android.util.Log;
 
-import com.klaus3d3.xDripwatchface.widget.BatteryWidget;
-import com.klaus3d3.xDripwatchface.widget.CirclesWidget;
-import com.klaus3d3.xDripwatchface.widget.HeartRateWidget;
 import com.klaus3d3.xDripwatchface.widget.MainClock;
 import com.klaus3d3.xDripwatchface.widget.GreatWidget;
 import com.klaus3d3.xDripwatchface.widget.WeatherWidget;
@@ -29,9 +26,7 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
         super(
                 new MainClock(),
                 new GreatWidget(),
-                new WeatherWidget(),
-                new HeartRateWidget(),
-                new CirclesWidget()
+                new WeatherWidget()
         );
     }
 

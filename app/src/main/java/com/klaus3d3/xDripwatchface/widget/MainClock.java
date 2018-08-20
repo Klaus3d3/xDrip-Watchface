@@ -244,7 +244,7 @@ public class MainClock extends DigitalClockWidget {
         this.indicatorBool = service.getResources().getBoolean(R.bool.indicator);
         this.indicatorFlashBool = service.getResources().getBoolean(R.bool.flashing_indicator);
         this.indicatorFont = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
-        this.indicatorFont.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE));
+        this.indicatorFont.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE));
         this.indicatorFont.setTextSize(service.getResources().getDimension(R.dimen.indicator_font_size));
         this.indicatorFont.setColor(service.getResources().getColor(R.color.indicator_colour));
         this.indicatorFont.setTextAlign(Paint.Align.CENTER);
@@ -373,60 +373,10 @@ public class MainClock extends DigitalClockWidget {
         background.setImagePicture(SimpleFile.readFileFromAssets(service, "background_splt.png"));
 
         // Set font
-        Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE);
+        Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
 
-        // Draw hours
-        SlptLinearLayout hourLayout = new SlptLinearLayout();
-        if(service.getResources().getBoolean(R.bool.no_0_on_hour_first_digit)) {// No 0 on first digit
-            SlptViewComponent firstDigit = new SlptHourHView();
-            ((SlptNumView) firstDigit).setStringPictureArray(digitalNumsNo0);
-            hourLayout.add(firstDigit);
-            SlptViewComponent secondDigit = new SlptHourLView();
-            ((SlptNumView) secondDigit).setStringPictureArray(digitalNums);
-            hourLayout.add(secondDigit);
-        }else{
-            hourLayout.add(new SlptHourHView());
-            hourLayout.add(new SlptHourLView());
-            hourLayout.setStringPictureArrayForAll(this.digitalNums);
-        }
-        hourLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.hours_font_size),
-                service.getResources().getColor(R.color.hour_colour_slpt),
-                timeTypeFace
-        );
-        // Position based on screen on
-        hourLayout.alignX = 2;
-        hourLayout.alignY=0;
-        hourLayout.setRect(
-                (int) (2*service.getResources().getDimension(R.dimen.hours_left)+640),
-                (int) (service.getResources().getDimension(R.dimen.hours_font_size))
-        );
-        hourLayout.setStart(
-                -320,
-                (int) (service.getResources().getDimension(R.dimen.hours_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.hours_font_size))
-        );
 
-        // Draw minutes
-        SlptLinearLayout minuteLayout = new SlptLinearLayout();
-        minuteLayout.add(new SlptMinuteHView());
-        minuteLayout.add(new SlptMinuteLView());
-        minuteLayout.setStringPictureArrayForAll(this.digitalNums);
-        minuteLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.minutes_font_size),
-                service.getResources().getColor(R.color.minute_colour_slpt),
-                timeTypeFace
-        );
-        // Position based on screen on
-        minuteLayout.alignX = 2;
-        minuteLayout.alignY=0;
-        minuteLayout.setRect(
-                (int) (2*service.getResources().getDimension(R.dimen.minutes_left)+640),
-                (int) (service.getResources().getDimension(R.dimen.minutes_font_size))
-        );
-        minuteLayout.setStart(
-                -320,
-                (int) (service.getResources().getDimension(R.dimen.minutes_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.minutes_font_size))
-        );
+
 
         // Draw indicator
         SlptLinearLayout indicatorLayout = new SlptLinearLayout();
@@ -458,41 +408,6 @@ public class MainClock extends DigitalClockWidget {
         point.setStringPicture(".");
         SlptPictureView point2 = new SlptPictureView();
         point2.setStringPicture(".");
-
-        // Draw DATE (30.12.2018)
-        SlptLinearLayout dateLayout = new SlptLinearLayout();
-        dateLayout.add(new SlptDayHView());
-        dateLayout.add(new SlptDayLView());
-        dateLayout.add(point);//add .
-        dateLayout.add(new SlptMonthHView());
-        dateLayout.add(new SlptMonthLView());
-        dateLayout.add(point2);//add .
-        dateLayout.add(new SlptYear3View());
-        dateLayout.add(new SlptYear2View());
-        dateLayout.add(new SlptYear1View());
-        dateLayout.add(new SlptYear0View());
-        dateLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.date_font_size),
-                service.getResources().getColor(R.color.date_colour_slpt),
-                timeTypeFace);
-        // Position based on screen on
-        dateLayout.alignX = 2;
-        dateLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.date_left);
-        if(!service.getResources().getBoolean(R.bool.date_left_align)) {
-            // If text is centered, set rectangle
-            dateLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.date_font_size))
-            );
-            tmp_left = -320;
-        }
-        dateLayout.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.date_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.date_font_size))
-        );
-        // Hide if disabled
-        if(!service.getResources().getBoolean(R.bool.date)){dateLayout.show=false;}
 
 
         // Draw day of month
@@ -569,35 +484,6 @@ public class MainClock extends DigitalClockWidget {
         // Hide if disabled
         if(!service.getResources().getBoolean(R.bool.month)){monthLayout.show=false;}
 
-        // Draw year number
-        SlptLinearLayout yearLayout = new SlptLinearLayout();
-        yearLayout.add(new SlptYear3View());
-        yearLayout.add(new SlptYear2View());
-        yearLayout.add(new SlptYear1View());
-        yearLayout.add(new SlptYear0View());
-        yearLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.year_font_size),
-                service.getResources().getColor(R.color.year_colour_slpt),
-                timeTypeFace
-        );
-        // Position based on screen on
-        yearLayout.alignX = 2;
-        yearLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.year_left);
-        if(!service.getResources().getBoolean(R.bool.year_left_align)) {
-            // If text is centered, set rectangle
-            yearLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.year_font_size))
-            );
-            tmp_left = -320;
-        }
-        yearLayout.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.year_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.year_font_size))
-        );
-        // Hide if disabled
-        if(!service.getResources().getBoolean(R.bool.year)){yearLayout.show=false;}
 
 
         // Set day name font

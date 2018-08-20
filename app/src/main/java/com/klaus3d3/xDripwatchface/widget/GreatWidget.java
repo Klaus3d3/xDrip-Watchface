@@ -18,8 +18,11 @@ import android.util.Base64;
 import android.util.Log;
 
 
+import com.ingenic.iwds.slpt.view.sport.SlptPowerNumView;
+import com.ingenic.iwds.slpt.view.sport.SlptTodayStepNumView;
 import com.klaus3d3.xDripwatchface.CustomDataUpdater;
 import com.klaus3d3.xDripwatchface.data.Alarm;
+import com.klaus3d3.xDripwatchface.data.Battery;
 import com.klaus3d3.xDripwatchface.data.CustomData;
 import com.klaus3d3.xDripwatchface.data.HeartRate;
 import com.klaus3d3.xDripwatchface.data.Steps;
@@ -49,12 +52,13 @@ import com.ingenic.iwds.slpt.view.utils.SimpleFile;
 
 
 public class GreatWidget extends AbstractWidget {
-    private Time time;
-    private Steps steps;
+
     private HeartRate HR;
 
     private Alarm alarmData;
     private Xdrip xdripData;
+    private Battery batteryData;
+    private Steps stepsData;
 
     private TextPaint ampmPaint;
     private Paint PhoneBatteryPaint;
@@ -66,12 +70,10 @@ public class GreatWidget extends AbstractWidget {
     private Paint xdripgraphpaint;
     private TextPaint hourFont;
 
-    private String tempAMPM;
 
-    private String alarm;
     private Boolean alarmBool;
     private Boolean alarmAlignLeftBool;
-    private Boolean ampmBool;
+
     private Boolean ampmAlignLeftBool;
     private Boolean xdripBool;
     private Boolean xdripAlignLeftBool;
@@ -83,8 +85,7 @@ public class GreatWidget extends AbstractWidget {
 
     private Service mService;
 
-    private float ampmTop;
-    private float ampmLeft;
+
     private float alarmTop;
     private float alarmLeft;
     private float xdripTop;
@@ -92,6 +93,20 @@ public class GreatWidget extends AbstractWidget {
     private String[] digitalNums = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
     private String[] digitalNumsNo0 = {"", "1", "2", "3", "4", "5", "6", "7", "8", "9"};//no 0 on first digit
     private Bitmap graph;
+    private Paint batteryPaint;
+    private Paint stepsPaint;
+
+    private boolean batteryBool;
+    private boolean stepsBool;
+
+    private boolean batteryAlignLeftBool;
+    private boolean stepsAlignLeftBool;
+
+    private float batteryTextLeft;
+    private float batteryTextTop;
+    private float stepsTextLeft;
+    private float stepsTextTop;
+
 
 
 
@@ -103,13 +118,7 @@ public class GreatWidget extends AbstractWidget {
 
 
 
-        // Get AM/PM
-        this.time = getSlptTime();
-        this.tempAMPM = this.time.ampmStr;
 
-        // Get next alarm
-        this.alarmData = getAlarm();
-        this.alarm = this.alarmData.alarm; // ex: Fri 10:30
 
         // Get xdrip
         this.xdripData = getXdrip();
@@ -127,11 +136,7 @@ public class GreatWidget extends AbstractWidget {
 
 
 
-        // Get wifi status
-        //this.wifi = getWifi();
 
-        this.ampmLeft = service.getResources().getDimension(R.dimen.ampm_left);
-        this.ampmTop = service.getResources().getDimension(R.dimen.ampm_top);
         this.alarmLeft = service.getResources().getDimension(R.dimen.alarm_left);
         this.alarmTop = service.getResources().getDimension(R.dimen.alarm_top);
         this.xdripLeft = service.getResources().getDimension(R.dimen.xdrip_left);
@@ -141,7 +146,7 @@ public class GreatWidget extends AbstractWidget {
         this.background = service.getResources().getDrawable(R.drawable.background_red);
 
         this.background.setBounds(0, 220, 320, 300);
-        this.ampmBool = service.getResources().getBoolean(R.bool.ampm);
+
         this.ampmAlignLeftBool = service.getResources().getBoolean(R.bool.ampm_left_align);
         this.phonebatteryLeftBool=service.getResources().getBoolean(R.bool.battery_left_align);
         this.alarmBool = service.getResources().getBoolean(R.bool.alarm);
@@ -188,6 +193,27 @@ public class GreatWidget extends AbstractWidget {
         this.PhoneBatteryPaint.setTextAlign( (this.phonebatteryLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER );
         this.no_0_on_hour_first_digit = service.getResources().getBoolean(R.bool.no_0_on_hour_first_digit);
 
+        this.batteryBool = service.getResources().getBoolean(R.bool.battery);
+        this.stepsBool = service.getResources().getBoolean(R.bool.steps);
+
+        this.batteryAlignLeftBool = service.getResources().getBoolean(R.bool.battery_left_align);
+        this.stepsAlignLeftBool = service.getResources().getBoolean(R.bool.steps_left_align);
+        this.batteryTextLeft = service.getResources().getDimension(R.dimen.battery_text_left);
+        this.batteryTextTop = service.getResources().getDimension(R.dimen.battery_text_top);
+        this.stepsTextLeft = service.getResources().getDimension(R.dimen.steps_text_left);
+        this.stepsTextTop = service.getResources().getDimension(R.dimen.steps_text_top);
+
+        this.batteryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        this.batteryPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE));
+        this.batteryPaint.setTextSize(service.getResources().getDimension(R.dimen.steps_font_size));
+        this.batteryPaint.setColor(service.getResources().getColor(R.color.battery_colour));
+        this.batteryPaint.setTextAlign( (this.batteryAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER );
+
+        this.stepsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        this.stepsPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE));
+        this.stepsPaint.setTextSize(service.getResources().getDimension(R.dimen.steps_font_size));
+        this.stepsPaint.setColor(service.getResources().getColor(R.color.steps_colour));
+        this.stepsPaint.setTextAlign( (this.stepsAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER );
     }
 
 
@@ -221,7 +247,7 @@ public class GreatWidget extends AbstractWidget {
             this.xdripDatePaint.setColor(Color.parseColor(xdripData.color));
             if(xdripData.color.equals("WHITE"))this.background.draw(canvas);
 
-            if(xdripData.firstdata)canvas.drawBitmap(xdripData.sgv_graph, mService.getResources().getDimension(R.dimen.xdripgraph_left), mService.getResources().getDimension(R.dimen.xdripgraph_top), xdripgraphpaint);
+            if(xdripData.firstdata && xdripData.watchfacegraph_bool)canvas.drawBitmap(xdripData.sgv_graph, mService.getResources().getDimension(R.dimen.xdripgraph_left), mService.getResources().getDimension(R.dimen.xdripgraph_top), xdripgraphpaint);
             canvas.drawText(xdripData.sgv, xdripLeft, xdripTop, xdripsgvPaint);
             canvas.drawText(xdripData.delta, mService.getResources().getDimension(R.dimen.xdripdelta_left), mService.getResources().getDimension(R.dimen.xdripdelta_top), xdripDeltaPaint);
             canvas.drawText(TimeAgo.using(xdripData.timestamp), mService.getResources().getDimension(R.dimen.xdripdate_left), mService.getResources().getDimension(R.dimen.xdripdate_top), xdripDatePaint);
@@ -230,13 +256,26 @@ public class GreatWidget extends AbstractWidget {
         }
         canvas.drawText( (this.no_0_on_hour_first_digit)?hours+"":Util.formatTime(hours)+Util.formatTime(minutes), this.leftHour, this.topHour, this.hourFont);
 
+        // Show battery
+        if (this.batteryData != null && this.batteryBool) {
+            String text = String.format("%02d%%", this.batteryData.getLevel() * 100 / this.batteryData.getScale());
+            canvas.drawText(text, batteryTextLeft, batteryTextTop, batteryPaint);
+        }
+
+        // Show steps
+        if (this.stepsData != null && this.stepsBool) {
+            String text = String.format("%s", this.stepsData.getSteps());
+            canvas.drawText(text, stepsTextLeft, stepsTextTop, stepsPaint);
+        }
+
+
     }
 
     @Override
     public List<DataType> getDataTypes() {
         // For many refreshes
         //return Arrays.asList(DataType.BATTERY, DataType.STEPS, DataType.DISTANCE, DataType.TOTAL_DISTANCE, DataType.TIME,  DataType.CALORIES,  DataType.DATE,  DataType.HEART_RATE,  DataType.FLOOR, DataType.WEATHER);
-        return Arrays.asList(DataType.TIME,  DataType.XDRIP);
+        return Arrays.asList(DataType.TIME,  DataType.XDRIP, DataType.HEART_RATE, DataType.BATTERY, DataType.STEPS);
     }
 
     @Override
@@ -246,19 +285,18 @@ public class GreatWidget extends AbstractWidget {
 
         // On each Data updated
         switch (type) {
-            case TIME:
 
+            case BATTERY:
+                this.batteryData = (Battery) value;
+                break;
+            case TIME:
                 break;
             case STEPS:
-                this.steps = (Steps) value;
-
+                this.stepsData = (Steps) value;
                 break;
             case HEART_RATE:
                 this.HR = (HeartRate) value;
-
                 break;
-
-
             case XDRIP:
                 // Update Xdrip
                 this.xdripData = (Xdrip) value;
@@ -280,10 +318,7 @@ public class GreatWidget extends AbstractWidget {
 
 
 
-    public Alarm getAlarm() {
-        String str = Settings.System.getString(this.mService.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
-        return new Alarm(str);
-    }
+
 
     public Xdrip getXdrip(){
         String str = Settings.System.getString(this.mService.getContentResolver(), "xdrip");
@@ -299,16 +334,71 @@ public class GreatWidget extends AbstractWidget {
         this.mService = service;
 
 
-        this.ampmBool = service.getResources().getBoolean(R.bool.ampm);
+
         int tmp_left;
         Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
-        // Get AM/PM
-        this.time = getSlptTime();
-        this.tempAMPM = this.time.ampmStr;
+
+        // Show battery
+        SlptLinearLayout power = new SlptLinearLayout();
+        SlptPictureView percentage = new SlptPictureView();
+        percentage.setStringPicture("%");
+        power.add(new SlptPowerNumView());
+        power.add(percentage);
+        power.setTextAttrForAll(
+                service.getResources().getDimension(R.dimen.battery_font_size),
+                service.getResources().getColor(R.color.battery_colour_slpt),
+                timeTypeFace
+        );
+        // Position based on screen on
+        power.alignX = 2;
+        power.alignY = 0;
+        tmp_left = (int) service.getResources().getDimension(R.dimen.battery_text_left);
+        if(!service.getResources().getBoolean(R.bool.battery_left_align)) {
+            // If text is centered, set rectangle
+            power.setRect(
+                    (int) (2 * tmp_left + 640),
+                    (int) (service.getResources().getDimension(R.dimen.battery_font_size))
+            );
+            tmp_left = -320;
+        }
+        power.setStart(
+                tmp_left,
+                (int) (service.getResources().getDimension(R.dimen.battery_text_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.battery_font_size))
+        );
+        // Hide if disabled
+        if(!service.getResources().getBoolean(R.bool.battery)){power.show=false;}
+
+        // Show steps (today)
+        SlptLinearLayout steps = new SlptLinearLayout();
+        steps.add(new SlptTodayStepNumView());
+        steps.setTextAttrForAll(
+                service.getResources().getDimension(R.dimen.steps_font_size),
+                service.getResources().getColor(R.color.steps_colour_slpt),
+                timeTypeFace
+        );
+        // Position based on screen on
+        steps.alignX = 2;
+        steps.alignY = 0;
+        tmp_left = (int) service.getResources().getDimension(R.dimen.steps_text_left);
+        if(!service.getResources().getBoolean(R.bool.steps_left_align)) {
+            // If text is centered, set rectangle
+            steps.setRect(
+                    (int) (2 * tmp_left + 640),
+                    (int) (service.getResources().getDimension(R.dimen.steps_font_size))
+            );
+            tmp_left = -320;
+        }
+        steps.setStart(
+                (int) tmp_left,
+                (int) (service.getResources().getDimension(R.dimen.steps_text_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.steps_font_size))
+        );
+        // Hide if disabled
+        if(!service.getResources().getBoolean(R.bool.steps)){steps.show=false;}
+
+
 
         // Get next alarm
-        this.alarmData = getAlarm();
-        this.alarm = alarmData.alarm;
+
 
         // Get xdrip
         this.xdripData = getXdrip();
@@ -352,51 +442,50 @@ public class GreatWidget extends AbstractWidget {
 
 
 
-        // Draw XdripGraph
+    // Draw XdripGraph
 
-            SlptPictureView xdripGraphLayout = new SlptPictureView();
-        if(xdripData.firstdata) {
+    SlptPictureView xdripGraphLayout = new SlptPictureView();
+    if (xdripData.firstdata) {
         xdripGraphLayout.setImagePicture(BitmaptoByte(xdripData.sgv_graph));
-            // Position based on screen on
-            xdripGraphLayout.setStart((int) service.getResources().getDimension(R.dimen.xdripgraph_left), (int) service.getResources().getDimension(R.dimen.xdripgraph_top));
-
-        }
-        if (!xdripData.firstdata) xdripGraphLayout.show = false;
-        // Draw hours
-
-        SlptLinearLayout hourLayout = new SlptLinearLayout();
-        if(service.getResources().getBoolean(R.bool.no_0_on_hour_first_digit)) {// No 0 on first digit
-            SlptViewComponent firstDigit = new SlptHourHView();
-            ((SlptNumView) firstDigit).setStringPictureArray(digitalNumsNo0);
-            hourLayout.add(firstDigit);
-            SlptViewComponent secondDigit = new SlptHourLView();
-            ((SlptNumView) secondDigit).setStringPictureArray(digitalNums);
-            hourLayout.add(secondDigit);
-
-        }else{
-            hourLayout.add(new SlptHourHView());
-            hourLayout.add(new SlptHourLView());
-            hourLayout.add(new SlptMinuteHView());
-            hourLayout.add(new SlptMinuteLView());
-            hourLayout.setStringPictureArrayForAll(this.digitalNums);
-        }
-        hourLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.hours_font_size),
-                service.getResources().getColor(R.color.hour_colour_slpt),
-                timeTypeFace
-        );
         // Position based on screen on
-        hourLayout.alignX = 2;
-        hourLayout.alignY=0;
-        hourLayout.setRect(
-                (int) (2*service.getResources().getDimension(R.dimen.hours_left)+640),
-                (int) (service.getResources().getDimension(R.dimen.hours_font_size))
-        );
-        hourLayout.setStart(
-                -320,
-                (int) (service.getResources().getDimension(R.dimen.hours_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.hours_font_size))
-        );
+        xdripGraphLayout.setStart((int) service.getResources().getDimension(R.dimen.xdripgraph_left), (int) service.getResources().getDimension(R.dimen.xdripgraph_top));
 
+    }
+    if (!xdripData.firstdata || !xdripData.watchfacegraph_bool) xdripGraphLayout.show = false;
+    // Draw hours
+
+    SlptLinearLayout hourLayout = new SlptLinearLayout();
+    if (service.getResources().getBoolean(R.bool.no_0_on_hour_first_digit)) {// No 0 on first digit
+        SlptViewComponent firstDigit = new SlptHourHView();
+        ((SlptNumView) firstDigit).setStringPictureArray(digitalNumsNo0);
+        hourLayout.add(firstDigit);
+        SlptViewComponent secondDigit = new SlptHourLView();
+        ((SlptNumView) secondDigit).setStringPictureArray(digitalNums);
+        hourLayout.add(secondDigit);
+
+    } else {
+        hourLayout.add(new SlptHourHView());
+        hourLayout.add(new SlptHourLView());
+        hourLayout.add(new SlptMinuteHView());
+        hourLayout.add(new SlptMinuteLView());
+        hourLayout.setStringPictureArrayForAll(this.digitalNums);
+    }
+    hourLayout.setTextAttrForAll(
+            service.getResources().getDimension(R.dimen.hours_font_size),
+            service.getResources().getColor(R.color.hour_colour_slpt),
+            timeTypeFace
+    );
+    // Position based on screen on
+    hourLayout.alignX = 2;
+    hourLayout.alignY = 0;
+    hourLayout.setRect(
+            (int) (2 * service.getResources().getDimension(R.dimen.hours_left) + 640),
+            (int) (service.getResources().getDimension(R.dimen.hours_font_size))
+    );
+    hourLayout.setStart(
+            -320,
+            (int) (service.getResources().getDimension(R.dimen.hours_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.hours_font_size))
+    );
 
         // Draw Xdrip SGV
         SlptLinearLayout xdripSGVLayout = new SlptLinearLayout();
@@ -516,6 +605,6 @@ public class GreatWidget extends AbstractWidget {
         // Hide if disabled
         if(!service.getResources().getBoolean(R.bool.xdrip)){xdripDateLayout.show=false;}
 
-        return Arrays.asList(new SlptViewComponent[]{ background,xdripGraphLayout,hourLayout,xdripSGVLayout,xdripDeltaLayout,xdripDateLayout,Phonebattery,xdripStrikeSGVLayout});
+        return Arrays.asList(new SlptViewComponent[]{ background,xdripGraphLayout,hourLayout,xdripSGVLayout,xdripDeltaLayout,xdripDateLayout,Phonebattery,xdripStrikeSGVLayout,power,steps});
     }
 }

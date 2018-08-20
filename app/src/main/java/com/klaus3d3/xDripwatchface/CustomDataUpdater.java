@@ -51,6 +51,7 @@ public class CustomDataUpdater extends Service {
     public static String watchface_date="1";
     public static String watchface_timeago=TimeAgo.using(1);
     public static String watchface_graph="";
+    public static boolean watchfacegraph_bool=false;
     private Intent SaveSettingIndent;
     private int counter=0;
     AlarmManager alarmManager;
@@ -122,6 +123,7 @@ public class CustomDataUpdater extends Service {
                     watchface_sgv=db.getString("sgv");
                     watchface_battery=db.getString("phone_battery");
                     watchface_timeago=TimeAgo.using(db.getLong("date"));
+                    watchfacegraph_bool=db.getBoolean("watchface_graph");
                     if(db.getBoolean("ishigh")||db.getBoolean("islow")||db.getBoolean("isstale")){bad_value=true;}
                     else {bad_value=false;}
                     alarmManager.cancel(PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
@@ -232,6 +234,7 @@ public class CustomDataUpdater extends Service {
         json_data.put("color",watchface_color);
         json_data.put("strike",watchface_strike);
         json_data.put("bad_value",bad_value);
+        json_data.put("watchfacegraph_bool",String.valueOf(watchfacegraph_bool));
 
 
         Settings.System.putString(mcontext.getApplicationContext().getContentResolver(), "xdrip",json_data.toString());

@@ -22,9 +22,9 @@
 <dimen name="ampm_top">180px</dimen>
 
     <!-- indicator ":" -->
-<dimen name="indicator_font_size">90px</dimen>
-<dimen name="indicator_left">158px</dimen>
-<dimen name="indicator_top">197px</dimen>
+<dimen name="indicator_font_size">40px</dimen>
+<dimen name="indicator_left">159px</dimen>
+<dimen name="indicator_top">190px</dimen>
 
     <!-- battery -->
 <dimen name="battery_font_size">20px</dimen>

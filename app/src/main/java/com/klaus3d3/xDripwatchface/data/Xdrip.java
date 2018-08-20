@@ -26,7 +26,7 @@ public class Xdrip {
     public Bitmap sgv_graph;
     public Long timestamp=Long.valueOf(1);
     public Boolean firstdata=false;
-
+    public boolean watchfacegraph_bool=false;
 
     public Xdrip(String parmStr1) {
         this.JSONstr = parmStr1;
@@ -45,6 +45,7 @@ public class Xdrip {
                 this.sgv_graph=StringToBitMap(json_data.getString("sgv_graph"));
                 this.phonebattery=json_data.getString("phonebattery");
                 this.color=json_data.getString("color");
+                this.watchfacegraph_bool=Boolean.valueOf(json_data.getString("watchfacegraph_bool"));
                 if(Boolean.valueOf(json_data.getString("strike")))
                 this.strike=new String(new char[this.sgv.length()]).replace("\0", "─");
                 else this.strike="";
