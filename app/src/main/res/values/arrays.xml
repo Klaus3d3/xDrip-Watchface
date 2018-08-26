@@ -65,4 +65,7 @@
         <item>@string/Spanish</item>
         <item>@string/Turkish</item>
     </string-array>
+    <string-array name="spring_depend">
+        <item>com.klaus3d3.xDripwatchface/com.klaus3d3.xDripwatchface.springboard.NightscoutPage</item>
+    </string-array>
 </resources>

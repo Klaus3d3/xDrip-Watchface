@@ -74,7 +74,7 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
         this.context = this.getApplicationContext();
         this.needRefreshSecond = Util.needSlptRefreshSecond(this.context);
         if (this.needRefreshSecond) {
-            this.setClockPeriodSecond(false);
+            this.setClockPeriodSecond(true);
         }
     }
 }

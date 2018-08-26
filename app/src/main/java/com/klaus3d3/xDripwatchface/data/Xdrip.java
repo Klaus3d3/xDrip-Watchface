@@ -23,10 +23,9 @@ public class Xdrip {
     public String delta="--";
     public String timeago="--";
     public String phonebattery="--";
-    public Bitmap sgv_graph;
+    public String sgv_graph="false";
     public Long timestamp=Long.valueOf(1);
     public Boolean firstdata=false;
-    public boolean watchfacegraph_bool=false;
 
     public Xdrip(String parmStr1) {
         this.JSONstr = parmStr1;
@@ -42,10 +41,9 @@ public class Xdrip {
                 this.delta = json_data.getString("delta");
                 this.timestamp=Long.valueOf(json_data.getString("timestamp"));
                 this.timeago = json_data.getString("timeago");;
-                this.sgv_graph=StringToBitMap(json_data.getString("sgv_graph"));
+                this.sgv_graph=json_data.getString("sgv_graph");
                 this.phonebattery=json_data.getString("phonebattery");
                 this.color=json_data.getString("color");
-                this.watchfacegraph_bool=Boolean.valueOf(json_data.getString("watchfacegraph_bool"));
                 if(Boolean.valueOf(json_data.getString("strike")))
                 this.strike=new String(new char[this.sgv.length()]).replace("\0", "─");
                 else this.strike="";
@@ -68,15 +66,6 @@ public class Xdrip {
         return String.format("[Xdrip data info] Sting 1:%s", this.JSONstr);
     }
 
-    public Bitmap StringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
+
 
 }

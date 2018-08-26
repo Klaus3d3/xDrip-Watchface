@@ -23,7 +23,7 @@ public class xDripOtheralertActivity extends Activity {
     private Vibrator vibrator;
     private String Alarmtext_view;
     private String SGV_view;
-    private boolean eventBusConnected;
+
     TextView sgv;
     TextView Alarmtext;
 
@@ -51,7 +51,8 @@ public class xDripOtheralertActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xdripotheralertactivity);
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        context = this.getApplicationContext();
+
         registerReceiver(mMessageReceiver, new IntentFilter("close_alarm_dialog"));
                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
@@ -60,8 +61,10 @@ public class xDripOtheralertActivity extends Activity {
                     //WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
         Alarmtext_view =getIntent().getStringExtra("Alarmtext");
         SGV_view= getIntent().getStringExtra("sgv");
-        View sgv = findViewById(R.id.SGV);
-        View Alarmtext = findViewById(R.id.Alarm_text);
+        TextView sgv = (TextView) findViewById(R.id.SGV);
+        TextView  Alarmtext = (TextView)findViewById(R.id.Alarm_text);
+        sgv.setText(SGV_view);
+        Alarmtext.setText(Alarmtext_view);
 
     }
 
@@ -69,9 +72,7 @@ public class xDripOtheralertActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        sgv.setText(SGV_view);
-        Alarmtext.setText(Alarmtext_view);
-
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrate();
 
     }

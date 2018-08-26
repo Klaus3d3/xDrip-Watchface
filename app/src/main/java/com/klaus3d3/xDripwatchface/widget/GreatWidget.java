@@ -23,7 +23,7 @@ import com.ingenic.iwds.slpt.view.sport.SlptTodayStepNumView;
 import com.klaus3d3.xDripwatchface.CustomDataUpdater;
 import com.klaus3d3.xDripwatchface.data.Alarm;
 import com.klaus3d3.xDripwatchface.data.Battery;
-import com.klaus3d3.xDripwatchface.data.CustomData;
+
 import com.klaus3d3.xDripwatchface.data.HeartRate;
 import com.klaus3d3.xDripwatchface.data.Steps;
 import com.klaus3d3.xDripwatchface.data.Xdrip;
@@ -55,7 +55,7 @@ public class GreatWidget extends AbstractWidget {
 
     private HeartRate HR;
 
-    private Alarm alarmData;
+
     private Xdrip xdripData;
     private Battery batteryData;
     private Steps stepsData;
@@ -92,7 +92,6 @@ public class GreatWidget extends AbstractWidget {
     private float xdripLeft;
     private String[] digitalNums = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
     private String[] digitalNumsNo0 = {"", "1", "2", "3", "4", "5", "6", "7", "8", "9"};//no 0 on first digit
-    private Bitmap graph;
     private Paint batteryPaint;
     private Paint stepsPaint;
 
@@ -216,7 +215,16 @@ public class GreatWidget extends AbstractWidget {
         this.stepsPaint.setTextAlign( (this.stepsAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER );
     }
 
-
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 
 
     public byte[] BitmaptoByte(Bitmap bitmap) {
@@ -231,10 +239,7 @@ public class GreatWidget extends AbstractWidget {
     public void draw(Canvas canvas, float width, float height, float centerX, float centerY, int minutes, int hours) {
 
 
-        // Draw Alarm, if enabled
-        if(this.alarmBool) {
-            canvas.drawText(this.alarmData.alarm, alarmLeft, alarmTop, alarmPaint);
-        }
+
 
             // Draw Phonebattery
             canvas.drawText(xdripData.phonebattery+"%", mService.getResources().getDimension(R.dimen.phonebattery_text_left), mService.getResources().getDimension(R.dimen.phonebattery_text_top), PhoneBatteryPaint);
@@ -247,7 +252,7 @@ public class GreatWidget extends AbstractWidget {
             this.xdripDatePaint.setColor(Color.parseColor(xdripData.color));
             if(xdripData.color.equals("WHITE"))this.background.draw(canvas);
 
-            if(xdripData.firstdata && xdripData.watchfacegraph_bool)canvas.drawBitmap(xdripData.sgv_graph, mService.getResources().getDimension(R.dimen.xdripgraph_left), mService.getResources().getDimension(R.dimen.xdripgraph_top), xdripgraphpaint);
+            if(xdripData.firstdata && !xdripData.sgv_graph.equals("false"))canvas.drawBitmap(StringToBitMap(xdripData.sgv_graph), mService.getResources().getDimension(R.dimen.xdripgraph_left), mService.getResources().getDimension(R.dimen.xdripgraph_top), xdripgraphpaint);
             canvas.drawText(xdripData.sgv, xdripLeft, xdripTop, xdripsgvPaint);
             canvas.drawText(xdripData.delta, mService.getResources().getDimension(R.dimen.xdripdelta_left), mService.getResources().getDimension(R.dimen.xdripdelta_top), xdripDeltaPaint);
             canvas.drawText(TimeAgo.using(xdripData.timestamp), mService.getResources().getDimension(R.dimen.xdripdate_left), mService.getResources().getDimension(R.dimen.xdripdate_top), xdripDatePaint);
@@ -300,7 +305,7 @@ public class GreatWidget extends AbstractWidget {
             case XDRIP:
                 // Update Xdrip
                 this.xdripData = (Xdrip) value;
-                this.graph=xdripData.sgv_graph;
+
                // Log.w("DinoDevs-GreatFit", type.toString()+" => "+value.toString() );
                 break;
 
@@ -446,12 +451,15 @@ public class GreatWidget extends AbstractWidget {
 
     SlptPictureView xdripGraphLayout = new SlptPictureView();
     if (xdripData.firstdata) {
-        xdripGraphLayout.setImagePicture(BitmaptoByte(xdripData.sgv_graph));
-        // Position based on screen on
-        xdripGraphLayout.setStart((int) service.getResources().getDimension(R.dimen.xdripgraph_left), (int) service.getResources().getDimension(R.dimen.xdripgraph_top));
+        if (!xdripData.sgv_graph.equals("false"))
+            xdripGraphLayout.setImagePicture(BitmaptoByte(StringToBitMap(xdripData.sgv_graph)));
+        else
+            xdripGraphLayout.setImagePicture(SimpleFile.readFileFromAssets(service, "empty_graph.png"));
+            // Position based on screen on
+            xdripGraphLayout.setStart((int) service.getResources().getDimension(R.dimen.xdripgraph_left), (int) service.getResources().getDimension(R.dimen.xdripgraph_top));
 
     }
-    if (!xdripData.firstdata || !xdripData.watchfacegraph_bool) xdripGraphLayout.show = false;
+    if (!xdripData.firstdata) xdripGraphLayout.show = false;
     // Draw hours
 
     SlptLinearLayout hourLayout = new SlptLinearLayout();

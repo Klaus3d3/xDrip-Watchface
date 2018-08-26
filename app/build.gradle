@@ -27,11 +27,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation files('libs/HuamiWatchFacesWOS2.8.jar')
     implementation 'com.github.marlonlom:timeago:3.0.2'
-
+    implementation files('libs/SpringboardPluginLib.jar')
 
 }
 

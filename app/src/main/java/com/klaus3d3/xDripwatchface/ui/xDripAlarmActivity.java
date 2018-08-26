@@ -28,7 +28,6 @@ public class xDripAlarmActivity extends Activity {
     private Vibrator vibrator;
     private String Alarmtext_view;
     private String SGV_view;
-    private boolean eventBusConnected;
     private int snooze_time;
     private int default_snooze;
     private boolean snooze;

@@ -403,11 +403,7 @@ public class MainClock extends DigitalClockWidget {
         if(!service.getResources().getBoolean(R.bool.indicator)){indicatorLayout.show=false;}
 
 
-        // Set . string
-        SlptPictureView point = new SlptPictureView();
-        point.setStringPicture(".");
-        SlptPictureView point2 = new SlptPictureView();
-        point2.setStringPicture(".");
+       timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE);
 
 
         // Draw day of month
