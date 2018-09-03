@@ -1,13 +1,16 @@
 package com.klaus3d3.xDripwatchface.settings;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.klaus3d3.xDripwatchface.widget.MainClock;
+import com.klaus3d3.xDripwatchface.Constants;
+import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.klaus3d3.xDripwatchface.R;
 
 // BY GREATAPO
@@ -29,14 +32,17 @@ public class Settings extends FragmentActivity {
         setContentView(R.layout.settings);
 
         // Load settings
-        this.settings = new APsettings(MainClock.class.getName(), this.getApplicationContext());
+        try {
+            this.settings = new APsettings(Constants.PACKAGE_NAME, this.getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY));
+        }catch(Exception e){
+            Log.e("xDripwidget",e.toString());}
 
         // Save button
         TextView about_button = (TextView) findViewById(R.id.about);
         about_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Made by GreatApo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Made by GreatApo & Klaus3d3", Toast.LENGTH_SHORT).show();
             }
         });
 

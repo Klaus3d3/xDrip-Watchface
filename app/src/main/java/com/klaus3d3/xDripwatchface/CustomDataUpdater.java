@@ -5,18 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 
-
-import android.graphics.Bitmap;
 import android.os.IBinder;
 
 import android.provider.Settings;
-import android.util.Base64;
 import android.util.Log;
 
 import com.huami.watch.transport.DataTransportResult;
-import com.klaus3d3.xDripwatchface.Constants;
 
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
@@ -31,15 +26,16 @@ import android.app.PendingIntent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.klaus3d3.xDripwatchface.ui.xDripOtheralertActivity;
 import com.klaus3d3.xDripwatchface.ui.xDripAlarmActivity;
-
-import java.io.ByteArrayOutputStream;
+import com.klaus3d3.xDripwatchface.widget.MainClock;
 
 
 public class CustomDataUpdater extends Service {
     private Context context;
-    private static CustomDataUpdater instance = null;
+
 
 
     private TransporterClassic companionTransporter;
@@ -59,32 +55,28 @@ public class CustomDataUpdater extends Service {
     public static String SensorBattery="";
     public static String HardwareSourceInfo="";
     public static String CollectionInfo="";
+    private com.klaus3d3.xDripwatchface.settings.APsettings settings;
 
     private Intent SaveSettingIndent;
+
     private int counter=0;
     AlarmManager alarmManager;
+    Context Settingsctx;
 
-    public static boolean isServiceCreated() {
-        try {
-            // If instance was not cleared but the service was destroyed an Exception will be thrown
-            return instance != null && instance.ping();
-        } catch (NullPointerException e) {
-            // destroyed/not-started
-            return false;
-        }
-    }
-    private boolean ping() {
-        return true;
-    }
 
     @Override
     public void onCreate() {
-        Log.d("CustomDataUpdater", "Service Created");
+        super.onCreate();
+        Log.w("CustomDataUpdater", "Service Created");
         alarmManager= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         context=getApplicationContext();
         this.SaveSettingIndent= new Intent(this, TimeTick.class);
         registerReceiver(snoozeReceiver, new IntentFilter("snooze_alarm_intent"));
-        instance = this;
+       try {
+            Settingsctx=getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
+        }catch(Exception e){Log.e("xDripWidget",e.toString());}
+
+
     }
 
 
@@ -95,14 +87,16 @@ public class CustomDataUpdater extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("CustomDataUpdater", "Service started");
+        this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
+        settings.setBoolean("CustomDataUpdaterIsRunning",true);
+
+
+        Log.w("CustomDataUpdater", "Service started");
         if (companionTransporter == null) {
             initTransporter();
         }
-        //Settings.System.putString(context.getContentResolver(), "xdrip", "{\"sgv_graph\":\"" + watchface_graph + "\",\"sgv\":\"" + watchface_sgv + "\",\"delta\":\"" + watchface_delta + "\",\"updatetime\":\"" + watchface_date+ "\",\"phonebattery\":\""+watchface_battery+"\",\"timeago\":\""+watchface_timeago+"\"}");//default
-        //savetoSettings(context);
-        return START_STICKY;
-        //return super.onStartCommand(intent, flags, startId);
+                return START_STICKY;
+
     }
 
 
@@ -128,7 +122,7 @@ public class CustomDataUpdater extends Service {
             public void onDataReceived(TransportDataItem transportDataItem) {
                 String action = transportDataItem.getAction();
                 DataBundle db = transportDataItem.getData();
-                Log.d("CustomDataUpdater", "action: " + action + ", module: " + transportDataItem.getModuleName());
+                Log.e("CustomDataUpdater", "action: " + action + ", module: " + transportDataItem.getModuleName());
 
                 if (action == null) {
                     return;
@@ -155,14 +149,19 @@ public class CustomDataUpdater extends Service {
                     alarmManager.set(AlarmManager.RTC_WAKEUP,db.getLong("date")+1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
                     savetoSettings(context);
                     Intent WidgetUpdateIntent = new Intent("WidgetUpdateIntent");
+
                     sendBroadcast(WidgetUpdateIntent);
 
 
-                        DataBundle hd = new DataBundle();
-                        hd.putInt("steps", StepsToSend);
-                        hd.putInt("heart_rate", HRToSend);
-                        hd.putInt("heart_acuracy", 1);
-                        companionTransporter.send("Amazfit_Healthdata", hd);
+
+
+            if(settings.getBoolean("HealthDataSwitch",false)){
+                    DataBundle hd = new DataBundle();
+                    hd.putInt("steps", StepsToSend);
+                    hd.putInt("heart_rate", HRToSend);
+                    hd.putInt("heart_acuracy", 1);
+                    companionTransporter.send("Amazfit_Healthdata", hd);}
+
                         }
                 if (action.equals(Constants.ACTION_XDRIP_OTHERALERT))
                 {
@@ -205,7 +204,7 @@ public class CustomDataUpdater extends Service {
         });
 
         if (!companionTransporter.isTransportServiceConnected()) {
-            Log.d("CustomDataUpdater", "connecting companionTransporter to transportService");
+            Log.w("CustomDataUpdater", "connecting companionTransporter to transportService");
             companionTransporter.connectTransportService();
         }
 
@@ -261,7 +260,7 @@ public class CustomDataUpdater extends Service {
         Settings.System.putString(mcontext.getApplicationContext().getContentResolver(), "xdrip",json_data.toString());
 
     }catch (JSONException e) {
-        Log.d("CustomDataUpdater", e.toString());
+        Log.w("CustomDataUpdater", e.toString());
     }
 
 }
@@ -269,18 +268,22 @@ public class CustomDataUpdater extends Service {
 
     @Override
     public void onDestroy() {
-            instance = null;
+
             unregisterReceiver(snoozeReceiver);
             companionTransporter.disconnectTransportService();
             unregisterComponentCallbacks(this);
             companionTransporter.removeAllChannelListeners();
             companionTransporter.removeAllDataListeners();
             companionTransporter.removeAllServiceConnectionListeners();
+        this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
+        settings.setBoolean("CustomDataUpdaterIsRunning",false);
+        Log.w("CustomDataUpdater", "Service stopped");
 
-          this.stopSelf();
-        Log.d("CustomDataUpdater", "Service stopped");
+
         super.onDestroy();
     }
+
+
 
 }
 

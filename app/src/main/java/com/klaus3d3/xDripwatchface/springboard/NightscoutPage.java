@@ -9,23 +9,25 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.Layout;
+import android.support.v4.view.ScrollingView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ScrollView;
 
-
+import com.klaus3d3.xDripwatchface.Constants;
+import com.klaus3d3.xDripwatchface.settings.APsettings;
+import com.klaus3d3.xDripwatchface.widget.MainClock;
 import com.klaus3d3.xDripwatchface.R;
 import com.klaus3d3.xDripwatchface.CustomDataUpdater;
-
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.klaus3d3.xDripwatchface.ui.xDripSnoozePickerActivity;
 
 
 import org.json.JSONObject;
@@ -43,25 +45,49 @@ public class NightscoutPage extends AbstractPlugin {
     private boolean mHasActive = false;
     private ISpringBoardHostStub mHost = null;
 
-
+    private com.klaus3d3.xDripwatchface.settings.APsettings settings;
+    Button GraphButton;
+    Button InfoButton;
+    Button SetupButton;
+    Button DataEntryButton;
+    Button LogButton;
+    Switch ServiceSwitch ;
+    Switch HealthDataSwitch;
+    Context Settingsctx;
 
     //Much like a fragment, getView returns the content view of the page. You can set up your layout here
+
     @Override
     public View getView(Context paramContext) {
 
         initIcons(paramContext);
         mContext = paramContext;
-        sContext = mContext.getApplicationContext();
-        mView = LayoutInflater.from(paramContext).inflate(R.layout.nightscoout_page, null);
-        Button GraphButton = (Button) mView.findViewById(R.id.GraphButton);
-        GraphButton.setOnClickListener(GraphButtonListener);
-        Button InfoButton = (Button) mView.findViewById(R.id.InfoButton);
-        InfoButton.setOnClickListener(InfoButtonListener);
-        Button SetupButton = (Button) mView.findViewById(R.id.SetupUpbutton);
-        SetupButton.setOnClickListener(SetupButtonListener);
-        Switch ServiceSwitch = (Switch) mView.findViewById(R.id.ServiceSwitch);
+        try {
+        Settingsctx=mHost.getHostWindow().getContext().getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
+        }catch(Exception e){Log.e("xDripWidget",e.toString());}
 
-        ServiceSwitch.setOnCheckedChangeListener(ServiceSwitchListener);
+
+
+
+        mView = LayoutInflater.from(paramContext).inflate(R.layout.nightscoout_page, null);
+        GraphButton = (Button) mView.findViewById(R.id.GraphButton);
+        GraphButton.setOnClickListener(GraphButtonListener);
+        InfoButton = (Button) mView.findViewById(R.id.InfoButton);
+        InfoButton.setOnClickListener(InfoButtonListener);
+        SetupButton = (Button) mView.findViewById(R.id.SetupUpbutton);
+        SetupButton.setOnClickListener(SetupButtonListener);
+
+        DataEntryButton = (Button) mView.findViewById(R.id.DataEntryButton);
+        DataEntryButton.setOnClickListener(DataEntryButtonListener);
+        LogButton = (Button) mView.findViewById(R.id.LogButton);
+        LogButton.setOnClickListener(LogButtonListener);
+        ServiceSwitch = (Switch) mView.findViewById(R.id.ServiceSwitch);
+        ServiceSwitch.setOnClickListener(ServiceSwitchListener);
+        HealthDataSwitch = (Switch) mView.findViewById(R.id.HealthDataSwitch);
+        HealthDataSwitch.setOnClickListener(HealthDataSwitchListener);
+
+
+
         return mView;
     }
 
@@ -89,9 +115,12 @@ public class NightscoutPage extends AbstractPlugin {
     @Override
     public void onActive(Bundle paramBundle) {
 
-
-        //refreshView();
         super.onActive(paramBundle);
+        this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
+        ServiceSwitch.setChecked(settings.get("CustomDataUpdaterIsRunning",false));
+        HealthDataSwitch.setChecked(settings.get("HealthDataSwitch",false));
+        HealthDataSwitch.setEnabled(ServiceSwitch.isChecked());
+
         //Check if the view is already inflated (reloading)
         if ((!this.mHasActive) && (this.mView != null)) {
             //It is, simply refresh
@@ -100,6 +129,7 @@ public class NightscoutPage extends AbstractPlugin {
 
             //Store active state
         this.mHasActive = true;
+
     }
 
     public Bitmap StringToBitMap(String encodedString) {
@@ -169,63 +199,152 @@ public class NightscoutPage extends AbstractPlugin {
         Log.w("xDripWidget", "onBindHost");
         mHost = paramISpringBoardHostStub;
         mHost.getHostWindow().getContext().registerReceiver(mMessageReceiver, new IntentFilter("WidgetUpdateIntent"));
-
-
-
+        //Log.w("xDripWidget onBindHost", xDripwatchface.get().toString());
     }
-    private View.OnClickListener GraphButtonListener = new View.OnClickListener() {
+
+
+
+    private View.OnClickListener ServiceSwitchListener = new View.OnClickListener() {
         public void onClick(View v) {
-          View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
-          View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
-          View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-          InfoLayout.setVisibility(View.INVISIBLE);
-          SetupLayout.setVisibility(View.INVISIBLE);
-          GraphLayout.setVisibility(View.VISIBLE);
 
-        }
-    };
-
-
-    private Switch.OnCheckedChangeListener ServiceSwitchListener = new Switch.OnCheckedChangeListener() {
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             // do something, the isChecked will be
-            // true if the switch is in the On position
-
-            if (isChecked){
+            if (ServiceSwitch.isChecked()){
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
                 mHost.getHostWindow().getContext().startService(TransportIntent);
+                HealthDataSwitch.setEnabled(true);
+                HealthDataSwitch.setChecked(settings.get("HealthDataSwitch",false));
+
             }
             else{
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
-                mHost.getHostWindow().getContext().stopService(TransportIntent);}
+                mHost.getHostWindow().getContext().stopService(TransportIntent);
+                HealthDataSwitch.setEnabled(false);
+
+                }
+        }
+    };
+
+    private View.OnClickListener HealthDataSwitchListener = new View.OnClickListener() {
+        public void onClick(View v) {
+                  settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
+
+                  settings.set("HealthDataSwitch",HealthDataSwitch.isChecked());
+
+
+
+
+        }};
+
+    private View.OnClickListener GraphButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+
+
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            didTapButton(GraphButton);
+            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
+            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
+            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
+            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
+            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+            GraphLayout.setVisibility(View.VISIBLE);
+            InfoLayout.setVisibility(View.INVISIBLE);
+            DataEntryLayout.setVisibility(View.INVISIBLE);
+            SetupLayout.setVisibility(View.INVISIBLE);
+            LogLayout.setVisibility(View.INVISIBLE);
+        }
+    };
+    private View.OnClickListener SetupButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            didTapButton(SetupButton);
+            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
+            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
+            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
+            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
+            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+            GraphLayout.setVisibility(View.INVISIBLE);
+            InfoLayout.setVisibility(View.INVISIBLE);
+            DataEntryLayout.setVisibility(View.INVISIBLE);
+            SetupLayout.setVisibility(View.VISIBLE);
+            LogLayout.setVisibility(View.INVISIBLE);
+        }
+    };
+    private View.OnClickListener LogButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+
+
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            didTapButton(LogButton);
+            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
+            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
+            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
+            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
+            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+            GraphLayout.setVisibility(View.INVISIBLE);
+            InfoLayout.setVisibility(View.INVISIBLE);
+            DataEntryLayout.setVisibility(View.INVISIBLE);
+            SetupLayout.setVisibility(View.INVISIBLE);
+            LogLayout.setVisibility(View.VISIBLE);
 
         }
     };
 
-
-    private View.OnClickListener SetupButtonListener = new View.OnClickListener() {
+    private View.OnClickListener DataEntryButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
+
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
+            didTapButton(DataEntryButton);
             View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
             View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
             View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-            InfoLayout.setVisibility(View.INVISIBLE);
+            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
+            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
             GraphLayout.setVisibility(View.INVISIBLE);
-            SetupLayout.setVisibility(View.VISIBLE);
-
+            InfoLayout.setVisibility(View.INVISIBLE);
+            DataEntryLayout.setVisibility(View.VISIBLE);
+            SetupLayout.setVisibility(View.INVISIBLE);
+            LogLayout.setVisibility(View.INVISIBLE);
 
         }
     };
     private View.OnClickListener InfoButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
+
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            didTapButton(InfoButton);
             View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
             View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
             View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-            SetupLayout.setVisibility(View.INVISIBLE);
+            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
+            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
             GraphLayout.setVisibility(View.INVISIBLE);
             InfoLayout.setVisibility(View.VISIBLE);
-
+            DataEntryLayout.setVisibility(View.INVISIBLE);
+            SetupLayout.setVisibility(View.INVISIBLE);
+            LogLayout.setVisibility(View.INVISIBLE);
         }
     };
 
@@ -233,11 +352,17 @@ public class NightscoutPage extends AbstractPlugin {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.w("NightscoutPage", "Received update");
+
+
+            Log.w("xDripWidget", "Received update");
             refreshView();
         }
 
     };
+    public void didTapButton(Button button) {
+        final Animation myAnim = AnimationUtils.loadAnimation(mView.getContext(), R.anim.bounce);
+        button.startAnimation(myAnim);
+    }
 
     //Called when the page is destroyed completely (in app mode). Same as the onDestroy method of an activity
     @Override
@@ -273,10 +398,7 @@ public class NightscoutPage extends AbstractPlugin {
     @Override
     public void onResume() {
         Log.w("xDripWidget","onResume");
-        Switch ServiceSwitch = (Switch) mView.findViewById(R.id.ServiceSwitch);
 
-        if (CustomDataUpdater.isServiceCreated())ServiceSwitch.setChecked(true);
-        else ServiceSwitch.setChecked(false);
         refreshView();
         super.onResume();
         //Check if view already loaded

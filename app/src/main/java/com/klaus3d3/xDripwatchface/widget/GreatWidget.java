@@ -114,16 +114,8 @@ public class GreatWidget extends AbstractWidget {
         Log.e("GreatWidget", "init");
         // This service
         this.mService = service;
-
-
-
-
-
-        // Get xdrip
+ // Get xdrip
         this.xdripData = getXdrip();
-
-
-
         this.leftHour = service.getResources().getDimension(R.dimen.hours_left);
         this.topHour = service.getResources().getDimension(R.dimen.hours_top);
         this.hourFont = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
@@ -131,11 +123,6 @@ public class GreatWidget extends AbstractWidget {
         this.hourFont.setTextSize(service.getResources().getDimension(R.dimen.hours_font_size));
         this.hourFont.setColor(service.getResources().getColor(R.color.hour_colour));
         this.hourFont.setTextAlign(Paint.Align.CENTER);
-
-
-
-
-
         this.alarmLeft = service.getResources().getDimension(R.dimen.alarm_left);
         this.alarmTop = service.getResources().getDimension(R.dimen.alarm_top);
         this.xdripLeft = service.getResources().getDimension(R.dimen.xdrip_left);

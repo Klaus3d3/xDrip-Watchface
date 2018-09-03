@@ -7,47 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/SetupLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
-        android:visibility="invisible">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Switch
-                    android:id="@+id/ServiceSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal|center"
-                    android:text="Background Service"
-                    android:textAlignment="textEnd"
-                    android:textSize="11sp" />
-
-                <Switch
-                    android:id="@+id/HealthDataSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal|center"
-                    android:text="Send Health Data to xDrip+"
-                    android:textAlignment="textEnd"
-                    android:textSize="11sp" />
-
-            </LinearLayout>
-        </ScrollView>
-
-    </FrameLayout>
-
     <TextView
         android:id="@+id/nightscout_sgv_textview"
         android:layout_width="match_parent"
@@ -55,26 +14,16 @@
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="false"
         android:layout_centerVertical="false"
+        android:layout_marginTop="-3dp"
         android:layout_weight="1"
         android:clickable="true"
         android:gravity="center"
-        android:text="℗000->"
+        android:text="000->"
         android:textAlignment="center"
         android:textColor="@android:color/holo_orange_dark"
         android:textScaleX="1"
         android:textSize="38sp"
         android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/nightscout_delta_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="false"
-        android:layout_marginTop="38dp"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:text="+0,0mg/dl"
-        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/nightscout_date_textview"
@@ -83,17 +32,198 @@
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="false"
         android:layout_centerVertical="false"
-        android:layout_marginTop="53dp"
+        android:layout_marginTop="50dp"
         android:layout_weight="1"
         android:gravity="center_horizontal"
         android:text="Date..waiting for data"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/nightscout_delta_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="35dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="+0,0mg/dl"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="70dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/GraphButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corners_button_widget_pressed"
+            android:text="Graph"
+            android:textSize="9sp" />
+
+        <Button
+            android:id="@+id/DataEntryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:text="Entry"
+            android:textSize="9sp" />
+
+        <Button
+            android:id="@+id/InfoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:text="Info"
+            android:textSize="9sp" />
+
+        <Button
+            android:id="@+id/LogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:text="LOG"
+            android:textSize="9sp" />
+
+        <Button
+            android:id="@+id/SetupUpbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:text="Setup"
+            android:textSize="9sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/DataEntryLayout"
+        android:layout_width="320dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="105dp"
+        android:layout_weight="1"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="To Do" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/LogLayout"
+        android:layout_width="320dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="105dp"
+        android:layout_weight="1"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="To Do" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/GraphLayout"
+        android:layout_width="320dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|left"
+        android:layout_marginTop="105dp"
+        android:layout_weight="1"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/SGVGraph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="false"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/SetupLayout"
+        android:layout_width="320dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="105dp"
+        android:layout_weight="1"
+        android:visibility="invisible">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <Switch
+                    android:id="@+id/ServiceSwitch"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="-10dp"
+                    android:gravity="center"
+                    android:switchMinWidth="50dp"
+                    android:text="Background Service"
+                    android:textAllCaps="false"
+                    android:textScaleX="1"
+                    android:textSize="11sp"
+                    android:translationX="20dp" /><![CDATA[/>
+
+
+
+                ]]>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <Switch
+                    android:id="@+id/HealthDataSwitch"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="-10dp"
+                    android:gravity="center"
+                    android:switchMinWidth="50dp"
+                    android:text="Send Health Data to xDrip+"
+                    android:textSize="11sp"
+                    android:translationX="20dp" /><![CDATA[
+
+                />
+
+            ]]>
+            </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
+
     <FrameLayout
         android:id="@+id/InfoLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:layout_width="320dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="105dp"
+        android:layout_weight="1"
         android:visibility="invisible">
 
         <ScrollView
@@ -130,61 +260,6 @@
                     android:gravity="center_horizontal" />
             </LinearLayout>
         </ScrollView>
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="70dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/GraphButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Graph"
-            android:textSize="8sp" />
-
-        <Button
-            android:id="@+id/InfoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Info"
-            android:textSize="8sp" />
-
-        <Button
-            android:id="@+id/DataEntryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Entry"
-            android:textSize="8sp" />
-
-        <Button
-            android:id="@+id/SetupUpbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Setup"
-            android:textSize="8sp" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/GraphLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp">
-
-        <ImageView
-            android:id="@+id/SGVGraph"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="false"
-            android:layout_weight="1" />
 
     </FrameLayout>
 

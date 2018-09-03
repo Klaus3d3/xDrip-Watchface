@@ -1,7 +1,11 @@
 package com.klaus3d3.xDripwatchface;
 
+import android.content.Intent;
+import android.util.Log;
+
 import com.huami.watch.watchface.AbstractSlptClock;
 
+import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.klaus3d3.xDripwatchface.widget.MainClock;
 import com.klaus3d3.xDripwatchface.widget.GreatWidget;
 import com.klaus3d3.xDripwatchface.widget.WeatherWidget;
@@ -12,6 +16,9 @@ import com.klaus3d3.xDripwatchface.widget.WeatherWidget;
  */
 
 public class GreatFit extends AbstractWatchFace {
+    private Intent TransportIntent;
+    private APsettings settings;
+
 
     public GreatFit() {
         super(
@@ -27,4 +34,6 @@ public class GreatFit extends AbstractWatchFace {
     protected Class<? extends AbstractSlptClock> slptClockClass() {
         return GreatFitSlpt.class;
     }
+
+
 }

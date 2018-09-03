@@ -17,9 +17,11 @@ import java.util.LinkedList;
 import android.os.PowerManager;
 import com.klaus3d3.xDripwatchface.data.DataType;
 import com.klaus3d3.xDripwatchface.data.MultipleWatchDataListenerAdapter;
+import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.klaus3d3.xDripwatchface.widget.AnalogClockWidget;
 import com.klaus3d3.xDripwatchface.widget.ClockWidget;
 import com.klaus3d3.xDripwatchface.widget.DigitalClockWidget;
+import com.klaus3d3.xDripwatchface.widget.MainClock;
 import com.klaus3d3.xDripwatchface.widget.Widget;
 import com.klaus3d3.xDripwatchface.R;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
@@ -37,8 +39,10 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
 
     public ClockWidget clock;
     final LinkedList<Widget> widgets = new LinkedList<>();
-    private Intent slptIntent;
+
     private Intent TransportIntent;
+    private APsettings settings;
+    Context Settingctx;
 
     private class DigitalEngine extends com.huami.watch.watchface.AbstractWatchFace.DigitalEngine {
 
@@ -126,14 +130,23 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
     }
     @Override
     public void onCreate() {
-        super.onCreate();
-        this.TransportIntent = new Intent(this,CustomDataUpdater.class);
+       super.onCreate();
+       this.TransportIntent = new Intent(this,CustomDataUpdater.class);
         this.startService(this.TransportIntent);
+        try {
+            Settingctx=getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
+        }catch(Exception e){Log.e("xDripWidget",e.toString());}
+        settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
+        settings.setBoolean("CustomDataUpdaterIsRunning",true);
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         this.stopService(this.TransportIntent);
+        settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
+        settings.setBoolean("CustomDataUpdaterIsRunning",false);
+
     }
 }

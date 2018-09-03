@@ -6,9 +6,12 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
+import android.util.Log;
 import android.widget.Toast;
+import android.content.Context;
 
 
+import com.klaus3d3.xDripwatchface.Constants;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.huami.watch.watchface.util.Util;
 import com.ingenic.iwds.slpt.view.core.SlptLinearLayout;
@@ -95,7 +98,8 @@ public class MainClock extends DigitalClockWidget {
     public int color = 3;
     public int language = 0;
     // Load settings
-    public APsettings settings;
+    public com.klaus3d3.xDripwatchface.settings.APsettings settings;
+    private Context Settingsctx;
 
     // Languages
     public static String[] codes = {
@@ -195,8 +199,11 @@ public class MainClock extends DigitalClockWidget {
 
         // Please do not change the following line
         Toast.makeText(service, "Code by GreatApo, style by "+service.getResources().getString(R.string.author), Toast.LENGTH_SHORT).show();
+        try {
+            Settingsctx=service.getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
+        }catch(Exception e){Log.e("MainClock",e.toString());}
 
-        this.settings = new APsettings(MainClock.class.getName(), service);
+        this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
         this.language = this.settings.get("lang", this.language) % this.codes.length;
         this.color = this.settings.getInt("color",this.color);
 
@@ -362,7 +369,10 @@ public class MainClock extends DigitalClockWidget {
     @Override
     public List<SlptViewComponent> buildSlptViewComponent(Service service) {
         //Load Settings
-        this.settings = new APsettings(MainClock.class.getName(), service);
+        try {
+            this.settings = new APsettings(Constants.PACKAGE_NAME, service.getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, 0));
+        }catch(Exception e){
+            Log.e("xDripwidget",e.toString());}
         this.language = this.settings.get("lang", this.language) % this.codes.length;
         this.color = this.settings.getInt("color",this.color);
         this.secondsBool = service.getResources().getBoolean(R.bool.seconds);

@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import android.util.Log;
 
 // BY GREATAPO
 
@@ -71,6 +72,7 @@ public class APsettings {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.w("APSettings",this.data.toString());
     }
 
     // Data Getter methods
