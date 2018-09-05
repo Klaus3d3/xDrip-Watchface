@@ -17,10 +17,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.klaus3d3.xDripwatchface.Constants;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
@@ -51,8 +53,11 @@ public class NightscoutPage extends AbstractPlugin {
     Button SetupButton;
     Button DataEntryButton;
     Button LogButton;
+
     Switch ServiceSwitch ;
     Switch HealthDataSwitch;
+    Switch UpdateTimerSwitch;
+
     Context Settingsctx;
 
     //Much like a fragment, getView returns the content view of the page. You can set up your layout here
@@ -85,6 +90,9 @@ public class NightscoutPage extends AbstractPlugin {
         ServiceSwitch.setOnClickListener(ServiceSwitchListener);
         HealthDataSwitch = (Switch) mView.findViewById(R.id.HealthDataSwitch);
         HealthDataSwitch.setOnClickListener(HealthDataSwitchListener);
+        UpdateTimerSwitch = (Switch) mView.findViewById(R.id.UpdateTimerSwitch);
+        UpdateTimerSwitch.setOnClickListener(UpdateTimerSwitchListener);
+
 
 
 
@@ -119,7 +127,9 @@ public class NightscoutPage extends AbstractPlugin {
         this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
         ServiceSwitch.setChecked(settings.get("CustomDataUpdaterIsRunning",false));
         HealthDataSwitch.setChecked(settings.get("HealthDataSwitch",false));
+        UpdateTimerSwitch.setChecked(settings.get("UpdateTimer",false));
         HealthDataSwitch.setEnabled(ServiceSwitch.isChecked());
+        UpdateTimerSwitch.setEnabled(ServiceSwitch.isChecked());
 
         //Check if the view is already inflated (reloading)
         if ((!this.mHasActive) && (this.mView != null)) {
@@ -213,15 +223,16 @@ public class NightscoutPage extends AbstractPlugin {
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
                 mHost.getHostWindow().getContext().startService(TransportIntent);
                 HealthDataSwitch.setEnabled(true);
-                HealthDataSwitch.setChecked(settings.get("HealthDataSwitch",false));
-
+                UpdateTimerSwitch.setEnabled(true);
+                Toast.makeText(v.getContext(), "starting service", Toast.LENGTH_LONG).show();
             }
             else{
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
                 mHost.getHostWindow().getContext().stopService(TransportIntent);
+                Toast.makeText(v.getContext(), "stopping service", Toast.LENGTH_LONG).show();
                 HealthDataSwitch.setEnabled(false);
-
+                UpdateTimerSwitch.setEnabled(false);
                 }
         }
     };
@@ -229,23 +240,43 @@ public class NightscoutPage extends AbstractPlugin {
     private View.OnClickListener HealthDataSwitchListener = new View.OnClickListener() {
         public void onClick(View v) {
                   settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
-
                   settings.set("HealthDataSwitch",HealthDataSwitch.isChecked());
-
+            if (ServiceSwitch.isChecked()){
+                Intent TransportIntent;
+                TransportIntent = new Intent( mContext,CustomDataUpdater.class);
+                mHost.getHostWindow().getContext().startService(TransportIntent);
+                Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_LONG).show();
+            }
 
 
 
         }};
+    private View.OnClickListener UpdateTimerSwitchListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
+            settings.set("UpdateTimer",UpdateTimerSwitch.isChecked());
+            if (ServiceSwitch.isChecked()){
+                Intent TransportIntent;
+                TransportIntent = new Intent( mContext,CustomDataUpdater.class);
+                mHost.getHostWindow().getContext().startService(TransportIntent);
+                Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_LONG).show();
+            }
+
+
+
+        }};
+
+
 
     private View.OnClickListener GraphButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
 
 
             GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
-            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             didTapButton(GraphButton);
             View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
             View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
@@ -262,11 +293,11 @@ public class NightscoutPage extends AbstractPlugin {
     private View.OnClickListener SetupButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
 
-            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
-            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             didTapButton(SetupButton);
             View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
             View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
@@ -284,11 +315,11 @@ public class NightscoutPage extends AbstractPlugin {
         public void onClick(View v) {
 
 
-            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
-            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             didTapButton(LogButton);
             View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
             View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
@@ -307,10 +338,10 @@ public class NightscoutPage extends AbstractPlugin {
     private View.OnClickListener DataEntryButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
 
-            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
             didTapButton(DataEntryButton);
             View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
@@ -329,11 +360,11 @@ public class NightscoutPage extends AbstractPlugin {
     private View.OnClickListener InfoButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
 
-            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            GraphButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             InfoButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
-            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
-            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_unpressed));
+            SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
+            DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             didTapButton(InfoButton);
             View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
             View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);

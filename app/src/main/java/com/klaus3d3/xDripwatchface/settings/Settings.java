@@ -37,16 +37,7 @@ public class Settings extends FragmentActivity {
         }catch(Exception e){
             Log.e("xDripwidget",e.toString());}
 
-        // Save button
-        TextView about_button = (TextView) findViewById(R.id.about);
-        about_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Made by GreatApo & Klaus3d3", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Save button
+               // Save button
         TextView close_settings_button = (TextView) findViewById(R.id.close_settings);
         close_settings_button.setOnClickListener(new View.OnClickListener() {
             @Override

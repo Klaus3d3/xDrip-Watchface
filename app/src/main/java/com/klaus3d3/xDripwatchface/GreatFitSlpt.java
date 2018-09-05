@@ -18,9 +18,7 @@ import com.ingenic.iwds.slpt.view.core.SlptViewComponent;
 
 public class GreatFitSlpt extends AbstractWatchFaceSlpt {
     // Class variables
-    private Context context;
-    private boolean needRefreshSecond;
-    public String greatfitParameters;
+
 
     public GreatFitSlpt() {
         super(
@@ -66,15 +64,13 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
 
 
     protected void initWatchFaceConfig() {
-        Log.w("xDripWatchface", "Initiating watchface");
+        Log.w("DinoDevs-GreatFit", "Initiating watchface");
 
-        this.greatfitParameters = "";
         //this.getResources().getBoolean(R.bool.seconds)
 
-        this.context = this.getApplicationContext();
-        this.needRefreshSecond = Util.needSlptRefreshSecond(this.context);
-        if (this.needRefreshSecond) {
-            this.setClockPeriodSecond(true);
-        }
+
+            this.setClockPeriodSecond(false);
+
+
     }
 }

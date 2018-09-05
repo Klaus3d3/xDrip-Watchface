@@ -56,8 +56,11 @@ public class CustomDataUpdater extends Service {
     public static String HardwareSourceInfo="";
     public static String CollectionInfo="";
     private com.klaus3d3.xDripwatchface.settings.APsettings settings;
-
+    private boolean sendhealthdatatoxdrip;
+    private static boolean updatetimer;
+    private String agoText;
     private Intent SaveSettingIndent;
+    private int minutefactor;
 
     private int counter=0;
     AlarmManager alarmManager;
@@ -89,7 +92,8 @@ public class CustomDataUpdater extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
         settings.setBoolean("CustomDataUpdaterIsRunning",true);
-
+        sendhealthdatatoxdrip=settings.getBoolean("HealthDataSwitch",false);
+        updatetimer=settings.getBoolean("UpdateTimer",false);
 
         Log.w("CustomDataUpdater", "Service started");
         if (companionTransporter == null) {
@@ -145,8 +149,11 @@ public class CustomDataUpdater extends Service {
                     if(db.getBoolean("ishigh")||db.getBoolean("islow")||db.getBoolean("isstale")){bad_value=true;}
                     else {bad_value=false;}
                     alarmManager.cancel(PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
-                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, db.getLong("date")+1000*60, 1000*60*1,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    if (updatetimer)
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, db.getLong("date")+1000*60, 1000*60*1,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    else
                     alarmManager.set(AlarmManager.RTC_WAKEUP,db.getLong("date")+1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
+
                     savetoSettings(context);
                     Intent WidgetUpdateIntent = new Intent("WidgetUpdateIntent");
 
@@ -155,7 +162,7 @@ public class CustomDataUpdater extends Service {
 
 
 
-            if(settings.getBoolean("HealthDataSwitch",false)){
+            if(sendhealthdatatoxdrip){
                     DataBundle hd = new DataBundle();
                     hd.putInt("steps", StepsToSend);
                     hd.putInt("heart_rate", HRToSend);
@@ -230,9 +237,11 @@ public class CustomDataUpdater extends Service {
     String timeago;
     if (System.currentTimeMillis()-Long.valueOf(watchface_date) > 600000)
         timeago=TimeAgo.using(Long.valueOf(CustomDataUpdater.watchface_date));
-    else
+    else{
+        if(updatetimer)timeago=TimeAgo.using(Long.valueOf(CustomDataUpdater.watchface_date));
+        else
         timeago="Less than 10 min ago";
-
+    }
     try {
         // Extract data from JSON
 

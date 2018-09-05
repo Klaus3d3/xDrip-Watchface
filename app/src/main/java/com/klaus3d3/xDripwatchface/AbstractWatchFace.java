@@ -42,7 +42,8 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
 
     private Intent TransportIntent;
     private APsettings settings;
-    Context Settingctx;
+    private Context Settingctx;
+
 
     private class DigitalEngine extends com.huami.watch.watchface.AbstractWatchFace.DigitalEngine {
 
@@ -61,6 +62,7 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
                     registerWatchDataListener(new MultipleWatchDataListenerAdapter(widget, type));
                 }
             }
+
         }
 
         @Override
@@ -91,6 +93,7 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
                     registerWatchDataListener(new MultipleWatchDataListenerAdapter(widget, type));
                 }
             }
+
         }
 
         @Override
@@ -137,7 +140,7 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
             Settingctx=getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
         }catch(Exception e){Log.e("xDripWidget",e.toString());}
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
-        settings.setBoolean("CustomDataUpdaterIsRunning",true);
+        settings.setBoolean("WatchfaceIsRunning",true);
 
     }
 
@@ -146,7 +149,7 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         super.onDestroy();
         this.stopService(this.TransportIntent);
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
-        settings.setBoolean("CustomDataUpdaterIsRunning",false);
+        settings.setBoolean("WatchfaceIsRunning",false);
 
     }
 }

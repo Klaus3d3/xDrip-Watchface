@@ -15,44 +15,6 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-        <CheckBox
-            android:id="@+id/year_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:checked="false"
-            android:gravity="center"
-            android:text="Show year"
-            android:textColor="#000"
-            android:textOff=""
-            android:textOn=""
-            android:textSize="10sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.142"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.611" />
-
-        <CheckBox
-            android:id="@+id/monday_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:checked="false"
-            android:gravity="center"
-            android:text="Monday 1st"
-            android:textColor="#000"
-            android:textOff=""
-            android:textOn=""
-            android:textSize="10sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.15"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.729" />
-
 
         <TextView
             android:id="@+id/language"
@@ -69,21 +31,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.406" />
-
-        <TextView
-            android:id="@+id/about"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="ⓘ"
-            android:textColor="#fff"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.731"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
 
         <TextView
             android:id="@+id/close_settings"

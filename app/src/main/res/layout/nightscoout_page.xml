@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:background="@drawable/lang"
             android:text="Entry"
             android:textSize="9sp" />
 
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:background="@drawable/lang"
             android:text="Info"
             android:textSize="9sp" />
 
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:background="@drawable/lang"
             android:text="LOG"
             android:textSize="9sp" />
 
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/rounded_corners_button_widget_unpressed"
+            android:background="@drawable/lang"
             android:text="Setup"
             android:textSize="9sp" />
     </LinearLayout>
@@ -174,20 +174,24 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="10dp" />
+                    android:layout_height="5dp" />
 
                 <Switch
                     android:id="@+id/ServiceSwitch"
-                    android:layout_width="200dp"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="-10dp"
+                    android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:switchMinWidth="50dp"
-                    android:text="Background Service"
+                    android:switchMinWidth="30dp"
+                    android:text="Background service"
                     android:textAllCaps="false"
+                    android:textOff="0"
+                    android:textOn="I"
                     android:textScaleX="1"
                     android:textSize="11sp"
                     android:translationX="20dp" /><![CDATA[/>
+
+
 
 
 
@@ -196,21 +200,55 @@
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="3dp"
                     android:background="?android:attr/listDivider" />
 
                 <Switch
                     android:id="@+id/HealthDataSwitch"
-                    android:layout_width="200dp"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="-10dp"
+                    android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:switchMinWidth="50dp"
+                    android:switchMinWidth="30dp"
                     android:text="Send Health Data to xDrip+"
+                    android:textOff="0"
+                    android:textOn="I"
                     android:textSize="11sp"
-                    android:translationX="20dp" /><![CDATA[
+                    android:translationX="20dp" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="?android:attr/listDivider" />
+
+                <Switch
+                    android:id="@+id/UpdateTimerSwitch"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:switchMinWidth="30dp"
+                    android:text="Update minutely"
+                    android:textOff="0"
+                    android:textOn="I"
+                    android:textSize="11sp"
+                    android:translationX="20dp" />
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="?android:attr/listDivider" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" /><![CDATA[
+
+
 
                 />
+
 
             ]]>
             </LinearLayout>

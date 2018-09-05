@@ -170,9 +170,10 @@
 <dimen name="xdripdate_left">160px</dimen>
 <dimen name="xdripdate_top">240px</dimen>
     <!-- Xdrip attention -->
-    <dimen name="xdripattention_font_size">80px</dimen>
-    <dimen name="xdripattention_left">158px</dimen>
-    <dimen name="xdripattention_top">260px</dimen>
+
+    <dimen name="xdrippatient_font_size">20px</dimen>
+    <dimen name="xdrippatient_left">160px</dimen>
+    <dimen name="xdrippatient_top">225px</dimen>
 
     <!-- Xdrip Graph -->
 

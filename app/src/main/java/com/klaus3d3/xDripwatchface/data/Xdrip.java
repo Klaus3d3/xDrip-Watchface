@@ -13,6 +13,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import android.content.Context;
+import com.klaus3d3.xDripwatchface.settings.APsettings;
+import com.klaus3d3.xDripwatchface.Constants;
+import android.util.Log;
 
 public class Xdrip {
 
@@ -26,6 +30,8 @@ public class Xdrip {
     public String sgv_graph="false";
     public Long timestamp=Long.valueOf(1);
     public Boolean firstdata=false;
+    private com.klaus3d3.xDripwatchface.settings.APsettings settings;
+    public String Patientsname="";
 
     public Xdrip(String parmStr1) {
         this.JSONstr = parmStr1;

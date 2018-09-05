@@ -1,6 +1,7 @@
 package com.klaus3d3.xDripwatchface.widget;
 
 import android.app.Service;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,6 +21,9 @@ import android.util.Log;
 
 import com.ingenic.iwds.slpt.view.sport.SlptPowerNumView;
 import com.ingenic.iwds.slpt.view.sport.SlptTodayStepNumView;
+import com.klaus3d3.xDripwatchface.AbstractWatchFace;
+import com.klaus3d3.xDripwatchface.AbstractWatchFaceSlpt;
+import com.klaus3d3.xDripwatchface.Constants;
 import com.klaus3d3.xDripwatchface.CustomDataUpdater;
 import com.klaus3d3.xDripwatchface.data.Alarm;
 import com.klaus3d3.xDripwatchface.data.Battery;
@@ -49,6 +53,7 @@ import com.ingenic.iwds.slpt.view.digital.SlptHourLView;
 import com.ingenic.iwds.slpt.view.digital.SlptMinuteHView;
 import com.ingenic.iwds.slpt.view.digital.SlptMinuteLView;
 import com.ingenic.iwds.slpt.view.utils.SimpleFile;
+import com.klaus3d3.xDripwatchface.settings.APsettings;
 
 
 public class GreatWidget extends AbstractWidget {
@@ -67,6 +72,7 @@ public class GreatWidget extends AbstractWidget {
     private TextPaint xdripsgvPaint;
     private TextPaint xdripDeltaPaint;
     private TextPaint xdripDatePaint;
+    private TextPaint PatientsNamePaint;
     private Paint xdripgraphpaint;
     private TextPaint hourFont;
 
@@ -115,6 +121,8 @@ public class GreatWidget extends AbstractWidget {
         // This service
         this.mService = service;
  // Get xdrip
+
+
         this.xdripData = getXdrip();
         this.leftHour = service.getResources().getDimension(R.dimen.hours_left);
         this.topHour = service.getResources().getDimension(R.dimen.hours_top);
@@ -156,7 +164,7 @@ public class GreatWidget extends AbstractWidget {
 
         this.xdripsgvPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
         this.xdripsgvPaint.setColor(Color.parseColor(xdripData.color));
-        this.xdripsgvPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE));
+        this.xdripsgvPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE));
         this.xdripsgvPaint.setTextSize(service.getResources().getDimension(R.dimen.xdrip_font_size));
         this.xdripsgvPaint.setTextAlign((this.xdripAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER);
 
@@ -165,6 +173,12 @@ public class GreatWidget extends AbstractWidget {
         this.xdripDeltaPaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE));
         this.xdripDeltaPaint.setTextSize(service.getResources().getDimension(R.dimen.xdripdelta_font_size));
         this.xdripDeltaPaint.setTextAlign((this.xdripAlignLeftBool) ? Paint.Align.LEFT : Paint.Align.CENTER);
+
+        this.PatientsNamePaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        this.PatientsNamePaint.setColor(Color.parseColor(xdripData.color));
+        this.PatientsNamePaint.setTypeface(ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE));
+        this.PatientsNamePaint.setTextSize(service.getResources().getDimension(R.dimen.xdrippatient_font_size));
+        this.PatientsNamePaint.setTextAlign(Paint.Align.CENTER);
 
         this.xdripDatePaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
         this.xdripDatePaint.setColor(service.getResources().getColor(R.color.xdrip_colour));
@@ -225,10 +239,7 @@ public class GreatWidget extends AbstractWidget {
     @Override
     public void draw(Canvas canvas, float width, float height, float centerX, float centerY, int minutes, int hours) {
 
-
-
-
-            // Draw Phonebattery
+           // Draw Phonebattery
             canvas.drawText(xdripData.phonebattery+"%", mService.getResources().getDimension(R.dimen.phonebattery_text_left), mService.getResources().getDimension(R.dimen.phonebattery_text_top), PhoneBatteryPaint);
 
 
@@ -237,6 +248,7 @@ public class GreatWidget extends AbstractWidget {
             this.xdripsgvPaint.setColor(Color.parseColor(xdripData.color));
             this.xdripDeltaPaint.setColor(Color.parseColor(xdripData.color));
             this.xdripDatePaint.setColor(Color.parseColor(xdripData.color));
+            this.PatientsNamePaint.setColor(Color.parseColor(xdripData.color));
             if(xdripData.color.equals("WHITE"))this.background.draw(canvas);
 
             if(xdripData.firstdata && !xdripData.sgv_graph.equals("false"))canvas.drawBitmap(StringToBitMap(xdripData.sgv_graph), mService.getResources().getDimension(R.dimen.xdripgraph_left), mService.getResources().getDimension(R.dimen.xdripgraph_top), xdripgraphpaint);
@@ -244,8 +256,7 @@ public class GreatWidget extends AbstractWidget {
             canvas.drawText(xdripData.delta, mService.getResources().getDimension(R.dimen.xdripdelta_left), mService.getResources().getDimension(R.dimen.xdripdelta_top), xdripDeltaPaint);
             canvas.drawText(TimeAgo.using(xdripData.timestamp), mService.getResources().getDimension(R.dimen.xdripdate_left), mService.getResources().getDimension(R.dimen.xdripdate_top), xdripDatePaint);
             canvas.drawText(xdripData.strike, xdripLeft, xdripTop, xdripsgvPaint);
-
-        }
+           }
         canvas.drawText( (this.no_0_on_hour_first_digit)?hours+"":Util.formatTime(hours)+Util.formatTime(minutes), this.leftHour, this.topHour, this.hourFont);
 
         // Show battery
@@ -327,6 +338,9 @@ public class GreatWidget extends AbstractWidget {
 
 
 
+
+
+
         int tmp_left;
         Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
 
@@ -359,6 +373,15 @@ public class GreatWidget extends AbstractWidget {
         );
         // Hide if disabled
         if(!service.getResources().getBoolean(R.bool.battery)){power.show=false;}
+        timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE);
+
+
+
+        timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
+
+
+
+
 
         // Show steps (today)
         SlptLinearLayout steps = new SlptLinearLayout();
@@ -490,7 +513,7 @@ public class GreatWidget extends AbstractWidget {
         xdripSGVLayout.setTextAttrForAll(
                 service.getResources().getDimension(R.dimen.xdrip_font_size),
                 Color.parseColor(xdripData.color),
-                ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE)
+                ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE)
         );
         // Position based on screen on
         xdripSGVLayout.alignX = 2;
