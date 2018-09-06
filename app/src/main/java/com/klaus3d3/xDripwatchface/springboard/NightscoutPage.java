@@ -23,6 +23,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ScrollView;
 import android.widget.Toast;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import com.klaus3d3.xDripwatchface.Constants;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
@@ -53,10 +57,12 @@ public class NightscoutPage extends AbstractPlugin {
     Button SetupButton;
     Button DataEntryButton;
     Button LogButton;
+    Button ClearLogButton;
 
     Switch ServiceSwitch ;
     Switch HealthDataSwitch;
     Switch UpdateTimerSwitch;
+    TextView LogTextView;
 
     Context Settingsctx;
 
@@ -81,7 +87,9 @@ public class NightscoutPage extends AbstractPlugin {
         InfoButton.setOnClickListener(InfoButtonListener);
         SetupButton = (Button) mView.findViewById(R.id.SetupUpbutton);
         SetupButton.setOnClickListener(SetupButtonListener);
-
+        ClearLogButton = (Button) mView.findViewById(R.id.ClearLogButton);
+        ClearLogButton.setOnLongClickListener(ClearLogButtonLongListener);
+        ClearLogButton.setOnClickListener(ClearLogButtonListener);
         DataEntryButton = (Button) mView.findViewById(R.id.DataEntryButton);
         DataEntryButton.setOnClickListener(DataEntryButtonListener);
         LogButton = (Button) mView.findViewById(R.id.LogButton);
@@ -92,7 +100,7 @@ public class NightscoutPage extends AbstractPlugin {
         HealthDataSwitch.setOnClickListener(HealthDataSwitchListener);
         UpdateTimerSwitch = (Switch) mView.findViewById(R.id.UpdateTimerSwitch);
         UpdateTimerSwitch.setOnClickListener(UpdateTimerSwitchListener);
-
+        LogTextView =(TextView) mView.findViewById(R.id.LogTextView);
 
 
 
@@ -125,6 +133,7 @@ public class NightscoutPage extends AbstractPlugin {
 
         super.onActive(paramBundle);
         this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
+
         ServiceSwitch.setChecked(settings.get("CustomDataUpdaterIsRunning",false));
         HealthDataSwitch.setChecked(settings.get("HealthDataSwitch",false));
         UpdateTimerSwitch.setChecked(settings.get("UpdateTimer",false));
@@ -224,13 +233,13 @@ public class NightscoutPage extends AbstractPlugin {
                 mHost.getHostWindow().getContext().startService(TransportIntent);
                 HealthDataSwitch.setEnabled(true);
                 UpdateTimerSwitch.setEnabled(true);
-                Toast.makeText(v.getContext(), "starting service", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), "starting service", Toast.LENGTH_SHORT).show();
             }
             else{
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
                 mHost.getHostWindow().getContext().stopService(TransportIntent);
-                Toast.makeText(v.getContext(), "stopping service", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), "stopping service", Toast.LENGTH_SHORT).show();
                 HealthDataSwitch.setEnabled(false);
                 UpdateTimerSwitch.setEnabled(false);
                 }
@@ -239,15 +248,19 @@ public class NightscoutPage extends AbstractPlugin {
 
     private View.OnClickListener HealthDataSwitchListener = new View.OnClickListener() {
         public void onClick(View v) {
-                  settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
-                  settings.set("HealthDataSwitch",HealthDataSwitch.isChecked());
-            if (ServiceSwitch.isChecked()){
+            settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
+
+            if (ServiceSwitch.isChecked()&settings.get("WatchfaceIsRunning",false)){
+
+                settings.set("HealthDataSwitch",HealthDataSwitch.isChecked());
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
                 mHost.getHostWindow().getContext().startService(TransportIntent);
-                Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_SHORT).show();
+            }else {
+                HealthDataSwitch.setChecked(false);
+                Toast.makeText(v.getContext(), "Service and watchface need to run", Toast.LENGTH_SHORT).show();
             }
-
 
 
         }};
@@ -259,14 +272,31 @@ public class NightscoutPage extends AbstractPlugin {
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
                 mHost.getHostWindow().getContext().startService(TransportIntent);
-                Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_SHORT).show();
             }
 
 
 
         }};
 
+    private View.OnLongClickListener ClearLogButtonLongListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
 
+
+            APsettings logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
+            logsave.clear();
+            LogTextView.setText("");
+            return false;
+        }
+    };
+    private View.OnClickListener ClearLogButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(ClearLogButton);
+            Toast.makeText(v.getContext(), "press long to clear LOG", Toast.LENGTH_SHORT).show();
+
+        }
+    };
 
     private View.OnClickListener GraphButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -331,6 +361,20 @@ public class NightscoutPage extends AbstractPlugin {
             DataEntryLayout.setVisibility(View.INVISIBLE);
             SetupLayout.setVisibility(View.INVISIBLE);
             LogLayout.setVisibility(View.VISIBLE);
+            LogTextView.setText("");
+
+            APsettings Logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
+            JSONObject Data = Logsave.getalldata();
+            try{
+            Iterator keysToCopyIterator = Data.keys();
+            List<String> keysList = new ArrayList<String>();
+            while(keysToCopyIterator.hasNext()) {
+                String key = (String) keysToCopyIterator.next();
+
+                LogTextView.append(key+" : "+Data.getString(key)+System.lineSeparator());
+            }}catch (Exception e){e.printStackTrace();}
+
+
 
         }
     };

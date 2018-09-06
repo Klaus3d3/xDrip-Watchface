@@ -2,8 +2,10 @@ package com.klaus3d3.xDripwatchface.settings;
 
 import android.content.Context;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,7 +53,7 @@ public class APsettings {
                 this.data = new JSONObject(data.toString());
             }
             catch (Exception e) {
-                e.printStackTrace();
+                Log.w("APSettings",e.toString());
                 if (this.data == null) {
                     this.data = new JSONObject();
                 }
@@ -62,7 +64,17 @@ public class APsettings {
             this.data = new JSONObject();
         }
     }
-
+    public void clear(){
+        File file = new File (this.save_directory, this.settings_file_name);
+        try {
+            FileWriter writer = new FileWriter(file);
+            writer.write("");
+            writer.close();}
+             catch (Exception e) {
+                Log.w("APSettings",e.toString());
+            }
+            Log.w("APSettings",this.data.toString());
+    }
     public void save() {
         File file = new File (this.save_directory, this.settings_file_name);
         try {
@@ -70,7 +82,7 @@ public class APsettings {
             writer.write(this.data.toString());
             writer.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.w("APSettings",e.toString());
         }
         Log.w("APSettings",this.data.toString());
     }
@@ -89,7 +101,14 @@ public class APsettings {
         return this.getBoolean (key, defvalue);
     }
 
-    public String getString (String key, String defvalue) {
+    public JSONObject getalldata(){
+
+        return this.data;
+    }
+
+
+
+        public String getString (String key, String defvalue) {
         String value;
         try {
             value = this.data.getString(key);
@@ -99,6 +118,7 @@ public class APsettings {
         }
         return value;
     }
+
     public int getInt (String key, int defvalue) {
         int value;
         try {

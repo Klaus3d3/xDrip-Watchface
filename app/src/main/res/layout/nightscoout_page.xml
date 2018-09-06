@@ -126,12 +126,42 @@
         android:layout_weight="1"
         android:visibility="invisible">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="To Do" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/ClearLogButton"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@drawable/lang"
+                    android:gravity="center"
+                    android:text="Clear LOG"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/LogTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:ems="10"
+                    android:gravity="center_horizontal"
+                    android:inputType="textMultiLine"
+                    android:textSize="10sp" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </ScrollView>
+
     </FrameLayout>
 
     <FrameLayout
@@ -178,7 +208,7 @@
 
                 <Switch
                     android:id="@+id/ServiceSwitch"
-                    android:layout_width="150dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
@@ -205,7 +235,7 @@
 
                 <Switch
                     android:id="@+id/HealthDataSwitch"
-                    android:layout_width="150dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
@@ -224,12 +254,12 @@
 
                 <Switch
                     android:id="@+id/UpdateTimerSwitch"
-                    android:layout_width="150dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
                     android:switchMinWidth="30dp"
-                    android:text="Update minutely"
+                    android:text="Update WF every minute"
                     android:textOff="0"
                     android:textOn="I"
                     android:textSize="11sp"

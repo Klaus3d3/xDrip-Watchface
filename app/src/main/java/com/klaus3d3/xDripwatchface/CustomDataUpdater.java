@@ -31,6 +31,9 @@ import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.klaus3d3.xDripwatchface.ui.xDripOtheralertActivity;
 import com.klaus3d3.xDripwatchface.ui.xDripAlarmActivity;
 import com.klaus3d3.xDripwatchface.widget.MainClock;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 
 public class CustomDataUpdater extends Service {
@@ -56,6 +59,7 @@ public class CustomDataUpdater extends Service {
     public static String HardwareSourceInfo="";
     public static String CollectionInfo="";
     private com.klaus3d3.xDripwatchface.settings.APsettings settings;
+    private com.klaus3d3.xDripwatchface.settings.APsettings logsave;
     private boolean sendhealthdatatoxdrip;
     private static boolean updatetimer;
     private String agoText;
@@ -75,9 +79,7 @@ public class CustomDataUpdater extends Service {
         context=getApplicationContext();
         this.SaveSettingIndent= new Intent(this, TimeTick.class);
         registerReceiver(snoozeReceiver, new IntentFilter("snooze_alarm_intent"));
-       try {
-            Settingsctx=getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
-        }catch(Exception e){Log.e("xDripWidget",e.toString());}
+
 
 
     }
@@ -90,6 +92,10 @@ public class CustomDataUpdater extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        try {
+            Settingsctx=getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
+        }catch(Exception e){Log.e("xDripWidget",e.toString());}
         this.settings = new APsettings(Constants.PACKAGE_NAME, Settingsctx);
         settings.setBoolean("CustomDataUpdaterIsRunning",true);
         sendhealthdatatoxdrip=settings.getBoolean("HealthDataSwitch",false);
@@ -126,6 +132,7 @@ public class CustomDataUpdater extends Service {
             public void onDataReceived(TransportDataItem transportDataItem) {
                 String action = transportDataItem.getAction();
                 DataBundle db = transportDataItem.getData();
+
                 Log.e("CustomDataUpdater", "action: " + action + ", module: " + transportDataItem.getModuleName());
 
                 if (action == null) {
@@ -171,7 +178,10 @@ public class CustomDataUpdater extends Service {
 
                         }
                 if (action.equals(Constants.ACTION_XDRIP_OTHERALERT))
-                {
+                {   DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                    Date date = new Date();
+                    logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
+                    logsave.setString(dateFormat.format(date),db.getString("alarmtext"));
                     Intent intent = new Intent(context, xDripOtheralertActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
@@ -180,6 +190,7 @@ public class CustomDataUpdater extends Service {
                     intent.putExtra("Alarmtext",db.getString("alarmtext"));
                     intent.putExtra("sgv",db.getString("sgv"));
 
+
                     context.startActivity(intent);
 
 
@@ -187,7 +198,10 @@ public class CustomDataUpdater extends Service {
                 }
                 if (action.equals(Constants.ACTION_XDRIP_ALARM))
                 {
-
+                    DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                    Date date = new Date();
+                    logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
+                    logsave.setString(dateFormat.format(date),db.getString("alarmtext"));
 
                     Intent intent = new Intent(context, xDripAlarmActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
