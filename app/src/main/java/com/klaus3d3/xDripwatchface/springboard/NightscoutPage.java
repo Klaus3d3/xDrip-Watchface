@@ -362,6 +362,8 @@ public class NightscoutPage extends AbstractPlugin {
             DataEntryLayout.setVisibility(View.INVISIBLE);
             SetupLayout.setVisibility(View.INVISIBLE);
             LogLayout.setVisibility(View.VISIBLE);
+            String text="";
+            String newline="";
             LogTextView.setText("");
 
             APsettings Logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
@@ -370,11 +372,12 @@ public class NightscoutPage extends AbstractPlugin {
             Iterator keysToCopyIterator = Data.keys();
             List<String> keysList = new ArrayList<String>();
             while(keysToCopyIterator.hasNext()) {
+
                 String key = (String) keysToCopyIterator.next();
-
-                LogTextView.append(key+" : "+Data.getString(key)+System.lineSeparator());
+                newline=key+" : "+Data.getString(key)+System.lineSeparator();
+                text=newline+text;
             }}catch (Exception e){e.printStackTrace();}
-
+            LogTextView.setText(text);
 
 
         }
