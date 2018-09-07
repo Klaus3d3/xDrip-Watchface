@@ -181,7 +181,7 @@ public class CustomDataUpdater extends Service {
                 {   DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                     Date date = new Date();
                     logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
-                    logsave.setString(dateFormat.format(date),db.getString("alarmtext"));
+                    logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString()+" : " + db.getString("alarmtext"));
                     Intent intent = new Intent(context, xDripOtheralertActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
@@ -201,8 +201,7 @@ public class CustomDataUpdater extends Service {
                     DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                     Date date = new Date();
                     logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
-                    logsave.setString(dateFormat.format(date),db.getString("alarmtext"));
-
+                    logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString()+" : " + db.getString("alarmtext"));
                     Intent intent = new Intent(context, xDripAlarmActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
@@ -216,7 +215,11 @@ public class CustomDataUpdater extends Service {
 
                 }
                 if (action.equals(Constants.ACTION_XDRIP_CANCEL))
-                {   Intent intent1 = new Intent("close_alarm_dialog");
+                {    DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                    Date date = new Date();
+                    logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
+                    logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString());
+                    Intent intent1 = new Intent("close_alarm_dialog");
                     sendBroadcast(intent1);
 
                 }

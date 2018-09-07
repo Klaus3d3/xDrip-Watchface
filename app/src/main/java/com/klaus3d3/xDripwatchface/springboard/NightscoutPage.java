@@ -93,6 +93,7 @@ public class NightscoutPage extends AbstractPlugin {
         DataEntryButton.setOnClickListener(DataEntryButtonListener);
         LogButton = (Button) mView.findViewById(R.id.LogButton);
         LogButton.setOnClickListener(LogButtonListener);
+        LogButton.setOnLongClickListener(ClearLogLongListener);
         ServiceSwitch = (Switch) mView.findViewById(R.id.ServiceSwitch);
         ServiceSwitch.setOnClickListener(ServiceSwitchListener);
         HealthDataSwitch = (Switch) mView.findViewById(R.id.HealthDataSwitch);
@@ -100,9 +101,9 @@ public class NightscoutPage extends AbstractPlugin {
         UpdateTimerSwitch = (Switch) mView.findViewById(R.id.UpdateTimerSwitch);
         UpdateTimerSwitch.setOnClickListener(UpdateTimerSwitchListener);
         LogTextView =(TextView) mView.findViewById(R.id.LogTextView);
-        LogContainer = (LinearLayout) mView.findViewById(R.id.LogContainer);
-        LogContainer.setOnLongClickListener(ClearLogLongListener);
-        LogContainer.setOnClickListener(ClearLogListener);
+
+
+
 
 
         return mView;
@@ -291,13 +292,7 @@ public class NightscoutPage extends AbstractPlugin {
             return false;
         }
     };
-    private View.OnClickListener ClearLogListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            //didTapButton(LogTextView);
-            Toast.makeText(v.getContext(), "press long to clear LOG", Toast.LENGTH_SHORT).show();
 
-        }
-    };
 
     private View.OnClickListener GraphButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -374,11 +369,11 @@ public class NightscoutPage extends AbstractPlugin {
             while(keysToCopyIterator.hasNext()) {
 
                 String key = (String) keysToCopyIterator.next();
-                newline=key+" : "+Data.getString(key)+System.lineSeparator();
+                newline=Data.getString(key)+System.lineSeparator();
                 text=newline+text;
             }}catch (Exception e){e.printStackTrace();}
             LogTextView.setText(text);
-
+            Toast.makeText(v.getContext(), "press long to clear LOG", Toast.LENGTH_SHORT).show();
 
         }
     };

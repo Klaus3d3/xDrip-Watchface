@@ -57,48 +57,54 @@
 
         <Button
             android:id="@+id/GraphButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_corners_button_widget_pressed"
-            android:text="Graph"
-            android:textSize="9sp" />
+            android:text="GRAPH"
+            android:textIsSelectable="false"
+            android:textSize="11sp" />
 
         <Button
             android:id="@+id/DataEntryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/lang"
-            android:text="Entry"
-            android:textSize="9sp" />
+            android:text="ENTRY"
+            android:textIsSelectable="false"
+            android:textSize="11sp" />
 
         <Button
             android:id="@+id/InfoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/lang"
-            android:text="Info"
-            android:textSize="9sp" />
+            android:text="INFO"
+            android:textIsSelectable="false"
+            android:textSize="11sp" />
 
         <Button
             android:id="@+id/LogButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/lang"
+            android:capitalize="characters"
             android:text="LOG"
-            android:textSize="9sp" />
+            android:textIsSelectable="false"
+            android:textSize="11sp" />
 
         <Button
             android:id="@+id/SetupUpbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/lang"
-            android:text="Setup"
-            android:textSize="9sp" />
+            android:text="SETUP"
+            android:textIsSelectable="false"
+            android:textSize="11sp" />
     </LinearLayout>
 
     <FrameLayout
