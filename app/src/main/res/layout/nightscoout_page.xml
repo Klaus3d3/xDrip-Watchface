@@ -131,30 +131,23 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/LogContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/ClearLogButton"
-                    android:layout_width="75dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:background="@drawable/lang"
-                    android:gravity="center"
-                    android:text="Clear LOG"
-                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/LogTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
+                    android:clickable="false"
                     android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:gravity="center_horizontal"
                     android:inputType="textMultiLine"
-                    android:textSize="10sp" />
+                    android:longClickable="false"
+                    android:textSize="11sp" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -219,13 +212,7 @@
                     android:textOn="I"
                     android:textScaleX="1"
                     android:textSize="11sp"
-                    android:translationX="20dp" /><![CDATA[/>
-
-
-
-
-
-                ]]>
+                    android:translationX="20dp" />
 
                 <View
                     android:id="@+id/divider"

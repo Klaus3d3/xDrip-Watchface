@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ScrollView;
@@ -57,13 +58,13 @@ public class NightscoutPage extends AbstractPlugin {
     Button SetupButton;
     Button DataEntryButton;
     Button LogButton;
-    Button ClearLogButton;
+
 
     Switch ServiceSwitch ;
     Switch HealthDataSwitch;
     Switch UpdateTimerSwitch;
     TextView LogTextView;
-
+   LinearLayout LogContainer;
     Context Settingsctx;
 
     //Much like a fragment, getView returns the content view of the page. You can set up your layout here
@@ -87,9 +88,7 @@ public class NightscoutPage extends AbstractPlugin {
         InfoButton.setOnClickListener(InfoButtonListener);
         SetupButton = (Button) mView.findViewById(R.id.SetupUpbutton);
         SetupButton.setOnClickListener(SetupButtonListener);
-        ClearLogButton = (Button) mView.findViewById(R.id.ClearLogButton);
-        ClearLogButton.setOnLongClickListener(ClearLogButtonLongListener);
-        ClearLogButton.setOnClickListener(ClearLogButtonListener);
+
         DataEntryButton = (Button) mView.findViewById(R.id.DataEntryButton);
         DataEntryButton.setOnClickListener(DataEntryButtonListener);
         LogButton = (Button) mView.findViewById(R.id.LogButton);
@@ -101,7 +100,9 @@ public class NightscoutPage extends AbstractPlugin {
         UpdateTimerSwitch = (Switch) mView.findViewById(R.id.UpdateTimerSwitch);
         UpdateTimerSwitch.setOnClickListener(UpdateTimerSwitchListener);
         LogTextView =(TextView) mView.findViewById(R.id.LogTextView);
-
+        LogContainer = (LinearLayout) mView.findViewById(R.id.LogContainer);
+        LogContainer.setOnLongClickListener(ClearLogLongListener);
+        LogContainer.setOnClickListener(ClearLogListener);
 
 
         return mView;
@@ -279,7 +280,7 @@ public class NightscoutPage extends AbstractPlugin {
 
         }};
 
-    private View.OnLongClickListener ClearLogButtonLongListener = new View.OnLongClickListener() {
+    private View.OnLongClickListener ClearLogLongListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
 
@@ -290,9 +291,9 @@ public class NightscoutPage extends AbstractPlugin {
             return false;
         }
     };
-    private View.OnClickListener ClearLogButtonListener = new View.OnClickListener() {
+    private View.OnClickListener ClearLogListener = new View.OnClickListener() {
         public void onClick(View v) {
-            didTapButton(ClearLogButton);
+            //didTapButton(LogTextView);
             Toast.makeText(v.getContext(), "press long to clear LOG", Toast.LENGTH_SHORT).show();
 
         }
