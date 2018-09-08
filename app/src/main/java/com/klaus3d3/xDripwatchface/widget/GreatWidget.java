@@ -238,9 +238,9 @@ public class GreatWidget extends AbstractWidget {
 
     @Override
     public void draw(Canvas canvas, float width, float height, float centerX, float centerY, int minutes, int hours) {
-
+        this.xdripData = getXdrip();
            // Draw Phonebattery
-            canvas.drawText(xdripData.phonebattery+"%", mService.getResources().getDimension(R.dimen.phonebattery_text_left), mService.getResources().getDimension(R.dimen.phonebattery_text_top), PhoneBatteryPaint);
+        canvas.drawText(xdripData.phonebattery+"%", mService.getResources().getDimension(R.dimen.phonebattery_text_left), mService.getResources().getDimension(R.dimen.phonebattery_text_top), PhoneBatteryPaint);
 
 
         // Draw Xdrip, if enabled
@@ -278,7 +278,7 @@ public class GreatWidget extends AbstractWidget {
     public List<DataType> getDataTypes() {
         // For many refreshes
         //return Arrays.asList(DataType.BATTERY, DataType.STEPS, DataType.DISTANCE, DataType.TOTAL_DISTANCE, DataType.TIME,  DataType.CALORIES,  DataType.DATE,  DataType.HEART_RATE,  DataType.FLOOR, DataType.WEATHER);
-        return Arrays.asList(DataType.TIME,  DataType.XDRIP, DataType.HEART_RATE, DataType.BATTERY, DataType.STEPS);
+        return Arrays.asList(DataType.TIME,  DataType.HEART_RATE, DataType.BATTERY, DataType.STEPS/*DataType.XDRIP*/);
     }
 
     @Override
@@ -300,12 +300,12 @@ public class GreatWidget extends AbstractWidget {
             case HEART_RATE:
                 this.HR = (HeartRate) value;
                 break;
-            case XDRIP:
+           /* case XDRIP:
                 // Update Xdrip
                 this.xdripData = (Xdrip) value;
 
                // Log.w("DinoDevs-GreatFit", type.toString()+" => "+value.toString() );
-                break;
+                break;*/
 
         }
 
@@ -324,8 +324,8 @@ public class GreatWidget extends AbstractWidget {
 
 
     public Xdrip getXdrip(){
-        String str = Settings.System.getString(this.mService.getContentResolver(), "xdrip");
-
+        String str = CustomDataUpdater.savetoSettings(mService);
+//String str = Settings.System.getString(this.mService.getContentResolver(), "xdrip");
         return new Xdrip(str);
     }
 

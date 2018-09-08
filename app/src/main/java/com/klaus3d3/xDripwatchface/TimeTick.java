@@ -18,7 +18,9 @@ public class TimeTick extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        CustomDataUpdater.savetoSettings(context);
-
+        String data = CustomDataUpdater.savetoSettings(context);
+        Intent UpdateIntent = new Intent("com.klaus3d3.xDripwatchface.newDataIntent");
+        UpdateIntent.putExtra("DATA",data);
+        context.sendBroadcast(UpdateIntent);
     }
 }

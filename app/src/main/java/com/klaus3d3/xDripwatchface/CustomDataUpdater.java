@@ -62,9 +62,8 @@ public class CustomDataUpdater extends Service {
     private com.klaus3d3.xDripwatchface.settings.APsettings logsave;
     private boolean sendhealthdatatoxdrip;
     private static boolean updatetimer;
-    private String agoText;
     private Intent SaveSettingIndent;
-    private int minutefactor;
+
 
     private int counter=0;
     AlarmManager alarmManager;
@@ -161,10 +160,10 @@ public class CustomDataUpdater extends Service {
                     else
                     alarmManager.set(AlarmManager.RTC_WAKEUP,db.getLong("date")+1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
 
-                    savetoSettings(context);
-                    Intent WidgetUpdateIntent = new Intent("WidgetUpdateIntent");
-
-                    sendBroadcast(WidgetUpdateIntent);
+                    String data = savetoSettings(context);
+                    Intent UpdateIntent = new Intent("com.klaus3d3.xDripwatchface.newDataIntent");
+                    UpdateIntent.putExtra("DATA",data);
+                    sendBroadcast(UpdateIntent);
 
 
 
@@ -249,7 +248,7 @@ public class CustomDataUpdater extends Service {
     };
 
 
-    public static void savetoSettings(Context mcontext){
+    public static String savetoSettings(Context mcontext){
 
     String timeago;
     if (System.currentTimeMillis()-Long.valueOf(watchface_date) > 600000)
@@ -283,12 +282,12 @@ public class CustomDataUpdater extends Service {
         json_data.put("strike",watchface_strike);
         json_data.put("bad_value",bad_value);
 
-        Settings.System.putString(mcontext.getApplicationContext().getContentResolver(), "xdrip",json_data.toString());
-
+        //Settings.System.putString(mcontext.getApplicationContext().getContentResolver(), "xdrip",json_data.toString());
+    return json_data.toString();
     }catch (JSONException e) {
         Log.w("CustomDataUpdater", e.toString());
     }
-
+return "";
 }
 
 

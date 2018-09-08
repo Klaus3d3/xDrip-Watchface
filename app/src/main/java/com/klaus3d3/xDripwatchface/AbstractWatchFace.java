@@ -1,5 +1,6 @@
 package com.klaus3d3.xDripwatchface;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,10 +18,13 @@ import java.util.LinkedList;
 import android.os.PowerManager;
 import com.klaus3d3.xDripwatchface.data.DataType;
 import com.klaus3d3.xDripwatchface.data.MultipleWatchDataListenerAdapter;
+import com.klaus3d3.xDripwatchface.data.MultipleWatchDataListener;
+import com.klaus3d3.xDripwatchface.data.Xdrip;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.klaus3d3.xDripwatchface.widget.AnalogClockWidget;
 import com.klaus3d3.xDripwatchface.widget.ClockWidget;
 import com.klaus3d3.xDripwatchface.widget.DigitalClockWidget;
+import com.klaus3d3.xDripwatchface.widget.GreatWidget;
 import com.klaus3d3.xDripwatchface.widget.MainClock;
 import com.klaus3d3.xDripwatchface.widget.Widget;
 import com.klaus3d3.xDripwatchface.R;
@@ -40,9 +44,10 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
     public ClockWidget clock;
     final LinkedList<Widget> widgets = new LinkedList<>();
 
-    private Intent TransportIntent;
+    private Intent TransportIntent,slptIntent;
     private APsettings settings;
     private Context Settingctx;
+    public Context mContext;
 
 
     private class DigitalEngine extends com.huami.watch.watchface.AbstractWatchFace.DigitalEngine {
@@ -134,6 +139,8 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
     @Override
     public void onCreate() {
        super.onCreate();
+       mContext=this;
+       this.slptIntent = new Intent(this, this.slptClockClass());
        this.TransportIntent = new Intent(this,CustomDataUpdater.class);
         this.startService(this.TransportIntent);
         try {
@@ -141,7 +148,34 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         }catch(Exception e){Log.e("xDripWidget",e.toString());}
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
         settings.setBoolean("WatchfaceIsRunning",true);
+        this.registerReceiver(WatchfaceUpdateReceiver, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
 
+    }
+    private BroadcastReceiver WatchfaceUpdateReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+
+
+            restartSlpt();
+            Log.w("xDripWatchface", "got new Data from Service "+intent.getStringExtra("DATA"));
+
+        }
+
+    };
+
+
+    public void restartSlpt(){
+        // Start Slpt
+        try {
+            this.stopService(this.slptIntent);
+            this.startService(this.slptIntent);
+            Log.w("xDripWatchFace", "Slpt service restarted" );
+        }catch(Exception e){
+            Log.w("xDripWatchFace", "Problem restarting slpt: "+e.toString() );
+        }
     }
 
     @Override
@@ -150,6 +184,8 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         this.stopService(this.TransportIntent);
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
         settings.setBoolean("WatchfaceIsRunning",false);
-
+        this.unregisterReceiver(WatchfaceUpdateReceiver);
     }
+
+
 }

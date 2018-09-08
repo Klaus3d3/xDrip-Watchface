@@ -45,7 +45,7 @@ import clc.sliteplugin.flowboard.ISpringBoardHostStub;
 
 
 public class NightscoutPage extends AbstractPlugin {
-
+    private static String DatafromService;
     private Context mContext;
     private Context sContext;
     private View mView;
@@ -53,18 +53,15 @@ public class NightscoutPage extends AbstractPlugin {
     private ISpringBoardHostStub mHost = null;
 
     private com.klaus3d3.xDripwatchface.settings.APsettings settings;
-    Button GraphButton;
-    Button InfoButton;
-    Button SetupButton;
-    Button DataEntryButton;
-    Button LogButton;
+    private Button GraphButton,InfoButton,SetupButton,DataEntryButton,LogButton;
+    private Button OneButton,TwoButton,ThreeButton,BackButton,FourButton,FiveButton,SixButton,DotButton;
+    private Button SevenButton,EightButton,NineButton,ZeroButton;
 
-
-    Switch ServiceSwitch ;
-    Switch HealthDataSwitch;
-    Switch UpdateTimerSwitch;
-    TextView LogTextView;
-   LinearLayout LogContainer;
+    private Switch ServiceSwitch ;
+    private Switch HealthDataSwitch;
+    private Switch UpdateTimerSwitch;
+    private TextView LogTextView;
+    private Boolean ButtonAlreadyPressed;
     Context Settingsctx;
 
     //Much like a fragment, getView returns the content view of the page. You can set up your layout here
@@ -101,11 +98,30 @@ public class NightscoutPage extends AbstractPlugin {
         UpdateTimerSwitch = (Switch) mView.findViewById(R.id.UpdateTimerSwitch);
         UpdateTimerSwitch.setOnClickListener(UpdateTimerSwitchListener);
         LogTextView =(TextView) mView.findViewById(R.id.LogTextView);
-
-
-
-
-
+        OneButton= (Button) mView.findViewById(R.id.OneButton);
+        TwoButton= (Button) mView.findViewById(R.id.TwoButton);
+        ThreeButton= (Button) mView.findViewById(R.id.ThreeButton);
+        BackButton= (Button) mView.findViewById(R.id.BackButton);
+        FourButton= (Button) mView.findViewById(R.id.FourButton);
+        FiveButton= (Button) mView.findViewById(R.id.FiveButton);
+        SixButton= (Button) mView.findViewById(R.id.SixButton);
+        ZeroButton= (Button) mView.findViewById(R.id.ZeroButton);
+        SevenButton= (Button) mView.findViewById(R.id.SevenButton);
+        EightButton= (Button) mView.findViewById(R.id.EightButton);
+        NineButton= (Button) mView.findViewById(R.id.NineButton);
+        DotButton= (Button) mView.findViewById(R.id.DotButton);
+        OneButton.setOnClickListener(OneButtonListener);
+        TwoButton.setOnClickListener(TwoButtonListener);
+        ThreeButton.setOnClickListener(ThreeButtonListener);
+        BackButton.setOnClickListener(BackButtonListener);
+        FourButton.setOnClickListener(FourButtonListener);
+        FiveButton.setOnClickListener(FiveButtonListener);
+        SixButton.setOnClickListener(SixButtonListener);
+        DotButton.setOnClickListener(DotButtonListener);
+        SevenButton.setOnClickListener(SevenButtonListener);
+        EightButton.setOnClickListener(EightButtonListener);
+        NineButton.setOnClickListener(NineButtonListener);
+        ZeroButton.setOnClickListener(ZeroButtonListener);
         return mView;
     }
 
@@ -141,7 +157,7 @@ public class NightscoutPage extends AbstractPlugin {
         UpdateTimerSwitch.setChecked(settings.get("UpdateTimer",false));
         HealthDataSwitch.setEnabled(ServiceSwitch.isChecked());
         UpdateTimerSwitch.setEnabled(ServiceSwitch.isChecked());
-
+        ButtonAlreadyPressed=false;
         //Check if the view is already inflated (reloading)
         if ((!this.mHasActive) && (this.mView != null)) {
             //It is, simply refresh
@@ -165,7 +181,7 @@ public class NightscoutPage extends AbstractPlugin {
     }
 
 
-    public void refreshView() {
+    public void refreshView(String parmStr1) {
         try{
 
         TextView sgv = (TextView) mView.findViewById(R.id.nightscout_sgv_textview);
@@ -178,9 +194,9 @@ public class NightscoutPage extends AbstractPlugin {
 
 
         ImageView graph= (ImageView)  mView.findViewById(R.id.SGVGraph);
-        String parmStr1;
+
         //try{
-        parmStr1=Settings.System.getString(mContext.getContentResolver(), "xdrip");
+        //parmStr1=Settings.System.getString(mContext.getContentResolver(), "xdrip");
         // Extract data from JSON
 
                 JSONObject json_data = new JSONObject(parmStr1);
@@ -219,7 +235,7 @@ public class NightscoutPage extends AbstractPlugin {
     public void onBindHost(ISpringBoardHostStub paramISpringBoardHostStub) {
         Log.w("xDripWidget", "onBindHost");
         mHost = paramISpringBoardHostStub;
-        mHost.getHostWindow().getContext().registerReceiver(mMessageReceiver, new IntentFilter("WidgetUpdateIntent"));
+        mHost.getHostWindow().getContext().registerReceiver(mMessageReceiver, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
         //Log.w("xDripWidget onBindHost", xDripwatchface.get().toString());
     }
 
@@ -232,6 +248,7 @@ public class NightscoutPage extends AbstractPlugin {
             if (ServiceSwitch.isChecked()){
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
+                mHost.getHostWindow().getContext().stopService(TransportIntent);
                 mHost.getHostWindow().getContext().startService(TransportIntent);
                 HealthDataSwitch.setEnabled(true);
                 UpdateTimerSwitch.setEnabled(true);
@@ -257,6 +274,7 @@ public class NightscoutPage extends AbstractPlugin {
                 settings.set("HealthDataSwitch",HealthDataSwitch.isChecked());
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
+                mHost.getHostWindow().getContext().stopService(TransportIntent);
                 mHost.getHostWindow().getContext().startService(TransportIntent);
                 Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_SHORT).show();
             }else {
@@ -273,6 +291,7 @@ public class NightscoutPage extends AbstractPlugin {
             if (ServiceSwitch.isChecked()){
                 Intent TransportIntent;
                 TransportIntent = new Intent( mContext,CustomDataUpdater.class);
+                mHost.getHostWindow().getContext().stopService(TransportIntent);
                 mHost.getHostWindow().getContext().startService(TransportIntent);
                 Toast.makeText(v.getContext(), "restarting service", Toast.LENGTH_SHORT).show();
             }
@@ -289,6 +308,7 @@ public class NightscoutPage extends AbstractPlugin {
             APsettings logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
             logsave.clear();
             LogTextView.setText("");
+            ButtonAlreadyPressed=true;
             return false;
         }
     };
@@ -373,7 +393,8 @@ public class NightscoutPage extends AbstractPlugin {
                 text=newline+text;
             }}catch (Exception e){e.printStackTrace();}
             LogTextView.setText(text);
-            Toast.makeText(v.getContext(), "press long to clear LOG", Toast.LENGTH_SHORT).show();
+            if(!ButtonAlreadyPressed)Toast.makeText(v.getContext(), "press long to clear LOG", Toast.LENGTH_SHORT).show();
+            ButtonAlreadyPressed=true;
 
         }
     };
@@ -422,14 +443,81 @@ public class NightscoutPage extends AbstractPlugin {
         }
     };
 
+
+    private View.OnClickListener OneButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(OneButton);
+        }
+    };
+    private View.OnClickListener TwoButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(TwoButton);
+        }
+    };
+    private View.OnClickListener ThreeButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(ThreeButton);
+        }
+    };
+    private View.OnClickListener BackButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(BackButton);
+        }
+    };
+    private View.OnClickListener FourButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(FourButton);
+        }
+    };
+    private View.OnClickListener FiveButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(FiveButton);
+        }
+    };
+    private View.OnClickListener SixButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(SixButton);
+        }
+    };
+    private View.OnClickListener ZeroButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(ZeroButton);
+        }
+    };
+    private View.OnClickListener SevenButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(SevenButton);
+        }
+    };
+    private View.OnClickListener EightButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(EightButton);
+        }
+    };
+    private View.OnClickListener NineButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(NineButton);
+        }
+    };
+    private View.OnClickListener DotButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            didTapButton(DotButton);
+        }
+    };
+
+
+
+
+
+
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            DatafromService=intent.getStringExtra("DATA");
 
             Log.w("xDripWidget", "Received update");
-            refreshView();
+            refreshView(DatafromService);
         }
 
     };
@@ -473,7 +561,7 @@ public class NightscoutPage extends AbstractPlugin {
     public void onResume() {
         Log.w("xDripWidget","onResume");
 
-        refreshView();
+        refreshView(DatafromService);
         super.onResume();
         //Check if view already loaded
         if ((!this.mHasActive) && (this.mView != null)) {
