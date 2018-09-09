@@ -157,8 +157,6 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         public void onReceive(Context context, Intent intent) {
 
 
-
-
             restartSlpt();
             Log.w("xDripWatchface", "got new Data from Service "+intent.getStringExtra("DATA"));
 

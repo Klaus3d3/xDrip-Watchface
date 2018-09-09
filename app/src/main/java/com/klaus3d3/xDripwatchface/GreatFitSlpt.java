@@ -1,6 +1,6 @@
 package com.klaus3d3.xDripwatchface;
 
-import android.content.Context;
+
 import android.util.Log;
 
 import com.klaus3d3.xDripwatchface.widget.MainClock;
@@ -25,8 +25,11 @@ public class GreatFitSlpt extends AbstractWatchFaceSlpt {
                 new MainClock(),
                 new GreatWidget(),
                 new WeatherWidget()
+
         );
+
     }
+
 
     @Override
     protected SlptLayout createClockLayout26WC() {

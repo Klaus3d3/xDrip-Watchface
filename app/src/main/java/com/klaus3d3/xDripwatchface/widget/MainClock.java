@@ -12,6 +12,10 @@ import android.content.Context;
 
 
 import com.klaus3d3.xDripwatchface.Constants;
+import com.klaus3d3.xDripwatchface.data.Battery;
+import com.klaus3d3.xDripwatchface.data.DataType;
+import com.klaus3d3.xDripwatchface.data.HeartRate;
+import com.klaus3d3.xDripwatchface.data.Steps;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.huami.watch.watchface.util.Util;
 import com.ingenic.iwds.slpt.view.core.SlptLinearLayout;
@@ -305,6 +309,7 @@ public class MainClock extends DigitalClockWidget {
     // Screen open watch mode
     @Override
     public void onDrawDigital(Canvas canvas, float width, float height, float centerX, float centerY, int seconds, int minutes, int hours, int year, int month, int day, int week, int ampm) {
+
         // Draw background image
         this.background.draw(canvas);
 

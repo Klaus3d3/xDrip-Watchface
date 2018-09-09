@@ -11,9 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Vibrator;
-import android.provider.Settings;
+
 import android.text.TextPaint;
 import android.util.Base64;
 import android.util.Log;
@@ -56,7 +54,7 @@ import com.ingenic.iwds.slpt.view.utils.SimpleFile;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
 
 
-public class GreatWidget extends AbstractWidget {
+public class GreatWidget extends  AbstractWidget {
 
     private HeartRate HR;
 
