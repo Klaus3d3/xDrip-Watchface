@@ -7,6 +7,6 @@ public class SlptAnalogAmPmView extends SlptTimeView {
     }
 
     protected short initType() {
-        return SVIEW_ALTITUDE;
+        return SVIEW_ANALOG_AM_PM;
     }
 }

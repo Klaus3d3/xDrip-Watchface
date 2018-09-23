@@ -87,9 +87,7 @@ public class xDripSnoozePickerActivity extends Activity {
 
 
 
-    public void didTapButton(Button button) {
-        final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
-        button.startAnimation(myAnim);}
+
 
 
    private void registerButtons() {
@@ -97,9 +95,7 @@ public class xDripSnoozePickerActivity extends Activity {
        tenmin.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.tenmin);
-               didTapButton((Button) view);
-               snooze_time = 10;
+              snooze_time = 10;
               finish();
            }
        });
@@ -109,8 +105,6 @@ public class xDripSnoozePickerActivity extends Activity {
        twenmin.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.twenmin);
-               didTapButton((Button) view);
                snooze_time = 20;
                finish();
            }
@@ -119,8 +113,6 @@ public class xDripSnoozePickerActivity extends Activity {
        thirtymin.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.thirtymin);
-               didTapButton((Button) view);
                snooze_time = 30;
                finish();
            }
@@ -129,8 +121,7 @@ public class xDripSnoozePickerActivity extends Activity {
        fourtyfivemin.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.fourtyfivemin);
-               didTapButton((Button) view);
+
                snooze_time = 45;
                finish();
            }
@@ -139,8 +130,7 @@ public class xDripSnoozePickerActivity extends Activity {
        onehour.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.onehour);
-               didTapButton((Button) view);
+
                snooze_time = 60;
                finish();
            }
@@ -149,8 +139,7 @@ public class xDripSnoozePickerActivity extends Activity {
        twohour.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.twohour);
-               didTapButton((Button) view);
+
                snooze_time = 120;
                finish();
            }
@@ -159,8 +148,7 @@ public class xDripSnoozePickerActivity extends Activity {
        threehour.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.threehour);
-               didTapButton((Button) view);
+
                snooze_time = 180;
                finish();
            }
@@ -169,8 +157,7 @@ public class xDripSnoozePickerActivity extends Activity {
        fourhour.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.fourhour);
-               didTapButton((Button) view);
+
                snooze_time = 240;
                finish();
            }
@@ -179,8 +166,7 @@ public class xDripSnoozePickerActivity extends Activity {
        sixhour.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.sixhour);
-               didTapButton((Button) view);
+
                snooze_time = 360;
                finish();
            }
@@ -189,8 +175,7 @@ public class xDripSnoozePickerActivity extends Activity {
        eigthhour.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //Button button = (Button) findViewById(R.id.eighthour);
-               didTapButton((Button) view);
+
                snooze_time = 480;
                finish();
            }

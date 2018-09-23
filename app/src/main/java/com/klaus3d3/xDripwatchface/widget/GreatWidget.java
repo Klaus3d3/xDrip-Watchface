@@ -322,7 +322,7 @@ public class GreatWidget extends  AbstractWidget {
 
 
     public Xdrip getXdrip(){
-        String str = CustomDataUpdater.savetoSettings(mService);
+        String str = AbstractWatchFace.DatafromService;
 //String str = Settings.System.getString(this.mService.getContentResolver(), "xdrip");
         return new Xdrip(str);
     }
@@ -341,6 +341,10 @@ public class GreatWidget extends  AbstractWidget {
 
         int tmp_left;
         Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
+
+
+
+
 
         // Show battery
         SlptLinearLayout power = new SlptLinearLayout();

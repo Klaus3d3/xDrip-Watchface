@@ -23,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/tenmin"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -40,7 +40,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/twenmin"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -57,7 +57,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/thirtymin"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -74,7 +74,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/fourtyfivemin"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -91,7 +91,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/onehour"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -108,7 +108,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/twohour"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -125,7 +125,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/threehour"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -142,7 +142,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/fourhour"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -159,7 +159,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/sixhour"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -176,7 +176,7 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
+            <com.huami.watch.common.widget.HmHaloButton
                 android:id="@+id/eighthour"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -194,5 +194,6 @@
                 android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>
+
 
 </RelativeLayout>

@@ -1,6 +1,9 @@
 package com.klaus3d3.xDripwatchface.springboard;
 
 
+import android.app.AlarmManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.view.ScrollingView;
+import android.text.Layout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,10 +31,20 @@ import android.widget.Toast;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import android.os.SystemClock;
+import android.provider.Settings;
+import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
+import android.app.admin.DeviceAdminReceiver;
+import android.app.admin.DevicePolicyManager;
 
 
 import com.klaus3d3.xDripwatchface.Constants;
+import com.klaus3d3.xDripwatchface.SystemProperties;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
+
+
+import com.klaus3d3.xDripwatchface.ui.xDripSnoozePickerActivity;
 import com.klaus3d3.xDripwatchface.widget.MainClock;
 import com.klaus3d3.xDripwatchface.R;
 import com.klaus3d3.xDripwatchface.CustomDataUpdater;
@@ -41,6 +55,7 @@ import org.json.JSONObject;
 
 import clc.sliteplugin.flowboard.AbstractPlugin;
 import clc.sliteplugin.flowboard.ISpringBoardHostStub;
+import com.ingenic.iwds.slpt.SlptClockClient;
 
 
 
@@ -53,16 +68,16 @@ public class NightscoutPage extends AbstractPlugin {
     private ISpringBoardHostStub mHost = null;
 
     private com.klaus3d3.xDripwatchface.settings.APsettings settings;
-    private Button GraphButton,InfoButton,SetupButton,DataEntryButton,LogButton;
-    private Button OneButton,TwoButton,ThreeButton,BackButton,FourButton,FiveButton,SixButton,DotButton;
-    private Button SevenButton,EightButton,NineButton,ZeroButton;
-
-    private Switch ServiceSwitch ;
-    private Switch HealthDataSwitch;
-    private Switch UpdateTimerSwitch;
-    private TextView LogTextView;
+    private Button GraphButton,InfoButton,SetupButton,DataEntryButton,LogButton,SendtoxDripButton;
+    private ImageView graph;
+    private Switch ServiceSwitch,HealthDataSwitch,UpdateTimerSwitch,LowPowerModeSwitch;
+    private TextView LogTextView,TimeTextViev,InsulinTextView,MealTextView,FingerTextView,sgv,delta,date,CollectionInfo;
+    private TextView HardwareSourceInfo,SensorBattery,SensorExpires;
+    View GraphLayout, InfoLayout,SetupLayout,LogLayout ,DataEntryLayout,DataField;
     private Boolean ButtonAlreadyPressed;
     Context Settingsctx;
+    private SlptClockClient slptClockClient;
+
 
     //Much like a fragment, getView returns the content view of the page. You can set up your layout here
 
@@ -75,17 +90,30 @@ public class NightscoutPage extends AbstractPlugin {
         Settingsctx=mHost.getHostWindow().getContext().getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
         }catch(Exception e){Log.e("xDripWidget",e.toString());}
 
-
-
-
         mView = LayoutInflater.from(paramContext).inflate(R.layout.nightscoout_page, null);
+        sgv = (TextView) mView.findViewById(R.id.nightscout_sgv_textview);
+        delta = (TextView) mView.findViewById(R.id.nightscout_delta_text_view);
+        date = (TextView) mView.findViewById(R.id.nightscout_date_textview);
+        CollectionInfo = (TextView) mView.findViewById(R.id.CollectionInfo);
+        HardwareSourceInfo = (TextView) mView.findViewById(R.id.HardwareSourceInfo);
+        SensorBattery = (TextView) mView.findViewById(R.id.SensorBattery);
+        SensorExpires = (TextView) mView.findViewById(R.id.SensorExpires);
+        graph = (ImageView)  mView.findViewById(R.id.SGVGraph);
+        GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
+        InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
+        SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
+        LogLayout = (View) mView.findViewById(R.id.LogLayout);
+        DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+        DataField = (View) mView.findViewById(R.id.DataField);
         GraphButton = (Button) mView.findViewById(R.id.GraphButton);
         GraphButton.setOnClickListener(GraphButtonListener);
         InfoButton = (Button) mView.findViewById(R.id.InfoButton);
         InfoButton.setOnClickListener(InfoButtonListener);
         SetupButton = (Button) mView.findViewById(R.id.SetupUpbutton);
         SetupButton.setOnClickListener(SetupButtonListener);
-
+        SendtoxDripButton = (Button) mView.findViewById(R.id.SendtoxDripButton);
+        SendtoxDripButton.setOnClickListener(SendtoxDripButtonListener);
+        DataField.setOnClickListener(DataFieldClickListener);
         DataEntryButton = (Button) mView.findViewById(R.id.DataEntryButton);
         DataEntryButton.setOnClickListener(DataEntryButtonListener);
         LogButton = (Button) mView.findViewById(R.id.LogButton);
@@ -97,33 +125,19 @@ public class NightscoutPage extends AbstractPlugin {
         HealthDataSwitch.setOnClickListener(HealthDataSwitchListener);
         UpdateTimerSwitch = (Switch) mView.findViewById(R.id.UpdateTimerSwitch);
         UpdateTimerSwitch.setOnClickListener(UpdateTimerSwitchListener);
+        LowPowerModeSwitch = (Switch) mView.findViewById(R.id.LowPowerModeSwitch);
+        LowPowerModeSwitch.setOnClickListener(LowPowerModeSwitchListener);
         LogTextView =(TextView) mView.findViewById(R.id.LogTextView);
-        OneButton= (Button) mView.findViewById(R.id.OneButton);
-        TwoButton= (Button) mView.findViewById(R.id.TwoButton);
-        ThreeButton= (Button) mView.findViewById(R.id.ThreeButton);
-        BackButton= (Button) mView.findViewById(R.id.BackButton);
-        FourButton= (Button) mView.findViewById(R.id.FourButton);
-        FiveButton= (Button) mView.findViewById(R.id.FiveButton);
-        SixButton= (Button) mView.findViewById(R.id.SixButton);
-        ZeroButton= (Button) mView.findViewById(R.id.ZeroButton);
-        SevenButton= (Button) mView.findViewById(R.id.SevenButton);
-        EightButton= (Button) mView.findViewById(R.id.EightButton);
-        NineButton= (Button) mView.findViewById(R.id.NineButton);
-        DotButton= (Button) mView.findViewById(R.id.DotButton);
-        OneButton.setOnClickListener(OneButtonListener);
-        TwoButton.setOnClickListener(TwoButtonListener);
-        ThreeButton.setOnClickListener(ThreeButtonListener);
-        BackButton.setOnClickListener(BackButtonListener);
-        FourButton.setOnClickListener(FourButtonListener);
-        FiveButton.setOnClickListener(FiveButtonListener);
-        SixButton.setOnClickListener(SixButtonListener);
-        DotButton.setOnClickListener(DotButtonListener);
-        SevenButton.setOnClickListener(SevenButtonListener);
-        EightButton.setOnClickListener(EightButtonListener);
-        NineButton.setOnClickListener(NineButtonListener);
-        ZeroButton.setOnClickListener(ZeroButtonListener);
+        TimeTextViev =(TextView) mView.findViewById(R.id.TimeTextView);
+        InsulinTextView =(TextView) mView.findViewById(R.id.InsulinTextView);
+        MealTextView =(TextView) mView.findViewById(R.id.MealTextView);
+        FingerTextView =(TextView) mView.findViewById(R.id.FingerTextView);
+
+
         return mView;
     }
+
+
 
 
 
@@ -155,16 +169,12 @@ public class NightscoutPage extends AbstractPlugin {
         ServiceSwitch.setChecked(settings.get("CustomDataUpdaterIsRunning",false));
         HealthDataSwitch.setChecked(settings.get("HealthDataSwitch",false));
         UpdateTimerSwitch.setChecked(settings.get("UpdateTimer",false));
+        LowPowerModeSwitch.setChecked(settings.get("LowPowerMode",false));
         HealthDataSwitch.setEnabled(ServiceSwitch.isChecked());
         UpdateTimerSwitch.setEnabled(ServiceSwitch.isChecked());
+        LowPowerModeSwitch.setEnabled(ServiceSwitch.isChecked());
         ButtonAlreadyPressed=false;
-        //Check if the view is already inflated (reloading)
-        if ((!this.mHasActive) && (this.mView != null)) {
-            //It is, simply refresh
-
-        }
-
-            //Store active state
+         //Store active state
         this.mHasActive = true;
 
     }
@@ -184,16 +194,8 @@ public class NightscoutPage extends AbstractPlugin {
     public void refreshView(String parmStr1) {
         try{
 
-        TextView sgv = (TextView) mView.findViewById(R.id.nightscout_sgv_textview);
-        TextView delta = (TextView) mView.findViewById(R.id.nightscout_delta_text_view);
-        TextView date = (TextView) mView.findViewById(R.id.nightscout_date_textview);
-        TextView CollectionInfo = (TextView) mView.findViewById(R.id.CollectionInfo);
-        TextView HardwareSourceInfo = (TextView) mView.findViewById(R.id.HardwareSourceInfo);
-        TextView SensorBattery = (TextView) mView.findViewById(R.id.SensorBattery);
-        TextView SensorExpires = (TextView) mView.findViewById(R.id.SensorExpires);
 
 
-        ImageView graph= (ImageView)  mView.findViewById(R.id.SGVGraph);
 
         //try{
         //parmStr1=Settings.System.getString(mContext.getContentResolver(), "xdrip");
@@ -202,13 +204,13 @@ public class NightscoutPage extends AbstractPlugin {
                 JSONObject json_data = new JSONObject(parmStr1);
                 sgv.setText(json_data.getString("sgv"));
                 delta.setText(json_data.getString("delta"));
-                date.setText(TimeAgo.using(Long.valueOf(json_data.getString("timestamp"))));
+                date.setText(TimeAgo.using(Long.valueOf(json_data.getString("date"))));
                 CollectionInfo.setText("Collector: " +json_data.getString("Collection_info"));
                 HardwareSourceInfo.setText("Hardware Source: " +json_data.getString("hardware_source_info"));
                 SensorBattery.setText("Transmitter battery: " +json_data.getString("sensor.latest_battery_level"));
                 SensorExpires.setText("Expires: " +json_data.getString("sensor_expires"));
 
-                if(!json_data.getString("widget_graph").equals("false"))
+                if(!json_data.getString("SGVGraph").equals("false"))
                 graph.setImageBitmap(StringToBitMap(json_data.getString("widget_graph")));
                 else graph.setImageDrawable(mContext.getResources().getDrawable(R.drawable.empty_graph));
 
@@ -236,7 +238,7 @@ public class NightscoutPage extends AbstractPlugin {
         Log.w("xDripWidget", "onBindHost");
         mHost = paramISpringBoardHostStub;
         mHost.getHostWindow().getContext().registerReceiver(mMessageReceiver, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
-        //Log.w("xDripWidget onBindHost", xDripwatchface.get().toString());
+
     }
 
 
@@ -300,6 +302,11 @@ public class NightscoutPage extends AbstractPlugin {
 
         }};
 
+    private View.OnClickListener LowPowerModeSwitchListener = new View.OnClickListener() {
+        public void onClick(View v) {
+
+          }};
+
     private View.OnLongClickListener ClearLogLongListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -313,6 +320,21 @@ public class NightscoutPage extends AbstractPlugin {
         }
     };
 
+    private View.OnClickListener SendtoxDripButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+
+
+        }
+    };
+
+    private View.OnClickListener DataFieldClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Toast.makeText(v.getContext(), "This will start a new activity", Toast.LENGTH_SHORT).show();
+
+        }
+    };
+
+
 
     private View.OnClickListener GraphButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -323,12 +345,7 @@ public class NightscoutPage extends AbstractPlugin {
             SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
-            didTapButton(GraphButton);
-            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
-            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
-            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
-            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+
             GraphLayout.setVisibility(View.VISIBLE);
             InfoLayout.setVisibility(View.INVISIBLE);
             DataEntryLayout.setVisibility(View.INVISIBLE);
@@ -344,12 +361,7 @@ public class NightscoutPage extends AbstractPlugin {
             SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
             LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
-            didTapButton(SetupButton);
-            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
-            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
-            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
-            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+
             GraphLayout.setVisibility(View.INVISIBLE);
             InfoLayout.setVisibility(View.INVISIBLE);
             DataEntryLayout.setVisibility(View.INVISIBLE);
@@ -366,12 +378,7 @@ public class NightscoutPage extends AbstractPlugin {
             SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             LogButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
             DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
-            didTapButton(LogButton);
-            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
-            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
-            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
-            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+
             GraphLayout.setVisibility(View.INVISIBLE);
             InfoLayout.setVisibility(View.INVISIBLE);
             DataEntryLayout.setVisibility(View.INVISIBLE);
@@ -407,12 +414,7 @@ public class NightscoutPage extends AbstractPlugin {
             SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.rounded_corners_button_widget_pressed));
-            didTapButton(DataEntryButton);
-            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
-            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
-            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
-            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+
             GraphLayout.setVisibility(View.INVISIBLE);
             InfoLayout.setVisibility(View.INVISIBLE);
             DataEntryLayout.setVisibility(View.VISIBLE);
@@ -429,12 +431,7 @@ public class NightscoutPage extends AbstractPlugin {
             SetupButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             LogButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
             DataEntryButton.setBackground(mView.getResources().getDrawable(R.drawable.lang));
-            didTapButton(InfoButton);
-            View GraphLayout = (View) mView.findViewById(R.id.GraphLayout);
-            View InfoLayout = (View) mView.findViewById(R.id.InfoLayout);
-            View SetupLayout = (View) mView.findViewById(R.id.SetupLayout);
-            View LogLayout = (View) mView.findViewById(R.id.LogLayout);
-            View DataEntryLayout = (View) mView.findViewById(R.id.DataEntryLayout);
+
             GraphLayout.setVisibility(View.INVISIBLE);
             InfoLayout.setVisibility(View.VISIBLE);
             DataEntryLayout.setVisibility(View.INVISIBLE);
@@ -444,66 +441,8 @@ public class NightscoutPage extends AbstractPlugin {
     };
 
 
-    private View.OnClickListener OneButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(OneButton);
-        }
-    };
-    private View.OnClickListener TwoButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(TwoButton);
-        }
-    };
-    private View.OnClickListener ThreeButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(ThreeButton);
-        }
-    };
-    private View.OnClickListener BackButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(BackButton);
-        }
-    };
-    private View.OnClickListener FourButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(FourButton);
-        }
-    };
-    private View.OnClickListener FiveButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(FiveButton);
-        }
-    };
-    private View.OnClickListener SixButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(SixButton);
-        }
-    };
-    private View.OnClickListener ZeroButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(ZeroButton);
-        }
-    };
-    private View.OnClickListener SevenButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(SevenButton);
-        }
-    };
-    private View.OnClickListener EightButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(EightButton);
-        }
-    };
-    private View.OnClickListener NineButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(NineButton);
-        }
-    };
-    private View.OnClickListener DotButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            didTapButton(DotButton);
-        }
-    };
+
+
 
 
 
@@ -521,15 +460,13 @@ public class NightscoutPage extends AbstractPlugin {
         }
 
     };
-    public void didTapButton(Button button) {
-        final Animation myAnim = AnimationUtils.loadAnimation(mView.getContext(), R.anim.bounce);
-        button.startAnimation(myAnim);
-    }
+
 
     //Called when the page is destroyed completely (in app mode). Same as the onDestroy method of an activity
     @Override
     public void onDestroy() {
         //EventBus.getDefault().unregister(mHost.getHostWindow().getContext());
+
         mHost.getHostWindow().getContext().unregisterReceiver(mMessageReceiver);
         super.onDestroy();
 

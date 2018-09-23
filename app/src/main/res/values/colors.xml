@@ -63,7 +63,7 @@
     <color name="weekday_colour">#000</color>
     <color name="weekday_colour_slpt">#000</color>
 
-    <color name="background">#000</color><!--Not used yet-->
+    <color name="background">#000000</color><!--Not used yet-->
     <color name="background_slpt">#000</color><!--Not used yet-->
 
 

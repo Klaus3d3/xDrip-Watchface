@@ -1,11 +1,13 @@
 package com.klaus3d3.xDripwatchface;
 
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import android.net.wifi.WifiManager;
 import android.os.IBinder;
 
 import android.provider.Settings;
@@ -17,10 +19,12 @@ import com.huami.watch.transport.DataTransportResult;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.huami.watch.transport.DataBundle;
 import com.huami.watch.transport.TransportDataItem;
+import com.ingenic.iwds.slpt.SlptClockClient;
 import com.kieronquinn.library.amazfitcommunication.Transporter;
 import com.kieronquinn.library.amazfitcommunication.TransporterClassic;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.widget.Toast;
 
 
 import org.json.JSONException;
@@ -61,12 +65,12 @@ public class CustomDataUpdater extends Service {
     private com.klaus3d3.xDripwatchface.settings.APsettings settings;
     private com.klaus3d3.xDripwatchface.settings.APsettings logsave;
     private boolean sendhealthdatatoxdrip;
+    private boolean lowpowermode;
     private static boolean updatetimer;
-    private Intent SaveSettingIndent;
-
 
     private int counter=0;
     AlarmManager alarmManager;
+    AlarmManager LowPowerManager;
     Context Settingsctx;
 
 
@@ -75,8 +79,9 @@ public class CustomDataUpdater extends Service {
         super.onCreate();
         Log.w("CustomDataUpdater", "Service Created");
         alarmManager= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        LowPowerManager= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         context=getApplicationContext();
-        this.SaveSettingIndent= new Intent(this, TimeTick.class);
+
         registerReceiver(snoozeReceiver, new IntentFilter("snooze_alarm_intent"));
 
 
@@ -89,6 +94,8 @@ public class CustomDataUpdater extends Service {
         return null;
     }
 
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -99,6 +106,7 @@ public class CustomDataUpdater extends Service {
         settings.setBoolean("CustomDataUpdaterIsRunning",true);
         sendhealthdatatoxdrip=settings.getBoolean("HealthDataSwitch",false);
         updatetimer=settings.getBoolean("UpdateTimer",false);
+        lowpowermode=settings.getBoolean("LowPowerMode",false);
 
         Log.w("CustomDataUpdater", "Service started");
         if (companionTransporter == null) {
@@ -139,31 +147,9 @@ public class CustomDataUpdater extends Service {
                 }
                 if (action.equals(Constants.ACTION_XDRIP_SYNC))
                 {
-
-                    watchface_date= String.valueOf(db.getLong("date"));
-                    watchface_delta=db.getString("delta");
-                    watchface_graph=db.getString("WFGraph");
-                    widget_graph=db.getString("SGVGraph");
-                    watchface_sgv=db.getString("sgv");
-                    watchface_battery=db.getString("phone_battery");
-                    watchface_timeago=TimeAgo.using(db.getLong("date"));
-                    HardwareSourceInfo=db.getString("hardware_source_info");
-                    SensorBattery=db.getString("sensor.latest_battery_level");
-                    SensorExpires=db.getString("sensor_expires");
-                    CollectionInfo=db.getString("Collection_info");
-
-                    if(db.getBoolean("ishigh")||db.getBoolean("islow")||db.getBoolean("isstale")){bad_value=true;}
-                    else {bad_value=false;}
-                    alarmManager.cancel(PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
-                    if (updatetimer)
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, db.getLong("date")+1000*60, 1000*60*1,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
-                    else
-                    alarmManager.set(AlarmManager.RTC_WAKEUP,db.getLong("date")+1000*60*10,PendingIntent.getBroadcast(context, 1, SaveSettingIndent, PendingIntent.FLAG_UPDATE_CURRENT));
-
-                    String data = savetoSettings(context);
-                    Intent UpdateIntent = new Intent("com.klaus3d3.xDripwatchface.newDataIntent");
-                    UpdateIntent.putExtra("DATA",data);
-                    sendBroadcast(UpdateIntent);
+                     Intent newDataUpdateIndent= new Intent("com.klaus3d3.xDripwatchface.newDataIntent");
+                     newDataUpdateIndent.putExtra("DATA",db.getString("Data"));
+                     sendBroadcast(newDataUpdateIndent);
 
 
 
@@ -175,21 +161,22 @@ public class CustomDataUpdater extends Service {
                     hd.putInt("heart_acuracy", 1);
                     companionTransporter.send("Amazfit_Healthdata", hd);}
 
+
+
                         }
                 if (action.equals(Constants.ACTION_XDRIP_OTHERALERT))
                 {   DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                     Date date = new Date();
+                    String Alarmtext= getStringfromJSON("alarmtext",db.getString("Data"));
+
                     logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
-                    logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString()+" : " + db.getString("alarmtext"));
+                    logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString()+" : " +Alarmtext);
                     Intent intent = new Intent(context, xDripOtheralertActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
                             Intent.FLAG_ACTIVITY_CLEAR_TOP |
                             Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    intent.putExtra("Alarmtext",db.getString("alarmtext"));
-                    intent.putExtra("sgv",db.getString("sgv"));
-
-
+                    intent.putExtra("Data",db.getString("Data"));
                     context.startActivity(intent);
 
 
@@ -199,17 +186,16 @@ public class CustomDataUpdater extends Service {
                 {
                     DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                     Date date = new Date();
+                    String Alarmtext= getStringfromJSON("alarmtext",db.getString("Data"));
+
                     logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
-                    logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString()+" : " + db.getString("alarmtext"));
+                    logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString()+" : " +Alarmtext);
                     Intent intent = new Intent(context, xDripAlarmActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
                             Intent.FLAG_ACTIVITY_CLEAR_TOP |
                             Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    intent.putExtra("Alarmtext",db.getString("alarmtext"));
-                    intent.putExtra("sgv",db.getString("sgv"));
-                    intent.putExtra("default_snooze",db.getInt("default_snooze"));
-
+                    intent.putExtra("Data",db.getString("Data"));
                     context.startActivity(intent);
 
                 }
@@ -233,6 +219,14 @@ public class CustomDataUpdater extends Service {
 
     }
 
+    private String getStringfromJSON(String Key, String JSON_String){
+        try {
+            JSONObject JSON_DATA = new JSONObject(JSON_String);
+            return JSON_DATA.getString(Key);
+        }catch (Exception e) {
+        }
+        return "";
+    }
 
     private BroadcastReceiver snoozeReceiver = new BroadcastReceiver() {
 
@@ -248,53 +242,14 @@ public class CustomDataUpdater extends Service {
     };
 
 
-    public static String savetoSettings(Context mcontext){
 
-    String timeago;
-    if (System.currentTimeMillis()-Long.valueOf(watchface_date) > 600000)
-        timeago=TimeAgo.using(Long.valueOf(CustomDataUpdater.watchface_date));
-    else{
-        if(updatetimer)timeago=TimeAgo.using(Long.valueOf(CustomDataUpdater.watchface_date));
-        else
-        timeago="Less than 10 min ago";
-    }
-    try {
-        // Extract data from JSON
-
-        JSONObject json_data = new JSONObject();
-        json_data.put("sgv",CustomDataUpdater.watchface_sgv);
-        json_data.put("delta",CustomDataUpdater.watchface_delta);
-        json_data.put("timestamp",CustomDataUpdater.watchface_date);
-        json_data.put("timeago",timeago);
-        json_data.put("sgv_graph",CustomDataUpdater.watchface_graph);
-        json_data.put("widget_graph",CustomDataUpdater.widget_graph);
-        json_data.put("phonebattery",CustomDataUpdater.watchface_battery);
-        json_data.put("Collection_info",CustomDataUpdater.CollectionInfo);
-        json_data.put("hardware_source_info",CustomDataUpdater.HardwareSourceInfo);
-        json_data.put("sensor.latest_battery_level",CustomDataUpdater.SensorBattery);
-        json_data.put("sensor_expires",CustomDataUpdater.SensorExpires);
-
-
-        if(System.currentTimeMillis()-Long.valueOf(watchface_date) > 600000)watchface_strike="true";else watchface_strike="false";
-        if(System.currentTimeMillis()-Long.valueOf(watchface_date) > 600000||CustomDataUpdater.bad_value){watchface_color="WHITE";}
-        else {watchface_color="BLACK";}
-        json_data.put("color",watchface_color);
-        json_data.put("strike",watchface_strike);
-        json_data.put("bad_value",bad_value);
-
-        //Settings.System.putString(mcontext.getApplicationContext().getContentResolver(), "xdrip",json_data.toString());
-    return json_data.toString();
-    }catch (JSONException e) {
-        Log.w("CustomDataUpdater", e.toString());
-    }
-return "";
-}
 
 
     @Override
     public void onDestroy() {
 
             unregisterReceiver(snoozeReceiver);
+
             companionTransporter.disconnectTransportService();
             unregisterComponentCallbacks(this);
             companionTransporter.removeAllChannelListeners();

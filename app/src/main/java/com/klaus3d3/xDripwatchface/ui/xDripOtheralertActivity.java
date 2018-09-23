@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.klaus3d3.xDripwatchface.R;
 import android.view.View;
 
+import org.json.JSONObject;
+
 //import butterknife.BindView;
 //import butterknife.ButterKnife;
 
@@ -21,8 +23,8 @@ public class xDripOtheralertActivity extends Activity {
 
 
     private Vibrator vibrator;
-    private String Alarmtext_view;
-    private String SGV_view;
+    private String Alarmtext_view="";
+    private String SGV_view="";
 
     TextView sgv;
     TextView Alarmtext;
@@ -59,8 +61,11 @@ public class xDripOtheralertActivity extends Activity {
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);// |
                     //WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
-        Alarmtext_view =getIntent().getStringExtra("Alarmtext");
-        SGV_view= getIntent().getStringExtra("sgv");
+
+        String Data = (getIntent().getStringExtra("Data"));
+        Alarmtext_view =getStringfromJSON("alarmtext",Data);
+        SGV_view= getStringfromJSON("sgv",Data);
+
         TextView sgv = (TextView) findViewById(R.id.SGV);
         TextView  Alarmtext = (TextView)findViewById(R.id.Alarm_text);
         sgv.setText(SGV_view);
@@ -68,6 +73,14 @@ public class xDripOtheralertActivity extends Activity {
 
     }
 
+    private String getStringfromJSON(String Key, String JSON_String){
+        try {
+            JSONObject JSON_DATA = new JSONObject(JSON_String);
+            return JSON_DATA.getString(Key);
+        }catch (Exception e) {
+        }
+        return "";
+    }
 
     @Override
     public void onStart() {

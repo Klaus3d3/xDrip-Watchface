@@ -15,25 +15,19 @@ import android.util.Log;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import android.os.PowerManager;
+
 import com.klaus3d3.xDripwatchface.data.DataType;
 import com.klaus3d3.xDripwatchface.data.MultipleWatchDataListenerAdapter;
-import com.klaus3d3.xDripwatchface.data.MultipleWatchDataListener;
-import com.klaus3d3.xDripwatchface.data.Xdrip;
+
 import com.klaus3d3.xDripwatchface.settings.APsettings;
 import com.klaus3d3.xDripwatchface.widget.AnalogClockWidget;
 import com.klaus3d3.xDripwatchface.widget.ClockWidget;
 import com.klaus3d3.xDripwatchface.widget.DigitalClockWidget;
-import com.klaus3d3.xDripwatchface.widget.GreatWidget;
-import com.klaus3d3.xDripwatchface.widget.MainClock;
+
 import com.klaus3d3.xDripwatchface.widget.Widget;
-import com.klaus3d3.xDripwatchface.R;
-import com.github.marlonlom.utilities.timeago.TimeAgo;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 
-
-import com.huami.watch.watchface.WatchDataListener;
-
-import org.json.JSONObject;
 
 /**
  * Abstract base class for watch faces
@@ -48,6 +42,8 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
     private APsettings settings;
     private Context Settingctx;
     public Context mContext;
+    public static String DatafromService="";
+    AlarmManager alarmManager;
 
 
     private class DigitalEngine extends com.huami.watch.watchface.AbstractWatchFace.DigitalEngine {
@@ -148,17 +144,29 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         }catch(Exception e){Log.e("xDripWidget",e.toString());}
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
         settings.setBoolean("WatchfaceIsRunning",true);
-        this.registerReceiver(WatchfaceUpdateReceiver, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
-
+        this.registerReceiver(WatchfaceUpdateReceiverfromService, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
+        this.registerReceiver(WatchfaceUpdateReceiverfromAM, new IntentFilter("com.klaus3d3.xDripwatchface.AlarmManagerWFUpdate"));
     }
-    private BroadcastReceiver WatchfaceUpdateReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver WatchfaceUpdateReceiverfromService = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            DatafromService=intent.getStringExtra("DATA");
+                Intent TimerUpdate = new Intent("com.klaus3d3.xDripwatchface.AlarmManagerWFUpdate");
+               // alarmManager.cancel(PendingIntent.getBroadcast(mContext, 1, TimerUpdate, PendingIntent.FLAG_UPDATE_CURRENT));
+                //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+1000*60, 1000*60*1,PendingIntent.getBroadcast(mContext, 1, TimerUpdate, PendingIntent.FLAG_UPDATE_CURRENT));
 
             restartSlpt();
             Log.w("xDripWatchface", "got new Data from Service "+intent.getStringExtra("DATA"));
+
+        }
+
+    };
+    private BroadcastReceiver WatchfaceUpdateReceiverfromAM = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+                 restartSlpt();
 
         }
 
@@ -168,6 +176,7 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
     public void restartSlpt(){
         // Start Slpt
         try {
+
             this.stopService(this.slptIntent);
             this.startService(this.slptIntent);
             Log.w("xDripWatchFace", "Slpt service restarted" );
@@ -182,7 +191,8 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         this.stopService(this.TransportIntent);
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
         settings.setBoolean("WatchfaceIsRunning",false);
-        this.unregisterReceiver(WatchfaceUpdateReceiver);
+        this.unregisterReceiver(WatchfaceUpdateReceiverfromService);
+        this.unregisterReceiver(WatchfaceUpdateReceiverfromAM);
     }
 
 

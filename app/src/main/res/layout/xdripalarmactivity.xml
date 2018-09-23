@@ -35,7 +35,7 @@
         android:textStyle="bold" />
 
 
-    <Button
+    <com.huami.watch.common.widget.HmHaloButton
         android:id="@+id/Snooze_Button"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
