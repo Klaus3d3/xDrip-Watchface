@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundwearlistview"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp"
+    android:paddingTop="10dp"
+    tools:context=".springboard.TestActivity">
+
+    <RelativeLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.huami.watch.common.widget.HmWearableListView
+            android:id="@+id/WearListeview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            app:layout_box="left|bottom|right" />
+
+        <com.huami.watch.common.widget.HmTextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:textColor="@color/light_grey"
+            android:textSize="20sp"
+            tools:text="List Items" />
+
+    </RelativeLayout>
+
+</android.support.wearable.view.BoxInsetLayout>

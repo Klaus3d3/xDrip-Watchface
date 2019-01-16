@@ -82,7 +82,9 @@ public class CustomDataUpdater extends Service {
         LowPowerManager= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         context=getApplicationContext();
 
-        registerReceiver(snoozeReceiver, new IntentFilter("snooze_alarm_intent"));
+        registerReceiver(snoozeReceiver, new IntentFilter("com.klaus3d3.xDripwatchface.snooze_alarm_intent"));
+        registerReceiver(newDataEntryfromWidgetReciever, new IntentFilter("com.klaus3d3.xDripwatchface.newDataEntrytoService"));
+
 
 
 
@@ -204,7 +206,7 @@ public class CustomDataUpdater extends Service {
                     Date date = new Date();
                     logsave = new APsettings(Constants.PACKAGE_NAME+".LOG", Settingsctx);
                     logsave.setString(String.valueOf(System.currentTimeMillis()),dateFormat.format(date)+" " + action.toString());
-                    Intent intent1 = new Intent("close_alarm_dialog");
+                    Intent intent1 = new Intent("com.klaus3d3.xDripwatchface.close_alarm_dialog");
                     sendBroadcast(intent1);
 
                 }
@@ -241,6 +243,21 @@ public class CustomDataUpdater extends Service {
 
     };
 
+    private BroadcastReceiver newDataEntryfromWidgetReciever = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            DataBundle db = new DataBundle();
+            db.putDouble("carbs",Double.valueOf(intent.getStringExtra("carbs")));
+            db.putDouble("insulin",Double.valueOf(intent.getStringExtra("insulin")));
+            db.putLong("timestamp",Long.valueOf(intent.getStringExtra("timestamp")));
+            companionTransporter.send("Amazfit_Treatmentsdata",db);
+
+        }
+
+    };
+
 
 
 
@@ -249,6 +266,7 @@ public class CustomDataUpdater extends Service {
     public void onDestroy() {
 
             unregisterReceiver(snoozeReceiver);
+            unregisterReceiver(newDataEntryfromWidgetReciever);
 
             companionTransporter.disconnectTransportService();
             unregisterComponentCallbacks(this);

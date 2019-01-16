@@ -2,34 +2,34 @@
 <resources>
     <!-- slpt = screen off state -->
     <!-- Hours -->
-<dimen name="hours_font_size">105px</dimen>
-<dimen name="hours_left">160px</dimen>
-<dimen name="hours_top">215px</dimen>
+    <dimen name="hours_font_size">105px</dimen>
+    <dimen name="hours_left">160px</dimen>
+    <dimen name="hours_top">215px</dimen>
 
     <!-- Minutes -->
-<dimen name="minutes_font_size">100px</dimen>
-<dimen name="minutes_left">130px</dimen>
-<dimen name="minutes_top">165px</dimen>
+    <dimen name="minutes_font_size">100px</dimen>
+    <dimen name="minutes_left">130px</dimen>
+    <dimen name="minutes_top">165px</dimen>
 
     <!-- Seconds -->
-<dimen name="seconds_font_size">32px</dimen>
-<dimen name="seconds_left">266px</dimen>
-<dimen name="seconds_top">110px</dimen>
+    <dimen name="seconds_font_size">32px</dimen>
+    <dimen name="seconds_left">266px</dimen>
+    <dimen name="seconds_top">110px</dimen>
 
     <!-- AM / PM -->
-<dimen name="ampm_font_size">30px</dimen>
-<dimen name="ampm_left">266px</dimen>
-<dimen name="ampm_top">180px</dimen>
+    <dimen name="ampm_font_size">30px</dimen>
+    <dimen name="ampm_left">266px</dimen>
+    <dimen name="ampm_top">180px</dimen>
 
     <!-- indicator ":" -->
-<dimen name="indicator_font_size">40px</dimen>
-<dimen name="indicator_left">159px</dimen>
-<dimen name="indicator_top">190px</dimen>
+    <dimen name="indicator_font_size">40px</dimen>
+    <dimen name="indicator_left">159px</dimen>
+    <dimen name="indicator_top">190px</dimen>
 
     <!-- battery -->
-<dimen name="battery_font_size">20px</dimen>
-<dimen name="battery_text_left">190px</dimen>
-<dimen name="battery_text_top">84px</dimen>
+    <dimen name="battery_font_size">20px</dimen>
+    <dimen name="battery_text_left">190px</dimen>
+    <dimen name="battery_text_top">84px</dimen>
 
 
     <!-- battery -->
@@ -39,136 +39,136 @@
 
 
     <!-- calories -->
-<dimen name="calories_font_size">24px</dimen>
-<dimen name="calories_text_left">192px</dimen>
-<dimen name="calories_text_top">785px</dimen>
+    <dimen name="calories_font_size">24px</dimen>
+    <dimen name="calories_text_left">192px</dimen>
+    <dimen name="calories_text_top">785px</dimen>
 
     <!-- floors -->
-<dimen name="floors_font_size">24px</dimen>
-<dimen name="floors_text_left">150px</dimen>
-<dimen name="floors_text_top">150px</dimen>
+    <dimen name="floors_font_size">24px</dimen>
+    <dimen name="floors_text_left">150px</dimen>
+    <dimen name="floors_text_top">150px</dimen>
 
     <!-- steps -->
-<dimen name="steps_font_size">20px</dimen>
-<dimen name="steps_text_left">65px</dimen>
-<dimen name="steps_text_top">84px</dimen>
+    <dimen name="steps_font_size">20px</dimen>
+    <dimen name="steps_text_left">65px</dimen>
+    <dimen name="steps_text_top">84px</dimen>
 
     <!-- today distance -->
-<dimen name="today_distance_font_size">24px</dimen>
-<dimen name="today_distance_text_left">250px</dimen>
-<dimen name="today_distance_text_top">172px</dimen>
+    <dimen name="today_distance_font_size">24px</dimen>
+    <dimen name="today_distance_text_left">250px</dimen>
+    <dimen name="today_distance_text_top">172px</dimen>
 
     <!-- total distance -->
-<dimen name="total_distance_font_size">24px</dimen>
-<dimen name="total_distance_text_left">205px</dimen>
-<dimen name="total_distance_text_top">188px</dimen>
+    <dimen name="total_distance_font_size">24px</dimen>
+    <dimen name="total_distance_text_left">205px</dimen>
+    <dimen name="total_distance_text_top">188px</dimen>
 
     <!-- heart rate -->
-<dimen name="heart_rate_font_size">24px</dimen>
-<dimen name="heart_rate_text_left">250px</dimen>
-<dimen name="heart_rate_text_top">217px</dimen>
+    <dimen name="heart_rate_font_size">24px</dimen>
+    <dimen name="heart_rate_text_left">250px</dimen>
+    <dimen name="heart_rate_text_top">217px</dimen>
     <!-- heart rate flashing icon  -->
-<dimen name="heart_rate_icon_left">227px</dimen>
-<dimen name="heart_rate_icon_top">199px</dimen>
+    <dimen name="heart_rate_icon_left">227px</dimen>
+    <dimen name="heart_rate_icon_top">199px</dimen>
 
     <!-- status (ex. charging icon) -->
-<dimen name="status_left">10px</dimen>
-<dimen name="status_top">150px</dimen>
+    <dimen name="status_left">10px</dimen>
+    <dimen name="status_top">150px</dimen>
 
     <!-- battery icon -->
-<dimen name="battery_icon_left">33px</dimen>
-<dimen name="battery_icon_top">175px</dimen>
+    <dimen name="battery_icon_left">33px</dimen>
+    <dimen name="battery_icon_top">175px</dimen>
 
     <!-- circle progress bars -->
-<dimen name="circles_thickness">9px</dimen>
-<dimen name="circles_padding">2px</dimen>
+    <dimen name="circles_thickness">9px</dimen>
+    <dimen name="circles_padding">2px</dimen>
     <!-- battery circle -->
-<dimen name="battery_circle_left">0px</dimen>
-<dimen name="battery_circle_top">0px</dimen>
+    <dimen name="battery_circle_left">0px</dimen>
+    <dimen name="battery_circle_top">0px</dimen>
     <!-- steps circle -->
-<dimen name="steps_circle_left">0px</dimen>
-<dimen name="steps_circle_top">0px</dimen>
+    <dimen name="steps_circle_left">0px</dimen>
+    <dimen name="steps_circle_top">0px</dimen>
     <!-- battery circle -->
-<dimen name="today_distance_circle_left">0px</dimen>
-<dimen name="today_distance_circle_top">0px</dimen>
+    <dimen name="today_distance_circle_left">0px</dimen>
+    <dimen name="today_distance_circle_top">0px</dimen>
 
     <!-- temperature -->
-<dimen name="temperature_font_size">20px</dimen>
-<dimen name="temperature_left">126px</dimen>
-<dimen name="temperature_top">84px</dimen>
+    <dimen name="temperature_font_size">20px</dimen>
+    <dimen name="temperature_left">126px</dimen>
+    <dimen name="temperature_top">84px</dimen>
     <!-- weather icon -->
-<dimen name="weather_img_left">121px</dimen>
-<dimen name="weather_img_top">20px</dimen>
+    <dimen name="weather_img_left">121px</dimen>
+    <dimen name="weather_img_top">20px</dimen>
 
     <!-- Weekday (Monday...) -->
-<dimen name="weekday_font_size">25px</dimen>
-<dimen name="weekday_left">80px</dimen>
-<dimen name="weekday_top">128px</dimen>
+    <dimen name="weekday_font_size">25px</dimen>
+    <dimen name="weekday_left">80px</dimen>
+    <dimen name="weekday_top">128px</dimen>
 
     <!-- Date -->
-<dimen name="date_font_size">20px</dimen>
-<dimen name="date_left">163px</dimen>
-<dimen name="date_top">100px</dimen>
+    <dimen name="date_font_size">20px</dimen>
+    <dimen name="date_left">163px</dimen>
+    <dimen name="date_top">100px</dimen>
 
     <!-- Day -->
-<dimen name="day_font_size">25px</dimen>
-<dimen name="day_left">162px</dimen>
-<dimen name="day_top">128px</dimen>
+    <dimen name="day_font_size">25px</dimen>
+    <dimen name="day_left">162px</dimen>
+    <dimen name="day_top">128px</dimen>
 
     <!-- Month -->
-<dimen name="month_font_size">25px</dimen>
-<dimen name="month_left">235px</dimen>
-<dimen name="month_top">128px</dimen>
+    <dimen name="month_font_size">25px</dimen>
+    <dimen name="month_left">235px</dimen>
+    <dimen name="month_top">128px</dimen>
 
     <!-- Year -->
-<dimen name="year_font_size">21px</dimen>
-<dimen name="year_left">164px</dimen>
-<dimen name="year_top">229px</dimen>
+    <dimen name="year_font_size">21px</dimen>
+    <dimen name="year_left">164px</dimen>
+    <dimen name="year_top">229px</dimen>
 
     <!-- City -->
-<dimen name="city_font_size">20px</dimen>
-<dimen name="city_left">94px</dimen>
-<dimen name="city_top">273px</dimen>
+    <dimen name="city_font_size">20px</dimen>
+    <dimen name="city_left">94px</dimen>
+    <dimen name="city_top">273px</dimen>
 
     <!-- Humidity -->
-<dimen name="humidity_font_size">20px</dimen>
-<dimen name="humidity_left">142px</dimen>
-<dimen name="humidity_top">248px</dimen>
+    <dimen name="humidity_font_size">20px</dimen>
+    <dimen name="humidity_left">142px</dimen>
+    <dimen name="humidity_top">248px</dimen>
 
     <!-- UV rays -->
-<dimen name="uv_font_size">20px</dimen>
-<dimen name="uv_left">35px</dimen>
-<dimen name="uv_top">160px</dimen>
+    <dimen name="uv_font_size">20px</dimen>
+    <dimen name="uv_left">35px</dimen>
+    <dimen name="uv_top">160px</dimen>
 
     <!-- Wind Direction -->
-<dimen name="wind_direction_font_size">20px</dimen>
-<dimen name="wind_direction_left">32px</dimen>
-<dimen name="wind_direction_top">170px</dimen>
+    <dimen name="wind_direction_font_size">20px</dimen>
+    <dimen name="wind_direction_left">32px</dimen>
+    <dimen name="wind_direction_top">170px</dimen>
 
     <!-- Wind Strength -->
-<dimen name="wind_strength_font_size">21px</dimen>
-<dimen name="wind_strength_left">35px</dimen>
-<dimen name="wind_strength_top">190px</dimen>
+    <dimen name="wind_strength_font_size">21px</dimen>
+    <dimen name="wind_strength_left">35px</dimen>
+    <dimen name="wind_strength_top">190px</dimen>
 
     <!-- Alarm -->
-<dimen name="alarm_font_size">20px</dimen>
-<dimen name="alarm_left">90px</dimen>
-<dimen name="alarm_top">33px</dimen>
+    <dimen name="alarm_font_size">20px</dimen>
+    <dimen name="alarm_left">90px</dimen>
+    <dimen name="alarm_top">33px</dimen>
 
     <!-- Xdrip sgv -->
-<dimen name="xdrip_font_size">62px</dimen>
-<dimen name="xdrip_left">160px</dimen>
-<dimen name="xdrip_top">295px</dimen>
+    <dimen name="xdrip_font_size">62px</dimen>
+    <dimen name="xdrip_left">160px</dimen>
+    <dimen name="xdrip_top">295px</dimen>
 
     <!-- Xdrip delta-->
-<dimen name="xdripdelta_font_size">20px</dimen>
-<dimen name="xdripdelta_left">233px</dimen>
-<dimen name="xdripdelta_top">260px</dimen>
+    <dimen name="xdripdelta_font_size">20px</dimen>
+    <dimen name="xdripdelta_left">233px</dimen>
+    <dimen name="xdripdelta_top">260px</dimen>
 
     <!-- Xdrip date -->
-<dimen name="xdripdate_font_size">24px</dimen>
-<dimen name="xdripdate_left">160px</dimen>
-<dimen name="xdripdate_top">240px</dimen>
+    <dimen name="xdripdate_font_size">24px</dimen>
+    <dimen name="xdripdate_left">160px</dimen>
+    <dimen name="xdripdate_top">240px</dimen>
     <!-- Xdrip attention -->
 
     <dimen name="xdrippatient_font_size">20px</dimen>
@@ -177,14 +177,29 @@
 
     <!-- Xdrip Graph -->
 
-<dimen name="xdripgraph_left">10px</dimen>
-<dimen name="xdripgraph_top">110px</dimen>
+    <dimen name="xdripgraph_left">10px</dimen>
+    <dimen name="xdripgraph_top">110px</dimen>
 
 
     <!-- Air Pressure -->
-<dimen name="air_pressure_font_size">20px</dimen>
-<dimen name="air_pressure_left">20px</dimen>
-<dimen name="air_pressure_top">170px</dimen>
+    <dimen name="air_pressure_font_size">20px</dimen>
+    <dimen name="air_pressure_left">20px</dimen>
+    <dimen name="air_pressure_top">170px</dimen>
+    <!--
+    Because the window insets on round devices are larger than 15dp, this padding only applies
+    to square screens.
+    -->
+    <dimen name="box_inset_layout_padding">0dp</dimen>
+
+    <!--
+    This padding applies to both square and round screens. The total padding between the buttons
+    and the window insets is box_inset_layout_padding (above variable) on square screens and
+    inner_frame_layout_padding (below variable) on round screens.
+    -->
+
+    <dimen name="inner_frame_layout_padding">5dp</dimen>
+    <dimen name="small_circle_radius2">30dp</dimen>
+    <dimen name="big_circle_radius2">30dp</dimen>
 
 
 </resources>

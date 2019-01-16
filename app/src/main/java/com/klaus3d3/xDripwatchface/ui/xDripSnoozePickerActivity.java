@@ -78,7 +78,7 @@ public class xDripSnoozePickerActivity extends Activity {
     public void finish() {
 
        if (snooze_time==0){snooze_time=default_snooze;}
-            Intent intent1 = new Intent("snooze_alarm_intent");
+            Intent intent1 = new Intent("com.klaus3d3.xDripwatchface.snooze_alarm_intent");
            intent1.putExtra("snooze_time",snooze_time);
            sendBroadcast(intent1);
         super.finish();

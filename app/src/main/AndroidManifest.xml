@@ -12,9 +12,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.DEVICE_POWER" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -76,6 +75,18 @@
                 <category android:name="android.intent.category.INFO" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.DataEntryActivity"
+            android:allowEmbedded="true"
+            android:exported="true"
+            android:label="@string/title_activity_data_entry"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.INFO" />
+            </intent-filter>
+        </activity>
 
         <service android:name=".GreatFitSlpt" />
         <service
@@ -105,7 +116,9 @@
         <!-- Here you can copy-paste the above code (under "Mainface") to add a second watch face -->
         <service android:name=".CustomDataUpdater" />
 
-        <activity android:name=".ui.TestActivity"></activity>
+        <activity
+            android:name=".springboard.TestActivity"
+            android:label="@string/title_activity_test"></activity>
     </application>
 
 </manifest>

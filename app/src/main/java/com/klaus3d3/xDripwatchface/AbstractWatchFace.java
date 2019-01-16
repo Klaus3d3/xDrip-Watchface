@@ -37,11 +37,12 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
 
     public ClockWidget clock;
     final LinkedList<Widget> widgets = new LinkedList<>();
-
+    private Intent TimerUpdateIntent;
     private Intent TransportIntent,slptIntent;
     private APsettings settings;
     private Context Settingctx;
     public Context mContext;
+    private Handler handler;
     public static String DatafromService="";
     AlarmManager alarmManager;
 
@@ -145,35 +146,31 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
         settings.setBoolean("WatchfaceIsRunning",true);
         this.registerReceiver(WatchfaceUpdateReceiverfromService, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
-        this.registerReceiver(WatchfaceUpdateReceiverfromAM, new IntentFilter("com.klaus3d3.xDripwatchface.AlarmManagerWFUpdate"));
+        alarmManager= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+
     }
+
     private BroadcastReceiver WatchfaceUpdateReceiverfromService = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             DatafromService=intent.getStringExtra("DATA");
-                Intent TimerUpdate = new Intent("com.klaus3d3.xDripwatchface.AlarmManagerWFUpdate");
-               // alarmManager.cancel(PendingIntent.getBroadcast(mContext, 1, TimerUpdate, PendingIntent.FLAG_UPDATE_CURRENT));
-                //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+1000*60, 1000*60*1,PendingIntent.getBroadcast(mContext, 1, TimerUpdate, PendingIntent.FLAG_UPDATE_CURRENT));
-
+           // TimerUpdateIntent =  new Intent("com.klaus3d3.xDripwatchface.newDataIntent");
+            //TimerUpdateIntent.putExtra("DATA",DatafromService);
+            alarmManager.cancel(PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+1000*60*10,PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             restartSlpt();
             Log.w("xDripWatchface", "got new Data from Service "+intent.getStringExtra("DATA"));
 
         }
 
     };
-    private BroadcastReceiver WatchfaceUpdateReceiverfromAM = new BroadcastReceiver() {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-                 restartSlpt();
-
-        }
-
-    };
 
 
     public void restartSlpt(){
+
         // Start Slpt
         try {
 
@@ -192,7 +189,7 @@ public abstract class AbstractWatchFace extends com.huami.watch.watchface.Abstra
         settings = new APsettings(Constants.PACKAGE_NAME, Settingctx);
         settings.setBoolean("WatchfaceIsRunning",false);
         this.unregisterReceiver(WatchfaceUpdateReceiverfromService);
-        this.unregisterReceiver(WatchfaceUpdateReceiverfromAM);
+
     }
 
 

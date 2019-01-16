@@ -22,6 +22,7 @@ public class Constants {
     public static final String ACTION_XDRIP_SNOOZE_CONFIRMATION = "SnoozeRemoteConfirmation";
     public static final String ACTION_XDRIP_CANCEL = "xDrip_AlarmCancel";
     public static final String ACTION_Amazfit_Snooze = "Amazfit_Remote_Snooze";
+    public static final String ACTION_Amazfit_Treatments = "Amazfit_Remote_Snooze";
     public static final String ACTION_XDRIP_DATA_CONFIRMATION = "SGVDataConfirmation";
     public static final String ACTION_XDRIP_COMMUNICATION_CHECK = "Are you there";
 

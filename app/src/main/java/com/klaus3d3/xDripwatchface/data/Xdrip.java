@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class Xdrip {
 
-    public String JSONstr;
+    public String JSONstr="";
     public String strike="";
     public String color="WHITE";
     public String sgv="--";

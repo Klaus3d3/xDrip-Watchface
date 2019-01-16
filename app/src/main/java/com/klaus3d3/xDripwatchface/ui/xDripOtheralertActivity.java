@@ -2,10 +2,7 @@
 package com.klaus3d3.xDripwatchface.ui;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
@@ -15,8 +12,7 @@ import android.view.View;
 
 import org.json.JSONObject;
 
-//import butterknife.BindView;
-//import butterknife.ButterKnife;
+
 
 
 public class xDripOtheralertActivity extends Activity {
@@ -33,19 +29,10 @@ public class xDripOtheralertActivity extends Activity {
     Context context;
 
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            finish();
-        }
-
-    };
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mMessageReceiver);
     }
 
 
@@ -54,8 +41,6 @@ public class xDripOtheralertActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xdripotheralertactivity);
         context = this.getApplicationContext();
-
-        registerReceiver(mMessageReceiver, new IntentFilter("close_alarm_dialog"));
                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
@@ -66,8 +51,8 @@ public class xDripOtheralertActivity extends Activity {
         Alarmtext_view =getStringfromJSON("alarmtext",Data);
         SGV_view= getStringfromJSON("sgv",Data);
 
-        TextView sgv = (TextView) findViewById(R.id.SGV);
-        TextView  Alarmtext = (TextView)findViewById(R.id.Alarm_text);
+        sgv = (TextView) findViewById(R.id.SGV);
+        Alarmtext = (TextView)findViewById(R.id.Alarm_text);
         sgv.setText(SGV_view);
         Alarmtext.setText(Alarmtext_view);
 

@@ -1,17 +1,20 @@
 apply plugin: 'com.android.application'
-
+ext {
+    supportLibVersion = '27.1.1'
+}
 android {
-    compileSdkVersion 22
+    compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId 'com.klaus3d3.xDripwatchface'
         minSdkVersion 22
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode 2
         versionName '2.0'
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     dexOptions {
         jumboMode true
         javaMaxHeapSize "4g"
@@ -29,9 +32,18 @@ android {
 dependencies {
     //implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation files('libs/AmazfitLibs.jar')
-    //implementation files('libs/HuamiWatchFacesWOS2.8.jar')
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation files('libs/test.jar')
+    //implementation files('libs/WearServices_libs.jar')
     implementation 'com.github.marlonlom:timeago:3.0.2'
     implementation files('libs/SpringboardPluginLib.jar')
-    //implementation files('libs/WearServices_libs.jar')
+    compileOnly 'com.google.android.wearable:wearable:2.3.0'
+    api 'com.google.android.support:wearable:2.3.0'
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support:support-emoji:$supportLibVersion"
+    implementation "com.android.support:support-emoji-appcompat:$supportLibVersion"
+    implementation "com.android.support:support-emoji-bundled:$supportLibVersion"
+
+
 }

@@ -373,6 +373,11 @@ public class MainClock extends DigitalClockWidget {
     // Screen locked/closed watch mode (Slpt mode)
     @Override
     public List<SlptViewComponent> buildSlptViewComponent(Service service) {
+        try {
+            Settingsctx=service.getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
+        }catch(Exception e){Log.e("MainClock",e.toString());}
+        this.settings = new APsettings(Constants.PACKAGE_NAME, service.getApplicationContext());
+        this.language = this.settings.get("lang", this.language) % this.codes.length;
         //Load Settings
         try {
             this.settings = new APsettings(Constants.PACKAGE_NAME, service.getApplicationContext().createPackageContext(Constants.PACKAGE_NAME, 0));
@@ -458,12 +463,12 @@ public class MainClock extends DigitalClockWidget {
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH);
         if(month>=9){
-            months_3let[2] = months_3let[0];
-            months_3let[0] = months_3let[10];
-            months_3let[1] = months_3let[11];
-            months[2] = months_3let[0];
-            months[0] = months_3let[10];
-            months[1] = months_3let[11];
+            months_3let[language][2] = months_3let[language][0];
+            months_3let[language][0] = months_3let[language][10];
+            months_3let[language][1] = months_3let[language][11];
+            months[language][2] = months[language][0];
+            months[language][0] = months[language][10];
+            months[language][1] = months[language][11];
         }
         if(service.getResources().getBoolean(R.bool.month_as_text)) { // if as text
             if (service.getResources().getBoolean(R.bool.three_letters_month_if_text)) {

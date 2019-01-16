@@ -44,6 +44,8 @@ import com.klaus3d3.xDripwatchface.SystemProperties;
 import com.klaus3d3.xDripwatchface.settings.APsettings;
 
 
+import com.klaus3d3.xDripwatchface.ui.DataEntryActivity;
+import com.klaus3d3.xDripwatchface.ui.xDripAlarmActivity;
 import com.klaus3d3.xDripwatchface.ui.xDripSnoozePickerActivity;
 import com.klaus3d3.xDripwatchface.widget.MainClock;
 import com.klaus3d3.xDripwatchface.R;
@@ -125,8 +127,6 @@ public class NightscoutPage extends AbstractPlugin {
         HealthDataSwitch.setOnClickListener(HealthDataSwitchListener);
         UpdateTimerSwitch = (Switch) mView.findViewById(R.id.UpdateTimerSwitch);
         UpdateTimerSwitch.setOnClickListener(UpdateTimerSwitchListener);
-        LowPowerModeSwitch = (Switch) mView.findViewById(R.id.LowPowerModeSwitch);
-        LowPowerModeSwitch.setOnClickListener(LowPowerModeSwitchListener);
         LogTextView =(TextView) mView.findViewById(R.id.LogTextView);
         TimeTextViev =(TextView) mView.findViewById(R.id.TimeTextView);
         InsulinTextView =(TextView) mView.findViewById(R.id.InsulinTextView);
@@ -169,10 +169,8 @@ public class NightscoutPage extends AbstractPlugin {
         ServiceSwitch.setChecked(settings.get("CustomDataUpdaterIsRunning",false));
         HealthDataSwitch.setChecked(settings.get("HealthDataSwitch",false));
         UpdateTimerSwitch.setChecked(settings.get("UpdateTimer",false));
-        LowPowerModeSwitch.setChecked(settings.get("LowPowerMode",false));
         HealthDataSwitch.setEnabled(ServiceSwitch.isChecked());
         UpdateTimerSwitch.setEnabled(ServiceSwitch.isChecked());
-        LowPowerModeSwitch.setEnabled(ServiceSwitch.isChecked());
         ButtonAlreadyPressed=false;
          //Store active state
         this.mHasActive = true;
@@ -237,7 +235,8 @@ public class NightscoutPage extends AbstractPlugin {
     public void onBindHost(ISpringBoardHostStub paramISpringBoardHostStub) {
         Log.w("xDripWidget", "onBindHost");
         mHost = paramISpringBoardHostStub;
-        mHost.getHostWindow().getContext().registerReceiver(mMessageReceiver, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
+        mHost.getHostWindow().getContext().registerReceiver(NewDatafromServiceReciever, new IntentFilter("com.klaus3d3.xDripwatchface.newDataIntent"));
+        mHost.getHostWindow().getContext().registerReceiver(NewDatafromEntryDialogReciever, new IntentFilter("com.klaus3d3.xDripwatchface.newDataEntry"));
 
     }
 
@@ -302,10 +301,7 @@ public class NightscoutPage extends AbstractPlugin {
 
         }};
 
-    private View.OnClickListener LowPowerModeSwitchListener = new View.OnClickListener() {
-        public void onClick(View v) {
 
-          }};
 
     private View.OnLongClickListener ClearLogLongListener = new View.OnLongClickListener() {
         @Override
@@ -322,6 +318,12 @@ public class NightscoutPage extends AbstractPlugin {
 
     private View.OnClickListener SendtoxDripButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
+            Intent intent1 = new Intent("com.klaus3d3.xDripwatchface.newDataEntrytoService");
+            intent1.putExtra("insulin",  String.valueOf(InsulinTextView.getText()));
+            intent1.putExtra("carbs", String.valueOf( MealTextView.getText()));
+            intent1.putExtra("timestamp",  String.valueOf(TimeTextViev.getText()));
+            //intent1.putExtra("Finger",  String.valueOf(FingerTV.getText()));
+            mContext.sendBroadcast(intent1);
 
 
         }
@@ -329,7 +331,11 @@ public class NightscoutPage extends AbstractPlugin {
 
     private View.OnClickListener DataFieldClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            Toast.makeText(v.getContext(), "This will start a new activity", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(v.getContext(), "This will start a new activity", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mContext, DataEntryActivity.class);
+
+           mHost.getHostWindow().getContext().startActivity(intent);
+
 
         }
     };
@@ -449,7 +455,7 @@ public class NightscoutPage extends AbstractPlugin {
 
 
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver NewDatafromServiceReciever = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -460,6 +466,17 @@ public class NightscoutPage extends AbstractPlugin {
         }
 
     };
+    private BroadcastReceiver NewDatafromEntryDialogReciever = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            TimeTextViev.setText(String.valueOf(System.currentTimeMillis()));
+            InsulinTextView.setText(intent.getStringExtra("Insulin"));
+            MealTextView.setText(intent.getStringExtra("Meal"));
+            FingerTextView.setText(intent.getStringExtra("Finger"));
+        }
+
+    };
 
 
     //Called when the page is destroyed completely (in app mode). Same as the onDestroy method of an activity
@@ -467,7 +484,8 @@ public class NightscoutPage extends AbstractPlugin {
     public void onDestroy() {
         //EventBus.getDefault().unregister(mHost.getHostWindow().getContext());
 
-        mHost.getHostWindow().getContext().unregisterReceiver(mMessageReceiver);
+        mHost.getHostWindow().getContext().unregisterReceiver(NewDatafromServiceReciever);
+        mHost.getHostWindow().getContext().unregisterReceiver(NewDatafromEntryDialogReciever);
         super.onDestroy();
 
     }
