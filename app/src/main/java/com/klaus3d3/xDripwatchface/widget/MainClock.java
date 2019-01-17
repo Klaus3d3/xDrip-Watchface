@@ -463,10 +463,10 @@ public class MainClock extends DigitalClockWidget {
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH);
         if(month>=9){
-            months_3let[language][2] = months_3let[language][0];
+            months_3let[language][2] = months_3let[language][12];
             months_3let[language][0] = months_3let[language][10];
             months_3let[language][1] = months_3let[language][11];
-            months[language][2] = months[language][0];
+            months[language][2] = months[language][12];
             months[language][0] = months[language][10];
             months[language][1] = months[language][11];
         }
