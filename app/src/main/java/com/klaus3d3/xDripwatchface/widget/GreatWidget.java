@@ -323,7 +323,7 @@ public class GreatWidget extends  AbstractWidget {
 
     public Xdrip getXdrip(){
         String str = AbstractWatchFace.DatafromService;
-//String str = Settings.System.getString(this.mService.getContentResolver(), "xdrip");
+        //String str = Settings.System.getString(this.mService.getContentResolver(), "xdrip");
         return new Xdrip(str);
     }
 
@@ -333,208 +333,192 @@ public class GreatWidget extends  AbstractWidget {
         // Variables
         // This service
         this.mService = service;
-
-
-
-
-
+        // List of element
+        List<SlptViewComponent> slpt_objects = new ArrayList<>();
 
         int tmp_left;
         Typeface timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
-
-
-
+        Typeface multiTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE);
 
 
         // Show battery
-        SlptLinearLayout power = new SlptLinearLayout();
-        SlptPictureView percentage = new SlptPictureView();
-        percentage.setStringPicture("%");
-        power.add(new SlptPowerNumView());
-        power.add(percentage);
-        power.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.battery_font_size),
-                service.getResources().getColor(R.color.battery_colour_slpt),
-                timeTypeFace
-        );
-        // Position based on screen on
-        power.alignX = 2;
-        power.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.battery_text_left);
-        if(!service.getResources().getBoolean(R.bool.battery_left_align)) {
-            // If text is centered, set rectangle
-            power.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.battery_font_size))
+        if(service.getResources().getBoolean(R.bool.battery)) {
+            SlptLinearLayout power = new SlptLinearLayout();
+            SlptPictureView percentage = new SlptPictureView();
+            percentage.setStringPicture("%");
+            power.add(new SlptPowerNumView());
+            power.add(percentage);
+            power.setTextAttrForAll(
+                    service.getResources().getDimension(R.dimen.battery_font_size),
+                    service.getResources().getColor(R.color.battery_colour_slpt),
+                    timeTypeFace
             );
-            tmp_left = -320;
+            // Position based on screen on
+            power.alignX = 2;
+            power.alignY = 0;
+            tmp_left = (int) service.getResources().getDimension(R.dimen.battery_text_left);
+            if (!service.getResources().getBoolean(R.bool.battery_left_align)) {
+                // If text is centered, set rectangle
+                power.setRect(
+                        (int) (2 * tmp_left + 640),
+                        (int) (service.getResources().getDimension(R.dimen.battery_font_size))
+                );
+                tmp_left = -320;
+            }
+            power.setStart(
+                    tmp_left,
+                    (int) (service.getResources().getDimension(R.dimen.battery_text_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.battery_font_size))
+            );
+            slpt_objects.add(power);
         }
-        power.setStart(
-                tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.battery_text_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.battery_font_size))
-        );
-        // Hide if disabled
-        if(!service.getResources().getBoolean(R.bool.battery)){power.show=false;}
-        timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE);
-
-
-
-        timeTypeFace = ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MONO_SPACE);
-
-
-
-
 
         // Show steps (today)
-        SlptLinearLayout steps = new SlptLinearLayout();
-        steps.add(new SlptTodayStepNumView());
-        steps.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.steps_font_size),
-                service.getResources().getColor(R.color.steps_colour_slpt),
-                timeTypeFace
-        );
-        // Position based on screen on
-        steps.alignX = 2;
-        steps.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.steps_text_left);
-        if(!service.getResources().getBoolean(R.bool.steps_left_align)) {
-            // If text is centered, set rectangle
-            steps.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.steps_font_size))
+        if(service.getResources().getBoolean(R.bool.steps)) {
+            SlptLinearLayout steps = new SlptLinearLayout();
+            steps.add(new SlptTodayStepNumView());
+            steps.setTextAttrForAll(
+                    service.getResources().getDimension(R.dimen.steps_font_size),
+                    service.getResources().getColor(R.color.steps_colour_slpt),
+                    timeTypeFace
             );
-            tmp_left = -320;
+            // Position based on screen on
+            steps.alignX = 2;
+            steps.alignY = 0;
+            tmp_left = (int) service.getResources().getDimension(R.dimen.steps_text_left);
+            if (!service.getResources().getBoolean(R.bool.steps_left_align)) {
+                // If text is centered, set rectangle
+                steps.setRect(
+                        (int) (2 * tmp_left + 640),
+                        (int) (service.getResources().getDimension(R.dimen.steps_font_size))
+                );
+                tmp_left = -320;
+            }
+            steps.setStart(
+                    (int) tmp_left,
+                    (int) (service.getResources().getDimension(R.dimen.steps_text_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.steps_font_size))
+            );
+            slpt_objects.add(steps);
         }
-        steps.setStart(
-                (int) tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.steps_text_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.steps_font_size))
-        );
-        // Hide if disabled
-        if(!service.getResources().getBoolean(R.bool.steps)){steps.show=false;}
 
-
-
-        // Get next alarm
-
-
-        // Get xdrip
+        // Get xdrip data
         this.xdripData = getXdrip();
 
-        SlptPictureView background = new SlptPictureView();
-        background.setImagePicture(SimpleFile.readFileFromAssets(service, "background_red.png"));
-        background.setStart((int) 0,  (int)220);
-        if(xdripData.color.equals("WHITE")){background.show=true;}else background.show=false;
-
-
+        // White bg?
+        if(xdripData.color.equals("WHITE")) {
+            SlptPictureView background = new SlptPictureView();
+            background.setImagePicture(SimpleFile.readFileFromAssets(service, "background_red.png"));
+            background.setStart((int) 0, (int) 220);
+            slpt_objects.add(background);
+        }
 
         // Show Phonebattery
-        SlptLinearLayout Phonebattery = new SlptLinearLayout();
-        SlptPictureView text = new SlptPictureView();
-        text.setStringPicture(xdripData.phonebattery+"%");
-        Phonebattery.add(text);
-        Phonebattery.setTextAttrForAll(
-                mService.getResources().getDimension(R.dimen.battery_font_size),
-                mService.getResources().getColor(R.color.battery_colour_slpt),
-                timeTypeFace
-        );
-        // Position based on screen on
-        Phonebattery.alignX = 2;
-        Phonebattery.alignY = 0;
-        tmp_left = (int) mService.getResources().getDimension(R.dimen.phonebattery_text_left);
-        if(!mService.getResources().getBoolean(R.bool.battery_left_align)) {
-            // If text is centered, set rectangle
-            Phonebattery.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (mService.getResources().getDimension(R.dimen.battery_font_size))
+        if(mService.getResources().getBoolean(R.bool.battery)) {
+            SlptLinearLayout Phonebattery = new SlptLinearLayout();
+            SlptPictureView text = new SlptPictureView();
+            text.setStringPicture(xdripData.phonebattery + "%");
+            Phonebattery.add(text);
+            Phonebattery.setTextAttrForAll(
+                    mService.getResources().getDimension(R.dimen.battery_font_size),
+                    mService.getResources().getColor(R.color.battery_colour_slpt),
+                    timeTypeFace
             );
-            tmp_left = -320;
+            // Position based on screen on
+            Phonebattery.alignX = 2;
+            Phonebattery.alignY = 0;
+            tmp_left = (int) mService.getResources().getDimension(R.dimen.phonebattery_text_left);
+            if (!mService.getResources().getBoolean(R.bool.battery_left_align)) {
+                // If text is centered, set rectangle
+                Phonebattery.setRect(
+                        (int) (2 * tmp_left + 640),
+                        (int) (mService.getResources().getDimension(R.dimen.battery_font_size))
+                );
+                tmp_left = -320;
+            }
+            Phonebattery.setStart(
+                    tmp_left,
+                    (int) (mService.getResources().getDimension(R.dimen.phonebattery_text_top) - ((float) mService.getResources().getInteger(R.integer.font_ratio) / 100) * mService.getResources().getDimension(R.dimen.battery_font_size))
+            );
+            slpt_objects.add(Phonebattery);
         }
-        Phonebattery.setStart(
-                tmp_left,
-                (int) (mService.getResources().getDimension(R.dimen.phonebattery_text_top)-((float)mService.getResources().getInteger(R.integer.font_ratio)/100)*mService.getResources().getDimension(R.dimen.battery_font_size))
-        );
-        // Hide if disabled
-        if(!mService.getResources().getBoolean(R.bool.battery)){Phonebattery.show=false;}
 
 
-
-
-    // Draw XdripGraph
-
-    SlptPictureView xdripGraphLayout = new SlptPictureView();
-    if (xdripData.firstdata) {
-        if (!xdripData.sgv_graph.equals("false"))
-            xdripGraphLayout.setImagePicture(BitmaptoByte(StringToBitMap(xdripData.sgv_graph)));
-        else
-            xdripGraphLayout.setImagePicture(SimpleFile.readFileFromAssets(service, "empty_graph.png"));
+        // Draw XdripGraph
+        if (xdripData.firstdata) {
+            SlptPictureView xdripGraphLayout = new SlptPictureView();
+            if (!xdripData.sgv_graph.equals("false"))
+                xdripGraphLayout.setImagePicture(BitmaptoByte(StringToBitMap(xdripData.sgv_graph)));
+            else
+                xdripGraphLayout.setImagePicture(SimpleFile.readFileFromAssets(service, "empty_graph.png"));
             // Position based on screen on
             xdripGraphLayout.setStart((int) service.getResources().getDimension(R.dimen.xdripgraph_left), (int) service.getResources().getDimension(R.dimen.xdripgraph_top));
 
-    }
-    if (!xdripData.firstdata) xdripGraphLayout.show = false;
-    // Draw hours
+            slpt_objects.add(xdripGraphLayout);
+        }
 
-    SlptLinearLayout hourLayout = new SlptLinearLayout();
-    if (service.getResources().getBoolean(R.bool.no_0_on_hour_first_digit)) {// No 0 on first digit
-        SlptViewComponent firstDigit = new SlptHourHView();
-        ((SlptNumView) firstDigit).setStringPictureArray(digitalNumsNo0);
-        hourLayout.add(firstDigit);
-        SlptViewComponent secondDigit = new SlptHourLView();
-        ((SlptNumView) secondDigit).setStringPictureArray(digitalNums);
-        hourLayout.add(secondDigit);
+        // Draw hours
+        SlptLinearLayout hourLayout = new SlptLinearLayout();
+        if (service.getResources().getBoolean(R.bool.no_0_on_hour_first_digit)) {// No 0 on first digit
+            SlptViewComponent firstDigit = new SlptHourHView();
+            ((SlptNumView) firstDigit).setStringPictureArray(digitalNumsNo0);
+            hourLayout.add(firstDigit);
+            SlptViewComponent secondDigit = new SlptHourLView();
+            ((SlptNumView) secondDigit).setStringPictureArray(digitalNums);
+            hourLayout.add(secondDigit);
 
-    } else {
-        hourLayout.add(new SlptHourHView());
-        hourLayout.add(new SlptHourLView());
-        hourLayout.add(new SlptMinuteHView());
-        hourLayout.add(new SlptMinuteLView());
-        hourLayout.setStringPictureArrayForAll(this.digitalNums);
-    }
-    hourLayout.setTextAttrForAll(
-            service.getResources().getDimension(R.dimen.hours_font_size),
-            service.getResources().getColor(R.color.hour_colour_slpt),
-            timeTypeFace
-    );
-    // Position based on screen on
-    hourLayout.alignX = 2;
-    hourLayout.alignY = 0;
-    hourLayout.setRect(
-            (int) (2 * service.getResources().getDimension(R.dimen.hours_left) + 640),
-            (int) (service.getResources().getDimension(R.dimen.hours_font_size))
-    );
-    hourLayout.setStart(
-            -320,
-            (int) (service.getResources().getDimension(R.dimen.hours_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.hours_font_size))
-    );
-
-        // Draw Xdrip SGV
-        SlptLinearLayout xdripSGVLayout = new SlptLinearLayout();
-        SlptPictureView xdripSGVStr = new SlptPictureView();
-        xdripSGVStr.setStringPicture( xdripData.sgv );
-        xdripSGVLayout.add(xdripSGVStr);
-        xdripSGVLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.xdrip_font_size),
-                Color.parseColor(xdripData.color),
-                ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE)
+        } else {
+            hourLayout.add(new SlptHourHView());
+            hourLayout.add(new SlptHourLView());
+            hourLayout.add(new SlptMinuteHView());
+            hourLayout.add(new SlptMinuteLView());
+            hourLayout.setStringPictureArrayForAll(this.digitalNums);
+        }
+        hourLayout.setTextAttrForAll(
+                service.getResources().getDimension(R.dimen.hours_font_size),
+                service.getResources().getColor(R.color.hour_colour_slpt),
+                timeTypeFace
         );
         // Position based on screen on
-        xdripSGVLayout.alignX = 2;
-        xdripSGVLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.xdrip_left);
-        if(!service.getResources().getBoolean(R.bool.xdrip_left_align)) {
-            // If text is centered, set rectangle
-            xdripSGVLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.xdrip_font_size))
-            );
-            tmp_left = -320;
-        }
-        xdripSGVLayout.setStart(
-                (int) tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.xdrip_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.xdrip_font_size))
+        hourLayout.alignX = 2;
+        hourLayout.alignY = 0;
+        hourLayout.setRect(
+                (int) (2 * service.getResources().getDimension(R.dimen.hours_left) + 640),
+                (int) (service.getResources().getDimension(R.dimen.hours_font_size))
         );
-        // Hide if disabled
-        if(!service.getResources().getBoolean(R.bool.xdrip)){xdripSGVLayout.show=false;}
+        hourLayout.setStart(
+                -320,
+                (int) (service.getResources().getDimension(R.dimen.hours_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.hours_font_size))
+        );
+        slpt_objects.add(hourLayout);
+
+        // Draw Xdrip SGV
+        if(service.getResources().getBoolean(R.bool.xdrip)) {
+            SlptLinearLayout xdripSGVLayout = new SlptLinearLayout();
+            SlptPictureView xdripSGVStr = new SlptPictureView();
+            xdripSGVStr.setStringPicture(xdripData.sgv);
+            xdripSGVLayout.add(xdripSGVStr);
+            xdripSGVLayout.setTextAttrForAll(
+                    service.getResources().getDimension(R.dimen.xdrip_font_size),
+                    Color.parseColor(xdripData.color),
+                    multiTypeFace
+            );
+            // Position based on screen on
+            xdripSGVLayout.alignX = 2;
+            xdripSGVLayout.alignY = 0;
+            tmp_left = (int) service.getResources().getDimension(R.dimen.xdrip_left);
+            if (!service.getResources().getBoolean(R.bool.xdrip_left_align)) {
+                // If text is centered, set rectangle
+                xdripSGVLayout.setRect(
+                        (int) (2 * tmp_left + 640),
+                        (int) (service.getResources().getDimension(R.dimen.xdrip_font_size))
+                );
+                tmp_left = -320;
+            }
+            xdripSGVLayout.setStart(
+                    (int) tmp_left,
+                    (int) (service.getResources().getDimension(R.dimen.xdrip_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.xdrip_font_size))
+            );
+            slpt_objects.add(xdripSGVLayout);
+        }
 
         // Draw Xdrip Strike
         SlptLinearLayout xdripStrikeSGVLayout = new SlptLinearLayout();
@@ -562,69 +546,69 @@ public class GreatWidget extends  AbstractWidget {
                 (int) tmp_left,
                 (int) (service.getResources().getDimension(R.dimen.xdrip_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.xdrip_font_size))
         );
-
+        slpt_objects.add(xdripStrikeSGVLayout);
 
 
         // Draw Xdrip Delta
-        SlptLinearLayout xdripDeltaLayout = new SlptLinearLayout();
-        SlptPictureView xdripDeltaStr = new SlptPictureView();
-        xdripDeltaStr.setStringPicture( xdripData.delta );
-        xdripDeltaLayout.add(xdripDeltaStr);
-        xdripDeltaLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.xdripdelta_font_size),
-                Color.parseColor(xdripData.color),
-                ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE)
-        );
-        // Position based on screen on
-        xdripDeltaLayout.alignX = 2;
-        xdripDeltaLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.xdripdelta_left);
-        if(!service.getResources().getBoolean(R.bool.xdrip_left_align)) {
-            // If text is centered, set rectangle
-            xdripDeltaLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.xdripdelta_font_size))
+        if(service.getResources().getBoolean(R.bool.xdrip)) {
+            SlptLinearLayout xdripDeltaLayout = new SlptLinearLayout();
+            SlptPictureView xdripDeltaStr = new SlptPictureView();
+            xdripDeltaStr.setStringPicture(xdripData.delta);
+            xdripDeltaLayout.add(xdripDeltaStr);
+            xdripDeltaLayout.setTextAttrForAll(
+                    service.getResources().getDimension(R.dimen.xdripdelta_font_size),
+                    Color.parseColor(xdripData.color),
+                    multiTypeFace
             );
-            tmp_left = -320;
+            // Position based on screen on
+            xdripDeltaLayout.alignX = 2;
+            xdripDeltaLayout.alignY = 0;
+            tmp_left = (int) service.getResources().getDimension(R.dimen.xdripdelta_left);
+            if (!service.getResources().getBoolean(R.bool.xdrip_left_align)) {
+                // If text is centered, set rectangle
+                xdripDeltaLayout.setRect(
+                        (int) (2 * tmp_left + 640),
+                        (int) (service.getResources().getDimension(R.dimen.xdripdelta_font_size))
+                );
+                tmp_left = -320;
+            }
+            xdripDeltaLayout.setStart(
+                    (int) tmp_left,
+                    (int) (service.getResources().getDimension(R.dimen.xdripdelta_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.xdripdelta_font_size))
+            );
+            slpt_objects.add(xdripDeltaLayout);
         }
-        xdripDeltaLayout.setStart(
-                (int) tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.xdripdelta_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.xdripdelta_font_size))
-        );
-        // Hide if disabled
-        if(!service.getResources().getBoolean(R.bool.xdrip)){xdripDeltaLayout.show=false;}
-
-
 
         // Draw Xdrip Date
-        SlptLinearLayout xdripDateLayout = new SlptLinearLayout();
-        SlptPictureView xdripDateStr = new SlptPictureView();
-        xdripDateStr.setStringPicture( xdripData.timeago );
-        xdripDateLayout.add(xdripDateStr);
-        xdripDateLayout.setTextAttrForAll(
-                service.getResources().getDimension(R.dimen.xdripdate_font_size),
-                Color.parseColor(xdripData.color),
-                ResourceManager.getTypeFace(service.getResources(), ResourceManager.Font.MULTI_SPACE)
-        );
-        // Position based on screen on
-        xdripDateLayout.alignX = 2;
-        xdripDateLayout.alignY = 0;
-        tmp_left = (int) service.getResources().getDimension(R.dimen.xdripdate_left);
-        if(!service.getResources().getBoolean(R.bool.xdrip_date_left_align)) {
-            // If text is centered, set rectangle
-            xdripDateLayout.setRect(
-                    (int) (2 * tmp_left + 640),
-                    (int) (service.getResources().getDimension(R.dimen.xdripdate_font_size))
+        if(service.getResources().getBoolean(R.bool.xdrip)) {
+            SlptLinearLayout xdripDateLayout = new SlptLinearLayout();
+            SlptPictureView xdripDateStr = new SlptPictureView();
+            xdripDateStr.setStringPicture(xdripData.timeago);
+            xdripDateLayout.add(xdripDateStr);
+            xdripDateLayout.setTextAttrForAll(
+                    service.getResources().getDimension(R.dimen.xdripdate_font_size),
+                    Color.parseColor(xdripData.color),
+                    multiTypeFace
             );
-            tmp_left = -320;
+            // Position based on screen on
+            xdripDateLayout.alignX = 2;
+            xdripDateLayout.alignY = 0;
+            tmp_left = (int) service.getResources().getDimension(R.dimen.xdripdate_left);
+            if (!service.getResources().getBoolean(R.bool.xdrip_date_left_align)) {
+                // If text is centered, set rectangle
+                xdripDateLayout.setRect(
+                        (int) (2 * tmp_left + 640),
+                        (int) (service.getResources().getDimension(R.dimen.xdripdate_font_size))
+                );
+                tmp_left = -320;
+            }
+            xdripDateLayout.setStart(
+                    (int) tmp_left,
+                    (int) (service.getResources().getDimension(R.dimen.xdripdate_top) - ((float) service.getResources().getInteger(R.integer.font_ratio) / 100) * service.getResources().getDimension(R.dimen.xdripdate_font_size))
+            );
+            slpt_objects.add(xdripDateLayout);
         }
-        xdripDateLayout.setStart(
-                (int) tmp_left,
-                (int) (service.getResources().getDimension(R.dimen.xdripdate_top)-((float)service.getResources().getInteger(R.integer.font_ratio)/100)*service.getResources().getDimension(R.dimen.xdripdate_font_size))
-        );
-        // Hide if disabled
-        if(!service.getResources().getBoolean(R.bool.xdrip)){xdripDateLayout.show=false;}
 
-        return Arrays.asList(new SlptViewComponent[]{ background,xdripGraphLayout,hourLayout,xdripSGVLayout,xdripDeltaLayout,xdripDateLayout,Phonebattery,xdripStrikeSGVLayout,power,steps});
+        return slpt_objects;
     }
 }
