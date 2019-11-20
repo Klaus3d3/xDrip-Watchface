@@ -209,7 +209,7 @@ public class NightscoutPage extends AbstractPlugin {
                 SensorExpires.setText("Expires: " +json_data.getString("sensor_expires"));
 
                 if(!json_data.getString("SGVGraph").equals("false"))
-                graph.setImageBitmap(StringToBitMap(json_data.getString("widget_graph")));
+                graph.setImageBitmap(StringToBitMap(json_data.getString("SGVGraph")));
                 else graph.setImageDrawable(mContext.getResources().getDrawable(R.drawable.empty_graph));
 
         }catch (Exception e) {
