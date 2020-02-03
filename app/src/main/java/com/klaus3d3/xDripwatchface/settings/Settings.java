@@ -22,7 +22,7 @@ public class Settings extends FragmentActivity {
     private com.klaus3d3.xDripwatchface.settings.APsettings settings;
     // Languages
     public static String[] codes = {
-            "English", "中文", "Czech", "Nederlands", "Français", "Deutsch", "Ελληνικά", "עברית", "Magyar", "Italiano", "日本語", "한국어", "Polski", "Português", "Русский", "Slovenčina", "Español", "Türkçe",
+            "English", "Български", "中文", "Hrvatski", "Czech", "Dansk", "Nederlands", "Français", "Deutsch", "Ελληνικά", "עברית", "Magyar", "Italiano", "日本語", "한국어", "Polski", "Português", "Română", "Русский", "Slovenčina", "Español", "ไทย", "Türkçe", "Tiếng Việt"
     };
 
     @Override
@@ -46,10 +46,6 @@ public class Settings extends FragmentActivity {
                 change_watchface();
             }
         });
-
-
-
-
 
         // Language button
         TextView language_button = (TextView) findViewById(R.id.language);
